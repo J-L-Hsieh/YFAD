@@ -1,0 +1,59 @@
+<!-- base.html -->
+<!DOCTYPE html>
+<html>
+    <head>
+
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <!-- Bootstrap CSS & JS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+
+        <!-- 引入css -->
+        <!-- <link rel="stylesheet" type="text/css" href="../static/css/style.css" /> -->
+
+        <!-- 引入D3.js -->
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+        {% load static %}
+        <!-- DataTables -->
+        <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.css">
+        <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.js"></script>
+
+        <title>
+            {% block title %} Yeast Feature Association Database{% endblock %}
+        </title>
+        <style>
+        .flexbox{
+            display:flex;
+            align-items:center;
+            justify-content:center;
+        }
+        </style>
+    </head>
+    <body>
+        <header class="py-3 mb-5 text-center bg-dark shadow">
+            <h2 class="text-light">Find Associations between the Queried Feature and the Compared Features </div>
+        </header>
+        <div class="container-fluid">
+            <div class="col-10 mx-auto">
+            {% csrf_token %}
+                <div class="card mb-3">
+                    <div class="card-header fs-5 fw-bold">
+                        <div id="first"></div>
+                        <div id="second"></div>
+                    </div>
+                    </div>
+                    <div id="associated_title" class='card-body'></div>
+                    <div class="flexbox">
+                        <div id="Answer1" style="width: 90%;"></div>
+                </div>
+            </div>
+        </div>
+    </body>
+    <script>csrf_token= "{{ csrf_token }}"</script>
+    <script src="{% static 'js/yeast_name.js'%}"></script>
+</html>

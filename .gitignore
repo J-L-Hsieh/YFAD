@@ -1,0 +1,6 @@
+#database 
+db.sqlite3
+
+#setting
+chunlin_project/settings.py
+
