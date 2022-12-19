@@ -47,7 +47,7 @@ $(document).ready(function(){
             /*-------------- 製作all table的 div 與專屬id ------------------ */
             var add_html = ''
             var add_herf = ''
-            for (i=0 ;i< all_title_name.length;i++){
+            for (i=0 ;i< column_order.length;i++){
                 /*--------------------------table 容器----------------------  */
                 add_html = add_html + `<div id = ${column_order[i]}></div>`
                 add_herf = add_herf + `<input id ="${column_order[i]}_move" class="btn btn-outline-primary" type="button" name="Submit" value="${column_order[i]}"  ></input>`
@@ -55,14 +55,14 @@ $(document).ready(function(){
             console.log(add_html)
             $('#herf_table').html(add_herf)
             $('#Answer2').html(add_html)
-            for (i=0 ;i< all_title_name.length;i++){
+            for (i=0 ;i< column_order.length;i++){
                 $(`#${column_order[i]}`).html(`<div class ="fs-3">Feature Name : ${column_order[i]}</div><div>${response.all_tables[column_order[i]]}</div>`)
                 $(`#${column_order[i]}_table`).DataTable({
                     'columnDefs':[
                         {   'targets':-1,
                             'data':null,
                             render:function(row){
-                                return '<a href = "/yeast/associated/detail/?id='+ table_name + '$' + row_name +'&name='+ all_title_name[i]+ '$' +row[1]+'"> Detail </a>';
+                                return '<a href = "/yeast/associated/detail/?id='+ table_name + '$' + row_name +'&name='+ column_order[i]+ '$' +row[1]+'"> Detail </a>';
                             },
                         },
                         {   'targets':2,

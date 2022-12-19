@@ -35,11 +35,11 @@ def yeast_browser(request):
     table_column = request.POST.get('other_feature')[:-1]
 
     sql = """
-        SELECT %s,%s FROM %s_all;
+        SELECT `%s(Queried)`, %s FROM %s_1_to_10;
     """%(table_name, table_column, table_name)
     print(sql)
     try:
-        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+        connect = sqlite3.connect('db.sqlite3')
         table = pd.read_sql(sql, connect)
     finally:
         connect.close()
@@ -58,16 +58,16 @@ def yeast_browser(request):
 
 def yeast_associated(request):
     # print(request)
-    print('--------')
+    # print('--------')
 
     table_name = request.POST.get('table_name')
     row_name = request.POST.get('row_name')
     try:
-        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+        connect = sqlite3.connect('db.sqlite3')
         select = """
-            SELECT * FROM %s_all WHERE %s IN ('%s')
-        """%(table_name,table_name,row_name)
-        print(select)
+            SELECT * FROM %s_1_to_10 WHERE `%s(Queried)` IN ('%s');
+        """%(table_name, table_name, row_name)
+        # print(select)
         table = pd.read_sql('%s' %select, connect)
     finally:
         connect.close()
@@ -91,14 +91,18 @@ def yeast_name(request):
     print(first_feature)
     print(second_feature)
     try:
-        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+        connect = sqlite3.connect('db.sqlite3')
         for  i in range(2):
             if i == 1:
-                select = 'SELECT count,SystematicName FROM ' + first_feature[0] +'_all WHERE '+first_feature[0] +" IN ('" +first_feature[1] +"')"
+                select = """
+                    SELECT count,SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ('%s')
+                """%(first_feature[0], first_feature[0], first_feature[1])
                 first_table = pd.read_sql('%s' %select, connect)
                 # print(select)
             else:
-                select = 'SELECT count,SystematicName FROM ' + second_feature[0] +'_all WHERE '+second_feature[0] +" IN ('" +second_feature[1] +"')"
+                select = """
+                    SELECT count,SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ('%s')
+                """%(second_feature[0], second_feature[0], second_feature[1])
                 second_table = pd.read_sql('%s' %select, connect)
     finally:
         connect.close()

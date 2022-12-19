@@ -3,7 +3,7 @@ import sqlite3
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width', None)
-pd.set_option('display.max_colwidth', -1)
+# pd.set_option('display.max_colwidth', -1)
 
 def modal(request):
     feature_name = request.POST.get('feature_name').split('%')
@@ -15,10 +15,12 @@ def modal(request):
     name2 = feature_name[3]
 
     try:
-        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+        connect = sqlite3.connect('db.sqlite3')
         db_cursor = connect.cursor()
 
-        select = """SELECT SystematicName FROM %s_all WHERE %s IN ('%s');"""%(feature1, feature1, name1)
+        select = """
+            SELECT SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ('%s');
+        """%(feature1, feature1, name1)
         db_cursor.execute(select)
         sys_name1 = db_cursor.fetchall()
         # print('---------------')
@@ -27,7 +29,9 @@ def modal(request):
 
         # print('---------------')
 
-        select = """SELECT SystematicName FROM %s_all WHERE %s IN ('%s');"""%(feature2, feature2, name2)
+        select = """
+            SELECT SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ('%s');
+        """%(feature2, feature2, name2)
         db_cursor.execute(select )
         sys_name2 = db_cursor.fetchall()
         # print('----')
@@ -37,23 +41,23 @@ def modal(request):
         # print(intersection)
         # print(feature1)
         '''-------------------------依照主要的feature取出證據檔------------------'''
-        if feature1 == 'Physical_Interaction':
+        if feature2 == 'Physical_Interaction':
             select = """
                 SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN %s OR `SystematicName(Hit)` IN %s
-            """%(feature1, intersection,intersection)
+            """%(feature2, intersection,intersection)
             evidence_table = pd.read_sql(select , connect)
 
 
-        elif feature1 == 'Genetic_Interaction':
+        elif feature2 == 'Genetic_Interaction':
             select = """
                 SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN %s OR `SystematicName(Hit)` IN %s
-            """%(feature1, intersection,intersection)
+            """%(feature2, intersection,intersection)
             evidence_table = pd.read_sql(select , connect)
 
         else:
             select = """
                 SELECT * FROM %s_evidence WHERE SystematicName IN %s
-            """%(feature1, intersection)
+            """%(feature2, intersection)
             evidence_table = pd.read_sql(select , connect)
     finally:
         connect.close()

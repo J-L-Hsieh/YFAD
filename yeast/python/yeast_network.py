@@ -2,8 +2,8 @@ import pandas as pd
 import sqlite3
 
 
-color_dict = {'GO_MF':'#E6AA68' ,'GO_BP':'#FFFBBD' ,'GO_CC':'#7FB069' ,'Protein_Domain':'#CA3C25' ,'Mutant_Phenotype':'#7EBDC2' ,'Pathway':'#FFDDD2' ,'Disease':'#254441' ,'Transcriptional_Regulation':'#B38D97' ,'Physical_Interaction':'#E3E4DB','Genetic_Interaction':'#CDCDCD'}
-
+color_dict = {'GO_MF':'darkseagreen' ,'GO_BP':'darksalmon' ,'GO_CC':'lightskyblue' ,'Protein_Domain':'plum' ,'Mutant_Phenotype':'coral' ,'Pathway':'grey' ,'Disease':'mistyrose' ,'Transcriptional_Regulation':'deepskyblue' ,'Physical_Interaction':'gold','Genetic_Interaction':'teal',
+            'GO_MF(Queried)':'darkseagreen' ,'GO_BP(Queried)':'darksalmon' ,'GO_CC(Queried)':'lightskyblue' ,'Protein_Domain(Queried)':'plum' ,'Mutant_Phenotype(Queried)':'coral' ,'Pathway(Queried)':'grey' ,'Disease(Queried)':'mistyrose' ,'Transcriptional_Regulation(Queried)':'deepskyblue' ,'Physical_Interaction(Queried)':'gold','Genetic_Interaction(Queried)':'teal'}
 
 def network(associated_table):
     associated_table = pd.DataFrame(associated_table)

@@ -4,22 +4,22 @@ $.ajaxSetup({
 });
 $(document).ready(function() {
     /* -------------------------------------下拉式選單與checkbox連動------------------------------------- */
-    var first = document.getElementById('first').value
-    console.log(first)
-    document.getElementById(`${first}`).style.display = 'none';
-    document.getElementById(`${first}_input`).checked = false;
+    // var first = document.getElementById('first').value
+    // console.log(first)
+    // document.getElementById(`${first}`).style.display = 'none';
+    // document.getElementById(`${first}_input`).checked = false;
     // console.log(typeof(first))
-    $('#first').on('change',function(){
-        console.log(first)
-        document.getElementById(`${first}`).style.display = '';  /* 顯現原有的 */
-        document.getElementById(`${first}_input`).checked = true;
+    // $('#first').on('change',function(){
+    //     console.log(first)
+    //     document.getElementById(`${first}`).style.display = '';  /* 顯現原有的 */
+    //     document.getElementById(`${first}_input`).checked = true;
 
-        first = this.value
-        console.log(first)
+    //     first = this.value
+    //     console.log(first)
 
-        document.getElementById(`${first}`).style.display = 'none';  /*隱藏選到的 */
-        document.getElementById(`${first}_input`).checked = false ;
-    });
+    //     document.getElementById(`${first}`).style.display = 'none';  /*隱藏選到的 */
+    //     document.getElementById(`${first}_input`).checked = false ;
+    // });
 
     /* -----------------------------------------傳遞已選擇變數------------------------------------- */
     $('#submit_feature').click(function(e){
