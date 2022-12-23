@@ -23,7 +23,7 @@ def associated_analysis(associated_table):
         for j in domain_name:
             try:
                 print(j)
-                connect = sqlite3.connect('db.sqlite3')
+                connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
                 db_cursor = connect.cursor()
                 select = """
                     SELECT SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ('%s');
@@ -45,7 +45,8 @@ def associated_analysis(associated_table):
                 connect.close()
         columns_title = ['Queried %s Term(A)' %queried_feature,'Associated %s Term(B)' %i,'Observed Ratio','Expext Ratio','Signficance of Associated(p-value)','Detail']
         # print(pd.DataFrame(table,columns=columns_title))
-        df_tables = pd.DataFrame(table,columns=columns_title).to_html(table_id='%s_table'%i,index= None,classes="table table-striped table-bordered")
+        df_tables = pd.DataFrame(table,columns=columns_title).to_html(index= None,classes="table table-striped table-bordered")
+        df_tables = df_tables.replace('table','table id="%s_table"'%i)
         response['%s'%i] = df_tables
         response['column_order'] = column_order
         # print(column_order)

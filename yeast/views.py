@@ -39,7 +39,7 @@ def yeast_browser(request):
     """%(table_name, table_column, table_name)
     print(sql)
     try:
-        connect = sqlite3.connect('db.sqlite3')
+        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
         table = pd.read_sql(sql, connect)
     finally:
         connect.close()
@@ -63,7 +63,7 @@ def yeast_associated(request):
     table_name = request.POST.get('table_name')
     row_name = request.POST.get('row_name')
     try:
-        connect = sqlite3.connect('db.sqlite3')
+        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
         select = """
             SELECT * FROM %s_1_to_10 WHERE `%s(Queried)` IN ('%s');
         """%(table_name, table_name, row_name)
@@ -91,7 +91,7 @@ def yeast_name(request):
     print(first_feature)
     print(second_feature)
     try:
-        connect = sqlite3.connect('db.sqlite3')
+        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
         for  i in range(2):
             if i == 1:
                 select = """

@@ -26,13 +26,23 @@ $(document).ready(function(){
             $('#associated_table').DataTable();
             var column_order = response.all_tables.column_order
             /* --------------------------network graph----------------------------*/
-            // for (i=0 ;i<all_title_name.length; i++){
-            //     $('#nodeFilterSelect').append(`<option value=${all_title_name[i]}>${all_title_name[i]}</option>`)
-            // }
-            var data = response.network_data
-            var options = {
+            for (i=0 ;i<column_order.length; i++){
+                $('#nodeFilterSelect').append(`<option value=${column_order[i]}>${column_order[i]}</option>`)
+            }
+
+            const nodeFilterSelector = document.getElementById("nodeFilterSelect");
+
+
+            function startNetwork(data) {
+            const container = document.getElementById("mynetwork");
+            const options = {
+                autoResize:true,
+
+                interaction:{
+                    hover: true
+                },
                 // nodes:{
-                //     type:'rectangle'
+                //     physics:false
                 // },
                 edges:{
                     arrows:{
@@ -40,8 +50,67 @@ $(document).ready(function(){
                     },
                 }
             };
-            var container = document.getElementById("mynetwork");
-            var network = new vis.Network(container, data, options);
+            const network = new vis.Network(container, data, options);
+
+            // 設置固定位置設定
+
+            network.on("dragEnd", function(params){
+                if (params.nodes&&params.nodes.length > 0){
+                    network.clustering.updateClusteredNode(params.nodes[0], {physics : false});
+                }
+            });
+            }
+
+            // create an array with nodes
+            var nodes = new vis.DataSet(response.network_data.nodes);
+            console.log(nodes)
+            // create an array with edges
+            var edges = new vis.DataSet(response.network_data.edges);
+
+            let nodeFilterValue = "";
+
+            const nodesFilter = (node) => {
+            if (nodeFilterValue === "") {
+                return true;
+            }
+
+            switch (nodeFilterValue) {
+                case "GO_MF"||"main":
+                return node.type === "GO_MF"|| node.type ==="main";
+                case "GO_BP"||"main":
+                return node.type === "GO_BP"|| node.type ==="main";
+                case "GO_CC"||"main":
+                return node.type === "GO_CC"|| node.type ==="main";
+                case "Protein_Domain"||"main":
+                return node.type === "Protein_Domain"|| node.type ==="main";
+                case "Phenotype"||"main":
+                return node.type === "Phenotype"|| node.type ==="main";
+                case "Disease"||"main":
+                return node.type === "Disease"|| node.type ==="main";
+                case "Physical_Interaction"||"main":
+                return node.type === "Physical_Interaction"|| node.type ==="main";
+                case "Genetic_Interaction"||"main":
+                return node.type === "Genetic_Interaction"|| node.type ==="main";
+                case "Pathway"||"main":
+                return node.type === "Pathway"|| node.type ==="main";
+                case "Transcriptional_Regulation"||"main":
+                return node.type === "Transcriptional_Regulation"|| node.type ==="main";
+                default:
+                return true;
+            }
+            };
+
+            const nodesView = new vis.DataView(nodes, { filter: nodesFilter });
+            const edgesView = new vis.DataView(edges);
+
+            nodeFilterSelector.addEventListener("change", (e) => {
+            // set new value to filter variable
+            nodeFilterValue = e.target.value;
+
+            nodesView.refresh();
+            });
+
+            startNetwork({ nodes: nodesView, edges: edgesView });
 
 
             /*-------------- 製作all table的 div 與專屬id ------------------ */
