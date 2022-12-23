@@ -41,7 +41,7 @@ $(document).ready(function() {
                         {   'targets':-1,
                             'data':null,
                             render:function(row){
-                                return '<a href = "/yeast/associated/?id='+row[0]+'&name='+table_name+'"> Detail </a>';
+                                return '<a href = "/yeast/browse/associated/?id='+row[0]+'&name='+table_name+'"> Detail </a>';
                             },
                         }
                     ]

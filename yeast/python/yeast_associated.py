@@ -16,40 +16,30 @@ def associated_analysis(associated_table):
     '''------------------回傳資料為各個table及column的順序--------------------'''
     response ={}
     for i in column_name:
-        # print(i)
-        # print(associated_table.at[0,'%s' %i])
         domain_name = eval(associated_table.at[0,'%s' %i])
         table = []
         for j in domain_name:
             try:
-                print(j)
                 connect = sqlite3.connect('db.sqlite3')
                 db_cursor = connect.cursor()
                 select = """
                     SELECT SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ('%s');
                 """%(i, i, j)
-                print(select)
                 domain_name = db_cursor.execute(select).fetchone()
-                print(domain_name)
 
                 domain_name = domain_name[0]
-                print(domain_name)
                 result_list = yeast_enrichment(queried_name,domain_name)
                 result_list.insert(0,queried_feature)
                 result_list.insert(1,j)
                 result_list.insert(7,'-')
-                # print(result_list)
                 #將每一列的資訊放進同一個list中,之後做成datatable
                 table.append(result_list)
             finally:
                 connect.close()
         columns_title = ['Queried %s Term(A)' %queried_feature,'Associated %s Term(B)' %i,'Observed Ratio','Expext Ratio','Signficance of Associated(p-value)','Detail']
-        # print(pd.DataFrame(table,columns=columns_title))
         df_tables = pd.DataFrame(table,columns=columns_title).to_html(table_id='%s_table'%i,index= None,classes="table table-striped table-bordered")
         response['%s'%i] = df_tables
         response['column_order'] = column_order
-        # print(column_order)
-    # print(response)
     return response
 
 

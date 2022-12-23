@@ -1,7 +1,8 @@
-#database 
+#database
 db.sqlite3
 
 #setting
 chunlin_project/settings.py
+
 chunlin_project/urls.py
 

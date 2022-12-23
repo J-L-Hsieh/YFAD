@@ -28,13 +28,11 @@ def network(associated_table):
         # edges.append({'from':'0','to':id_num})
 
         domain_name = eval(associated_table.iat[0,i])
-        # print(domain_name)
         '''------------------------------加入個特徵下的各個類別-------------------------'''
 
         for j in range(len(domain_name)):
             nodes.append({'id':'{feature}_{name_in_feature}'.format(feature = id_num, name_in_feature = j), 'group':domain_name[j], 'label':domain_name[j], 'color':color, 'type':column_order[i]})
             edges.append({'from':0, 'to':'{feature}_{name_in_feature}'.format(feature = id_num, name_in_feature = j),'color':color})
-
 
 
     response = {'nodes':nodes, 'edges':edges}

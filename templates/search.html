@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block content %}
+
+
+<div class="container">
+    <div class="card mt-5 w-100">
+        <div class="form-floating">
+            <form id ="search_input" method="post">
+                <div class="flexbox" style="width:100%;height:100px;font-size:26px;">
+                    <div style="width:25%">Feature : </div>
+                    <select id="first" style="width:75%" id ='type' type="text" name="input_feature">Queried Feature :
+                        <option value="GO_MF">GO(MF)</option>
+                        <option value="GO_BP">GO(BP)</option>
+                        <option value="GO_CC">GO(CC)</option>
+                        <option value="Protein_Domain">Protein Domain</option>
+                        <option value="Mutant_Phenotype">Mutant Phenotype</option>
+                        <option value="Pathway">Pathway</option>
+                        <option value="Disease">Disease</option>
+                        <option value="Transcriptional_Regulation">Transcriptional Regulation</option>
+                        <option value="Physical_Interaction">Physical Interation</option>
+                        <option value="Genetic_Interaction">Genetic Interaction</option>
+                    </select>
+                </div>
+                <hr>
+                <div class="flexbox">
+                    <textarea type="text" class="form-control" placeholder="Ex : PF00005" style="width:75%;height:100px;" id="floatingTextarea" name = input_name></textarea>
+                    <label for="floatingTextarea"></label>
+                </div>
+            </form>
+        </div>
+        <div class='card-body'>
+            <hr>
+            <button id="submit" class="btn btn-outline-primary">送出</button>
+        </div>
+    </div>
+</div>
+<div class="flexbox">
+    <div id="Answer" style="width:90%;"></div>
+</div>
+<!------------------------modal---------------------->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edvidence table</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div id="modal_table" class="card"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-------------------------------------------------->
+</body>
+
+<script>csrf_token= "{{ csrf_token }}"</script>
+<script src="{% static 'js/search.js'%}"></script>
+
+{% endblock content %}

@@ -19,10 +19,10 @@ from yeast.python.yeast_associated import associated_analysis
 from yeast.python.yeast_network import network
 from yeast.python.yeast_modal import modal
 
-
-
+def home(request):
+    return(render(request,'base.html',locals()))
 def yeast(request):
-    return(render(request,'yeast_browse.html',locals()))
+    return(render(request,'browse.html',locals()))
 def yeast_associated_base(request):
     return(render(request,'yeast_associated.html',locals()))
 def yeast_name_base(request):
@@ -37,7 +37,6 @@ def yeast_browser(request):
     sql = """
         SELECT `%s(Queried)`, %s FROM %s_1_to_10;
     """%(table_name, table_column, table_name)
-    print(sql)
     try:
         connect = sqlite3.connect('db.sqlite3')
         table = pd.read_sql(sql, connect)
@@ -49,16 +48,12 @@ def yeast_browser(request):
     table['Detail'] = detail_column
     table = table.to_html(index= None,classes="table table-striped table-bordered")
     table = table.replace('table','table id="result_table"',1)
-    # table = table.to_json(orient="records")
-    # print(table)
     response = {'table':table}
     return JsonResponse(response)
 
 '''----------------------------------------------------------------------------'''
 
 def yeast_associated(request):
-    # print(request)
-    # print('--------')
 
     table_name = request.POST.get('table_name')
     row_name = request.POST.get('row_name')
@@ -67,7 +62,6 @@ def yeast_associated(request):
         select = """
             SELECT * FROM %s_1_to_10 WHERE `%s(Queried)` IN ('%s');
         """%(table_name, table_name, row_name)
-        # print(select)
         table = pd.read_sql('%s' %select, connect)
     finally:
         connect.close()
@@ -88,8 +82,6 @@ def yeast_name(request):
     second_feature = request.POST.get('second_feature')
     first_feature = first_feature.split('$')
     second_feature = second_feature.split('$')
-    print(first_feature)
-    print(second_feature)
     try:
         connect = sqlite3.connect('db.sqlite3')
         for  i in range(2):
@@ -98,7 +90,6 @@ def yeast_name(request):
                     SELECT count,SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ('%s')
                 """%(first_feature[0], first_feature[0], first_feature[1])
                 first_table = pd.read_sql('%s' %select, connect)
-                # print(select)
             else:
                 select = """
                     SELECT count,SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ('%s')
@@ -107,10 +98,8 @@ def yeast_name(request):
     finally:
         connect.close()
 
-    print(first_table)
     first_names = eval(first_table.iat[0,1])
     second_names = eval(second_table.iat[0,1])
-    print(type(len(second_names)))
     first_name_table = pd.DataFrame(list(zip(first_names,['true']*len(first_names))),columns=['all','%s'%first_feature[1]])
     second_name_table = pd.DataFrame(list(zip(second_names,['true']*len(second_names))),columns=['all','%s'%second_feature[1]])
     df_merge = pd.merge(first_name_table,second_name_table,how="outer")
@@ -120,8 +109,67 @@ def yeast_name(request):
     return JsonResponse(response)
 
 '''----------------------------------------------------------------------------'''
+
 def yeast_modal(request):
     evidence_table = modal(request)
     response ={'evidence_table':evidence_table}
-    # print(evidence_table)
+    return JsonResponse(response)
+
+'''----------------------------------------------------------------------------'''
+
+def yeast_evidence(request):
+    feature = request.POST.get('feature').split('%')
+    print(feature)
+    feature1 = feature[0]
+    feature2 = feature[1]
+    systematice_name = feature[2]
+    connect = sqlite3.connect('db.sqlite3')
+    try:
+        if feature1 == 'Physical_Interaction':
+            select = """
+                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ('%s') OR `SystematicName(Hit)` IN ('%s')
+            """%(feature1, systematice_name, systematice_name)
+            feature1_table = pd.read_sql(select , connect)
+
+        elif feature1 == 'Genetic_Interaction':
+            select = """
+                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ('%s') OR `SystematicName(Hit)` IN ('%s')
+            """%(feature1, systematice_name,systematice_name)
+            feature1_table = pd.read_sql(select , connect)
+
+        else:
+            select = """
+                SELECT * FROM %s_evidence WHERE SystematicName IN ('%s')
+            """%(feature1, systematice_name)
+            feature1_table = pd.read_sql(select , connect)
+
+        if feature2 == 'Physical_Interaction':
+            select = """
+                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ('%s') OR `SystematicName(Hit)` IN ('%s')
+            """%(feature2, systematice_name,systematice_name)
+            feature2_table = pd.read_sql(select , connect)
+
+
+        elif feature2 == 'Genetic_Interaction':
+            select = """
+                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ('%s') OR `SystematicName(Hit)` IN ('%s')
+            """%(feature2, systematice_name,systematice_name)
+            feature2_table = pd.read_sql(select , connect)
+
+        else:
+            select = """
+                SELECT * FROM %s_evidence WHERE SystematicName IN ('%s')
+            """%(feature2, systematice_name)
+            feature2_table = pd.read_sql(select , connect)
+
+    finally:
+        connect.close()
+
+    feature1_table = feature1_table.to_html(index= None, classes="table table-striped table-bordered",escape=False)
+    feature1_table = feature1_table.replace('table', 'table id="feature1_table"', 1)
+
+    feature2_table = feature2_table.to_html(index= None, classes="table table-striped table-bordered",escape=False)
+    feature2_table = feature2_table.replace('table', 'table id="feature2_table"', 1)
+    response = {'feature1_table' : feature1_table, 'feature2_table' : feature2_table}
+
     return JsonResponse(response)
