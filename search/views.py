@@ -10,7 +10,7 @@ def search_mode(request):
     feature = request.POST.get('input_feature')
     name = request.POST.get('input_name')
 
-    conn = sqlite3.connect('db.sqlite3')
+    conn = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
     try:
         sql = """
             SELECT * FROM %s_1_to_10 WHERE `%s(Queried)` LIKE '%s';

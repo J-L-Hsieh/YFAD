@@ -38,7 +38,7 @@ def yeast_browser(request):
         SELECT `%s(Queried)`, %s FROM %s_1_to_10;
     """%(table_name, table_column, table_name)
     try:
-        connect = sqlite3.connect('db.sqlite3')
+        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
         table = pd.read_sql(sql, connect)
     finally:
         connect.close()
@@ -58,7 +58,7 @@ def yeast_associated(request):
     table_name = request.POST.get('table_name')
     row_name = request.POST.get('row_name')
     try:
-        connect = sqlite3.connect('db.sqlite3')
+        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
         select = """
             SELECT * FROM %s_1_to_10 WHERE `%s(Queried)` IN ('%s');
         """%(table_name, table_name, row_name)
@@ -83,7 +83,7 @@ def yeast_name(request):
     first_feature = first_feature.split('$')
     second_feature = second_feature.split('$')
     try:
-        connect = sqlite3.connect('db.sqlite3')
+        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
         for  i in range(2):
             if i == 1:
                 select = """
@@ -123,7 +123,7 @@ def yeast_evidence(request):
     feature1 = feature[0]
     feature2 = feature[1]
     systematice_name = feature[2]
-    connect = sqlite3.connect('db.sqlite3')
+    connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
     try:
         if feature1 == 'Physical_Interaction':
             select = """

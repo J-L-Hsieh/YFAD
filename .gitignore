@@ -4,5 +4,6 @@ db.sqlite3
 #setting
 chunlin_project/settings.py
 
+#uels.
 chunlin_project/urls.py
 
