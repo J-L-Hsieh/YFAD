@@ -23,10 +23,10 @@ def associated_analysis(associated_table):
                 connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
                 db_cursor = connect.cursor()
                 select = """
-                    SELECT SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ('%s');
+                    SELECT SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
                 """%(i, i, j)
+                print(select)
                 domain_name = db_cursor.execute(select).fetchone()
-
                 domain_name = domain_name[0]
                 result_list = yeast_enrichment(queried_name,domain_name)
                 result_list.insert(0,queried_feature)
