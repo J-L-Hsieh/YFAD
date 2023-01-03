@@ -10,7 +10,6 @@ def associated_analysis(associated_table):
     queried_name = associated_table.iat[0,2]
     '''------------------------------------------------------------------'''
     associated_table.drop(associated_table.columns[[0,1,2]],axis=1,inplace=True)
-    # print(associated_table)
     column_name = associated_table.columns.values.tolist()
     column_order = column_name[0:]
     '''------------------回傳資料為各個table及column的順序--------------------'''
@@ -20,12 +19,11 @@ def associated_analysis(associated_table):
         table = []
         for j in domain_name:
             try:
-                connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+                connect = sqlite3.connect('db.sqlite3')
                 db_cursor = connect.cursor()
                 select = """
                     SELECT SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
                 """%(i, i, j)
-                print(select)
                 domain_name = db_cursor.execute(select).fetchone()
                 domain_name = domain_name[0]
                 result_list = yeast_enrichment(queried_name,domain_name)
@@ -70,7 +68,6 @@ def yeast_enrichment(queried_name,domain_name):
     queried_name = eval(queried_name)
     domain_name = eval(domain_name)
 
-    # print(queried_name,domain_name)
 
     D = 6611
     C = len(domain_name)
@@ -95,6 +92,5 @@ def yeast_enrichment(queried_name,domain_name):
 
     response = []
     response.extend([str(A)+'/'+str(B),str(C)+'/'+str(D),result.iat[0,1]])
-    # print(response)
 
     return response

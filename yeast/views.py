@@ -38,7 +38,7 @@ def yeast_browser(request):
         SELECT `%s(Queried)`, %s FROM %s_1_to_10;
     """%(table_name, table_column, table_name)
     try:
-        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+        connect = sqlite3.connect('db.sqlite3')
         table = pd.read_sql(sql, connect)
     finally:
         connect.close()
@@ -58,7 +58,7 @@ def yeast_associated(request):
     table_name = request.POST.get('table_name')
     row_name = request.POST.get('row_name')
     try:
-        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+        connect = sqlite3.connect('db.sqlite3')
         select = """
             SELECT * FROM %s_1_to_10 WHERE `%s(Queried)` IN ('%s');
         """%(table_name, table_name, row_name)
@@ -83,7 +83,7 @@ def yeast_name(request):
     first_feature = first_feature.split('$')
     second_feature = second_feature.split('$')
     try:
-        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+        connect = sqlite3.connect('db.sqlite3')
         for  i in range(2):
             if i == 1:
                 select = """
@@ -97,15 +97,29 @@ def yeast_name(request):
                 second_table = pd.read_sql('%s' %select, connect)
     finally:
         connect.close()
-
+    print(first_feature[1])
     first_names = eval(first_table.iat[0,1])
     second_names = eval(second_table.iat[0,1])
     first_name_table = pd.DataFrame(list(zip(first_names,['true']*len(first_names))),columns=['all','%s'%first_feature[1]])
     second_name_table = pd.DataFrame(list(zip(second_names,['true']*len(second_names))),columns=['all','%s'%second_feature[1]])
-    df_merge = pd.merge(first_name_table,second_name_table,how="outer")
-    df_merge = df_merge.fillna('false').to_html(index=None, classes='table table-striped table-bordered')
-    df_merge = df_merge.replace('table', 'table id="both_name_table"')
-    response = {'df_merge':df_merge}
+    both_contain = pd.merge(first_name_table, second_name_table, how="inner")
+
+    union = pd.merge(first_name_table, second_name_table, how="outer")
+    union = union.fillna('false')
+    queried_contain = union[union["%s"%first_feature[1]] == 'false']
+    second_contain = union[union["%s"%second_feature[1]] == 'false']
+
+    both_contain = both_contain.fillna('false')
+    both_contain = both_contain.to_html(index=None, classes='table table-striped table-bordered')
+    both_contain = both_contain.replace('table', 'table id="both_name_table"')
+
+    queried_contain = queried_contain.to_html(index=None, classes='table table-striped table-bordered')
+    queried_contain = queried_contain.replace('table', 'table id="queried_table"')
+
+    second_contain = second_contain.to_html(index=None, classes='table table-striped table-bordered')
+    second_contain = second_contain.replace('table', 'table id="second_table"')
+
+    response = {'both_contain':both_contain, 'queried_contain':queried_contain, 'second_contain':second_contain}
     return JsonResponse(response)
 
 '''----------------------------------------------------------------------------'''
@@ -121,55 +135,69 @@ def yeast_evidence(request):
     feature = request.POST.get('feature').split('%')
     print(feature)
     feature1 = feature[0]
-    feature2 = feature[1]
-    systematice_name = feature[2]
-    connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
-    try:
+    feature2 = feature[2]
+    name1 = feature[1]
+    name2 = feature[3]
+    systematice_name = feature[4]
+    connect = sqlite3.connect('db.sqlite3')
+
+    if feature1 == 'false':
+        pass
+    else:
         if feature1 == 'Physical_Interaction':
-            select = """
-                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ('%s') OR `SystematicName(Hit)` IN ('%s')
-            """%(feature1, systematice_name, systematice_name)
-            feature1_table = pd.read_sql(select , connect)
+            select1 = """
+                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ('%s') AND `SystematicName(Hit)` IN ("%s") OR (`SystematicName(Hit)` IN ("%s") AND `SystematicName(Bait)` IN ("%s"));
+            """%(feature1, systematice_name, name1, systematice_name, name1)
 
         elif feature1 == 'Genetic_Interaction':
-            select = """
-                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ('%s') OR `SystematicName(Hit)` IN ('%s')
-            """%(feature1, systematice_name,systematice_name)
-            feature1_table = pd.read_sql(select , connect)
+            select1 = """
+                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ('%s') AND `SystematicName(Hit)` IN ("%s") OR (`SystematicName(Hit)` IN ("%s") AND `SystematicName(Bait)` IN ("%s"));
+            """%(feature1, systematice_name, name1, systematice_name, name1)
 
         else:
-            select = """
-                SELECT * FROM %s_evidence WHERE SystematicName IN ('%s')
-            """%(feature1, systematice_name)
-            feature1_table = pd.read_sql(select , connect)
+            select1 = """
+                SELECT * FROM %s_evidence WHERE SystematicName IN ('%s') AND %s IN ("%s");
+            """%(feature1, systematice_name, feature1, name1)
 
+    if feature2 == 'false':
+        pass
+
+    else:
         if feature2 == 'Physical_Interaction':
-            select = """
-                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ('%s') OR `SystematicName(Hit)` IN ('%s')
-            """%(feature2, systematice_name,systematice_name)
-            feature2_table = pd.read_sql(select , connect)
+            select2 = """
+                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ('%s') AND `SystematicName(Hit)` IN ("%s") OR (`SystematicName(Hit)` IN ("%s") AND `SystematicName(Bait)` IN ("%s"));
+            """%(feature2, systematice_name, name2, systematice_name, name2)
 
 
         elif feature2 == 'Genetic_Interaction':
-            select = """
-                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ('%s') OR `SystematicName(Hit)` IN ('%s')
-            """%(feature2, systematice_name,systematice_name)
-            feature2_table = pd.read_sql(select , connect)
+            select2 = """
+                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ('%s') AND `SystematicName(Hit)` IN ("%s") OR (`SystematicName(Hit)` IN ("%s") AND `SystematicName(Bait)` IN ("%s"));
+            """%(feature2, systematice_name, name2, systematice_name, name2)
 
         else:
-            select = """
-                SELECT * FROM %s_evidence WHERE SystematicName IN ('%s')
-            """%(feature2, systematice_name)
-            feature2_table = pd.read_sql(select , connect)
+            select2 = """
+                SELECT * FROM %s_evidence WHERE SystematicName IN ('%s') AND %s IN ("%s");
+            """%(feature2, systematice_name, feature2, name2)
 
+
+    try:
+
+        if feature1 == 'false':
+            feature1_table = 'no table'
+        else:
+
+            feature1_table = pd.read_sql(select1, connect)
+            feature1_table = feature1_table.to_html(index= None, classes="table table-striped table-bordered",escape=False)
+            feature1_table = feature1_table.replace('table', 'table id="feature1_table"', 1)
+
+        if feature2 == 'false':
+            feature2_table = 'no table'
+        else:
+            feature2_table = pd.read_sql(select2, connect)
+            feature2_table = feature2_table.to_html(index= None, classes="table table-striped table-bordered",escape=False)
+            feature2_table = feature2_table.replace('table', 'table id="feature2_table"', 1)
     finally:
         connect.close()
 
-    feature1_table = feature1_table.to_html(index= None, classes="table table-striped table-bordered",escape=False)
-    feature1_table = feature1_table.replace('table', 'table id="feature1_table"', 1)
-
-    feature2_table = feature2_table.to_html(index= None, classes="table table-striped table-bordered",escape=False)
-    feature2_table = feature2_table.replace('table', 'table id="feature2_table"', 1)
     response = {'feature1_table' : feature1_table, 'feature2_table' : feature2_table}
-
     return JsonResponse(response)

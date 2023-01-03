@@ -25,11 +25,17 @@ $(document).ready(function(){
             $('#Answer1').html(response.associated_table);
             $('#associated_table').DataTable();
             var column_order = response.all_tables.column_order
+
+
             /* --------------------------network graph----------------------------*/
             for (i=0 ;i<column_order.length; i++){
-                $('#nodeFilterSelect').append(`<option value=${column_order[i]}>${column_order[i]}</option>`)
+                if(i<5){
+                    $('#checkbox_container1').append(`<div style="width: 20%;" class="flexbox"><input type="checkbox" name="nodeFilterSelect" value=${column_order[i]} checked>${column_order[i]}</input></div>`)
+                }else{
+                    $('#checkbox_container2').append(`<div style="width: 20%;" class="flexbox"><input type="checkbox" name="nodeFilterSelect" value=${column_order[i]} checked>${column_order[i]}</input></div>`)
+                }
             }
-            const nodeFilterSelector = document.getElementById("nodeFilterSelect");
+            const nodeFilterSelector = document.getElementsByName("nodeFilterSelect");
 
 
             function startNetwork(data) {
@@ -42,18 +48,20 @@ $(document).ready(function(){
                 },
                 edges:{
                     arrows:{
-                        to:{enabled:true, type: 'arrow'}
+                        to:{enabled : true, type : 'arrow'}
                     },
                 }
             };
             const network = new vis.Network(container, data, options);
 
-            // 設置固定位置設定
+            // ----設置固定位置設定-----
             network.on("dragEnd", function(params){
                 if (params.nodes&&params.nodes.length > 0){
                     network.clustering.updateClusteredNode(params.nodes[0], {physics : false});
                 }
             });
+            // ----設置固定位置設定-----
+
             }
 
             // create an array with nodes
@@ -61,48 +69,37 @@ $(document).ready(function(){
             // create an array with edges
             var edges = new vis.DataSet(response.network_data.edges);
 
-            let nodeFilterValue = "";
-
-            const nodesFilter = (node) => {
-            if (nodeFilterValue === "") {
-                return true;
-            }
-
-            switch (nodeFilterValue) {
-                case "GO_MF"||"main":
-                return node.type === "GO_MF"|| node.type ==="main";
-                case "GO_BP"||"main":
-                return node.type === "GO_BP"|| node.type ==="main";
-                case "GO_CC"||"main":
-                return node.type === "GO_CC"|| node.type ==="main";
-                case "Protein_Domain"||"main":
-                return node.type === "Protein_Domain"|| node.type ==="main";
-                case "Mutant_Phenotype"||"main":
-                return node.type === "Mutant_Phenotype"|| node.type ==="main";
-                case "Disease"||"main":
-                return node.type === "Disease"|| node.type ==="main";
-                case "Physical_Interaction"||"main":
-                return node.type === "Physical_Interaction"|| node.type ==="main";
-                case "Genetic_Interaction"||"main":
-                return node.type === "Genetic_Interaction"|| node.type ==="main";
-                case "Pathway"||"main":
-                return node.type === "Pathway"|| node.type ==="main";
-                case "Transcriptional_Regulation"||"main":
-                return node.type === "Transcriptional_Regulation"|| node.type ==="main";
-                default:
-                return true;
-            }
+            //--------全部都顯示------
+            const nodesFilterValues = {
+                main: true,
+                GO_MF: true,
+                GO_BP: true,
+                GO_CC: true,
+                Protein_Domain: true,
+                Mutant_Phenotype: true,
+                Pathway: true,
+                Disease: true,
+                Transcriptional_Regulation: true,
+                Physical_Interaction: true,
+                Genetic_Interaction: true,
             };
+            //--------全部都顯示------
 
-            const nodesView = new vis.DataView(nodes, { filter: nodesFilter });
+            const nodesFilter = (node) =>{
+                return nodesFilterValues[node.type];
+            }
+
+            const nodesView = new vis.DataView(nodes, { filter : nodesFilter });
             const edgesView = new vis.DataView(edges);
+            console.log(edgesView)
 
-            nodeFilterSelector.addEventListener("change", (e) => {
-            // set new value to filter variable
-            nodeFilterValue = e.target.value;
-
-            nodesView.refresh();
-            });
+            nodeFilterSelector.forEach((filter) =>
+                filter.addEventListener("change", (e) => {
+                    const { value, checked } = e.target;
+                    nodesFilterValues[value] = checked;
+                    nodesView.refresh();
+            })
+            );
 
             startNetwork({ nodes: nodesView, edges: edgesView });
 
@@ -148,7 +145,11 @@ $(document).ready(function(){
                     success:function(response){
                         // console.log(response.evidence_table)
                         $('#modal_table').html(response.evidence_table)
-                        $('#evidence_table').DataTable()
+                        $('#evidence_table').DataTable({
+                            'bAutoWidth':true,
+                            'scrollX':true,
+                            'scrollY':true,
+                        })
                     },
                     error :function(){
                         alert('Something error');

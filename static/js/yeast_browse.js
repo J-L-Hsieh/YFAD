@@ -2,6 +2,7 @@ $.ajaxSetup({
     headers: { 'X-CSRFToken': csrf_token },
     type: 'POST',
 });
+
 $(document).ready(function() {
     /* -------------------------------------下拉式選單與checkbox連動------------------------------------- */
     // var first = document.getElementById('first').value
@@ -34,9 +35,11 @@ $(document).ready(function() {
             url: '/yeast/ajax_yeast_browser/',
             data: input,
             success: function(response){
-                console.log(response.table)
-                $('#result1').html(response.table)
+                $('#result').html('<div class="container"><<div class="card mt-5 w-100"><div class="card-body"></div>'+response.table+'</div></div>')
                 $('#result_table').DataTable({
+                    'bAutoWidth':true,
+                    'scrollX':true,
+                    'scrollY':true,
                     'columnDefs':[
                         {   'targets':-1,
                             'data':null,
