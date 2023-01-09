@@ -35,11 +35,19 @@ $(document).ready(function() {
             url: '/yeast/ajax_yeast_browser/',
             data: input,
             success: function(response){
-                $('#result').html('<div class="container"><<div class="card mt-5 w-100"><div class="card-body"></div>'+response.table+'</div></div>')
-                $('#result_table').DataTable({
+                console.time('-----------')
+                // $('#result').html('<div class="container"><div class="card mt-5 w-100"><div class="card-body"></div>'+response.table+'</div></div>')
+                $('#result').html('<div class="container"><div class="card mt-5 w-100"><div class="card-body"></div><table id="result_table" class="table table-striped table-bordered"></table></div></div>')
+                    console.log(response.columns)
+                    console.log(response.table)
+
+                    $('#result_table').DataTable({
                     'bAutoWidth':true,
                     'scrollX':true,
                     'scrollY':true,
+                    data : response.table,
+                    columns : response.columns,
+
                     'columnDefs':[
                         {   'targets':-1,
                             'data':null,
@@ -49,7 +57,10 @@ $(document).ready(function() {
                         }
                     ]
                 })
+                // console.log(mytable)
+                console.timeEnd('-----------')
             },
+
             error: function(){
                 alert('Something error');
             },

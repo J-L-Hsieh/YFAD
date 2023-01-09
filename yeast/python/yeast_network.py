@@ -2,8 +2,8 @@ import pandas as pd
 import sqlite3
 
 
-color_dict = {'GO_MF':'darkseagreen' ,'GO_BP':'darksalmon' ,'GO_CC':'lightskyblue' ,'Protein_Domain':'plum' ,'Mutant_Phenotype':'coral' ,'Pathway':'grey' ,'Disease':'mistyrose' ,'Transcriptional_Regulation':'deepskyblue' ,'Physical_Interaction':'gold','Genetic_Interaction':'teal',
-            'GO_MF(Queried)':'darkseagreen' ,'GO_BP(Queried)':'darksalmon' ,'GO_CC(Queried)':'lightskyblue' ,'Protein_Domain(Queried)':'plum' ,'Mutant_Phenotype(Queried)':'coral' ,'Pathway(Queried)':'grey' ,'Disease(Queried)':'mistyrose' ,'Transcriptional_Regulation(Queried)':'deepskyblue' ,'Physical_Interaction(Queried)':'gold','Genetic_Interaction(Queried)':'teal'}
+color_dict = {'GO_MF':'darkseagreen' ,'GO_BP':'red' ,'GO_CC':'lightskyblue' ,'Protein_Domain':'plum' ,'Mutant_Phenotype':'coral' ,'Pathway':'grey' ,'Disease':'mistyrose' ,'Transcriptional_Regulation':'royalblue' ,'Physical_Interaction':'gold','Genetic_Interaction':'teal',
+            'GO_MF(Queried)':'darkseagreen' ,'GO_BP(Queried)':'red' ,'GO_CC(Queried)':'lightskyblue' ,'Protein_Domain(Queried)':'plum' ,'Mutant_Phenotype(Queried)':'coral' ,'Pathway(Queried)':'grey' ,'Disease(Queried)':'mistyrose' ,'Transcriptional_Regulation(Queried)':'royalblue' ,'Physical_Interaction(Queried)':'gold','Genetic_Interaction(Queried)':'teal'}
 
 def network(associated_table):
     associated_table = pd.DataFrame(associated_table)
@@ -19,7 +19,7 @@ def network(associated_table):
     nodes = []
     edges = []
     color = color_dict['%s'%column_name[0]]
-    nodes.append({"id":'0', 'group':queried_feature, "label":queried_feature, 'color':color, 'shape':'box', 'type':'main'})
+    nodes.append({"id":'0', 'border':'#4F4F4F', 'group':queried_feature, "label":queried_feature, 'color':{'backgroud':color, 'border':'gray'}, 'shape':'box', 'type':'main'})
     '''---------------------------------加入每個特徵-----------------------------'''
     for i in range(len(column_order)):
         id_num = i+1
@@ -31,10 +31,8 @@ def network(associated_table):
         '''------------------------------加入個特徵下的各個類別-------------------------'''
 
         for j in range(len(domain_name)):
-            nodes.append({'id':'{feature}_{name_in_feature}'.format(feature = id_num, name_in_feature = j), 'group':domain_name[j], 'label':domain_name[j], 'color':color, 'type':column_order[i]})
+            nodes.append({'id':'{feature}_{name_in_feature}'.format(feature = id_num, name_in_feature = j), 'group':domain_name[j], 'label':domain_name[j], 'color':{'background': color, 'border':'gray'}, 'type':column_order[i]})
             edges.append({'from':0, 'to':'{feature}_{name_in_feature}'.format(feature = id_num, name_in_feature = j),'color':color})
 
-
     response = {'nodes':nodes, 'edges':edges}
-
     return response

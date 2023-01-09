@@ -23,7 +23,11 @@ $(document).ready(function(){
             // console.log('-----')
 
             $('#Answer1').html(response.associated_table);
-            $('#associated_table').DataTable();
+            $('#associated_table').DataTable({
+                'bAutoWidth':true,
+                'scrollX':true,
+                'scrollY':true,
+            });
             var column_order = response.all_tables.column_order
 
 
@@ -46,6 +50,11 @@ $(document).ready(function(){
                 interaction:{
                     hover: true
                 },
+
+                nodes:{
+                    borderWidth:0.8,
+                },
+
                 edges:{
                     arrows:{
                         to:{enabled : true, type : 'arrow'}
@@ -55,10 +64,8 @@ $(document).ready(function(){
             const network = new vis.Network(container, data, options);
 
             // ----設置固定位置設定-----
-            network.on("dragEnd", function(params){
-                if (params.nodes&&params.nodes.length > 0){
-                    network.clustering.updateClusteredNode(params.nodes[0], {physics : false});
-                }
+            network.on("stabilizationIterationsDone", function () {
+                network.setOptions( { physics: false } );
             });
             // ----設置固定位置設定-----
 

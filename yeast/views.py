@@ -19,6 +19,8 @@ from yeast.python.yeast_associated import associated_analysis
 from yeast.python.yeast_network import network
 from yeast.python.yeast_modal import modal
 
+import time
+
 def home(request):
     return(render(request,'base.html',locals()))
 def yeast(request):
@@ -33,7 +35,7 @@ def yeast_name_base(request):
 def yeast_browser(request):
     table_name = request.POST.get('first_feature')
     table_column = request.POST.get('other_feature')[:-1]
-
+    first = time.time()
     sql = """
         SELECT `%s(Queried)`, %s FROM %s_1_to_10;
     """%(table_name, table_column, table_name)
@@ -42,13 +44,15 @@ def yeast_browser(request):
         table = pd.read_sql(sql, connect)
     finally:
         connect.close()
-
     table = table.fillna('-')
     detail_column = ['-']*len(table)
     table['Detail'] = detail_column
-    table = table.to_html(index= None,classes="table table-striped table-bordered")
-    table = table.replace('table','table id="result_table"',1)
-    response = {'table':table}
+    table_columns = table.columns.values.tolist()
+    columns = []
+    for i in table_columns:
+        columns.append({'title': i})
+    table = table.values.tolist()
+    response = {'table':table, 'columns':columns}
     return JsonResponse(response)
 
 '''----------------------------------------------------------------------------'''

@@ -31,6 +31,7 @@ $(document).ready(function() {
                 tr.appendChild(td);
             }
             $('#both_name_table').DataTable({
+                'scrollY':true,
                 'columnDefs':[
                     {   'targets':1,
                         render:function(row){
@@ -74,6 +75,7 @@ $(document).ready(function() {
                 tr.appendChild(td);
             }
             $('#queried_table').DataTable({
+                'scrollY':true,
                 'columnDefs':[
                     {   'targets':1,
                         render:function(row){
@@ -117,6 +119,7 @@ $(document).ready(function() {
                 tr.appendChild(td);
             }
             $('#second_table').DataTable({
+                'scrollY':true,
                 'columnDefs':[
                     {   'targets':1,
                         render:function(row){
@@ -166,8 +169,8 @@ $(document).ready(function() {
                         if (feature1_exist != 'false'){
                             $('#feature1').html(response.feature1_table)
                             $('#feature1_table').DataTable({
-                                // 'bAutoWidth':true,
-                                // 'scrollX':true,
+                                'bAutoWidth':true,
+                                'scrollX':true,
                                 'scrollY':true,
                             })
                         }
@@ -207,8 +210,8 @@ $(document).ready(function() {
                         if (feature1_exist != 'false'){
                             $('#feature1').html(response.feature1_table)
                             $('#feature1_table').DataTable({
-                                // 'bAutoWidth':true,
-                                // 'scrollX':true,
+                                'bAutoWidth':true,
+                                'scrollX':true,
                                 'scrollY':true,
                             })
                         }
