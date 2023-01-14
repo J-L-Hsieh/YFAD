@@ -58,7 +58,26 @@ def modal(request):
             evidence_table = pd.read_sql(select , connect)
     finally:
         connect.close()
-    evidence_table = evidence_table.to_html(index= None, classes="table table-striped table-bordered",escape=False)
+    if feature2 == 'Physical_Interaction':
+        evidence_table['SystematicName(Bait)']=evidence_table['Bait_link']
+        evidence_table['SystematicName(Hit)']=evidence_table['Hit_link']
+        evidence_table['StandardName(Bait)']=evidence_table['term_link']
+        evidence_table = evidence_table.drop(columns=['Bait_link', 'Hit_link', 'term_link'])
+
+    elif feature2 == 'Genetic_Interaction':
+        evidence_table['SystematicName(Bait)']=evidence_table['Bait_link']
+        evidence_table['SystematicName(Hit)']=evidence_table['Hit_link']
+        evidence_table['StandardName(Bait)']=evidence_table['term_link']
+        evidence_table = evidence_table.drop(columns=['Bait_link', 'Hit_link', 'term_link'])
+
+    else:
+        evidence_table['SystematicName']=evidence_table['gene_link']
+        evidence_table['%s'%feature2]=evidence_table['term_link']
+        evidence_table = evidence_table.drop(columns=['gene_link', 'term_link'])
+    # print(evidence_table)
+    evidence_table = evidence_table.to_html(index= None, classes="table table-bordered table-hover dataTable no-footer", escape=False)
+    # evidence_table = evidence_table.to_html(index= None, classes = "table", escape=False)
+
     evidence_table = evidence_table.replace('table', 'table id="evidence_table"', 1)
 
     return evidence_table

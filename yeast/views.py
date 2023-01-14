@@ -35,7 +35,7 @@ def yeast_name_base(request):
 def yeast_browser(request):
     table_name = request.POST.get('first_feature')
     table_column = request.POST.get('other_feature')[:-1]
-    first = time.time()
+
     sql = """
         SELECT `%s(Queried)`, %s FROM %s_1_to_10;
     """%(table_name, table_column, table_name)
@@ -71,11 +71,11 @@ def yeast_associated(request):
         connect.close()
     '''---------------------刪除不必要的欄位------------------------'''
     associated_table = table.dropna(axis='columns')
-    all_tables = associated_analysis(associated_table)
+    all_tables = associated_analysis(associated_table,table_name)
     network_data = network(associated_table)
     associated_table = associated_table.drop(['count','SystematicName'],axis=1)
     #拿出column name
-    associated_table = associated_table.to_html(index= None,classes="table table-striped table-bordered")
+    associated_table = associated_table.to_html(index= None,classes="table table-bordered table-hover dataTable no-footer")
     associated_table = associated_table.replace('table','table id="associated_table"',1)
     response={'associated_table':associated_table , 'all_tables':all_tables, 'network_data':network_data}
     return JsonResponse(response)
@@ -114,13 +114,13 @@ def yeast_name(request):
     second_contain = union[union["%s"%second_feature[1]] == 'false']
 
     both_contain = both_contain.fillna('false')
-    both_contain = both_contain.to_html(index=None, classes='table table-striped table-bordered')
+    both_contain = both_contain.to_html(index=None, classes='table table-bordered table-hover dataTable no-footer')
     both_contain = both_contain.replace('table', 'table id="both_name_table"')
 
-    queried_contain = queried_contain.to_html(index=None, classes='table table-striped table-bordered')
+    queried_contain = queried_contain.to_html(index=None, classes='table table-bordered table-hover dataTable no-footer')
     queried_contain = queried_contain.replace('table', 'table id="queried_table"')
 
-    second_contain = second_contain.to_html(index=None, classes='table table-striped table-bordered')
+    second_contain = second_contain.to_html(index=None, classes='table table-bordered table-hover dataTable no-footer ')
     second_contain = second_contain.replace('table', 'table id="second_table"')
 
     response = {'both_contain':both_contain, 'queried_contain':queried_contain, 'second_contain':second_contain}
@@ -191,14 +191,14 @@ def yeast_evidence(request):
         else:
 
             feature1_table = pd.read_sql(select1, connect)
-            feature1_table = feature1_table.to_html(index= None, classes="table table-striped table-bordered",escape=False)
+            feature1_table = feature1_table.to_html(index= None, classes="table table-bordered table-hover dataTable no-footer",escape=False)
             feature1_table = feature1_table.replace('table', 'table id="feature1_table"', 1)
 
         if feature2 == 'false':
             feature2_table = 'no table'
         else:
             feature2_table = pd.read_sql(select2, connect)
-            feature2_table = feature2_table.to_html(index= None, classes="table table-striped table-bordered",escape=False)
+            feature2_table = feature2_table.to_html(index= None, classes="table table-bordered table-hover dataTable no-footer",escape=False)
             feature2_table = feature2_table.replace('table', 'table id="feature2_table"', 1)
     finally:
         connect.close()

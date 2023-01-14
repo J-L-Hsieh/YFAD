@@ -6,12 +6,18 @@ $.ajaxSetup({
 
 
 $(document).ready(function(){
+    $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
+        $($.fn.dataTable.tables( true ) ).css('width', '100%');
+        $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
+    } );
+
+
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const row_name = urlParams.get('id')
     const table_name = urlParams.get('name')
-    $('#queried').html(`<p>Queried ${table_name} Term : ${row_name}`)
-    $('#associated_title').html(`<p>Associated Term with the Queried ${table_name} Term `)
+    $('#queried').html(`<h2>Queried ${table_name} Term : ${row_name}<h2>`)
+    $('#associated_title').html(`<h4>Associated Term with the Queried ${table_name} Term </h4>`)
 
     console.log(table_name,row_name)
     // create a network
@@ -123,7 +129,7 @@ $(document).ready(function(){
             $('#herf_table').html(add_herf)
             $('#Answer2').html(add_html)
             for (i=0 ;i< column_order.length;i++){
-                $(`#${column_order[i]}`).html(`<div class ="fs-3">Feature Name : ${column_order[i]}</div><div>${response.all_tables[column_order[i]]}</div>`)
+                $(`#${column_order[i]}`).html(`<div class="card" style="margin-top:5%;" ><h3 class ="fs-3 card-header">Feature Name : ${column_order[i]}</h3> <div class="card-body">${response.all_tables[column_order[i]]}</div></div>`)
                 $(`#${column_order[i]}_table`).DataTable({
                     'columnDefs':[
                         {   'targets':-1,
@@ -153,11 +159,15 @@ $(document).ready(function(){
                         // console.log(response.evidence_table)
                         $('#modal_table').html(response.evidence_table)
                         $('#evidence_table').DataTable({
-                            'bAutoWidth':true,
-                            'scrollX':true,
-                            'scrollY':true,
+                            'bAutoWidth' : true,
+                            // 'scrollX':true,
+                            // 'scrollY' : true,
+                            "scrollCollapse" : true,
+                            "destroy": true,
                         })
+
                     },
+
                     error :function(){
                         alert('Something error');
                     }

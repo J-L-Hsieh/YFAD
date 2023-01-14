@@ -11,38 +11,46 @@
 {% endblock style %}
 
 {% block content %}
+{% csrf_token %}
+<div class="container-fluid">
+    <div class="col-9 mx-auto">
+        <div class="card" style="margin-top:5%;" >
+                <!-- black title -->
+                <div id="queried"  class="card-header bg-dark text-white"></div>
+                <!-- black title -->
+                <!-- first table and network -->
+                <div class="card-body " style="border: 3px solid #343a40;">
+                    <div class="card" >
+                        <div id="associated_title" class='card-header'></div>
+                        <div class="card-body ">
+                            <div class="flexbox">
+                                <div id="Answer1" style="width: 90%;"></div>
+                            </div>
+                            <div id="checkbox_container1" class="flexbox"></div>
+                            <div id="checkbox_container2" class="flexbox"></div>
+                            <div class="flexbox">
+                                <div id="mynetwork"></div>
+                        </div>
+                    </div>
+                </div>
+                <!-- first table and network -->
+                <div style=" margin-top:5%;"></div>
+                <div id="herf_table" class="fs-5 fw-bold flexbox"></div>
+                <!-- <hr class="page-title-under"> -->
 
-<div class="container-fluid">
-    <div class="col-10 mx-auto">
-    {% csrf_token %}
-        <div class="card mb-3">
-            <div id="queried"  class="card-header fs-5 fw-bold "></div>
-            <div id="associated_title" class='card-body'></div>
-            <div class="flexbox">
-                <div id="Answer1" style="width: 90%;"></div>
+                <!-- <div class="card"> -->
+                    <!-- <div class='card-body'></div> -->
+                    <div class="flexbox">
+                        <div id="Answer2"></div>
+                    </div>
+                </div>
             </div>
-            <div id="checkbox_container1" class="flexbox"></div>
-            <div id="checkbox_container2" class="flexbox"></div>
-            <div class="flexbox">
-                <div id="mynetwork"></div>
-            </div>
-        </div>
-    </div>
-</div>
-<div class="container-fluid">
-    <div class="col-10 mx-auto">
-    {% csrf_token %}
-        <div class="card mb-3">
-            <div id="herf_table" class="card-header fs-5 fw-bold flexbox"></div>
-            <div class='card-body'></div>
-            <div class="flexbox">
-                <div id="Answer2"></div>
         </div>
     </div>
 </div>
 <!------------------------modal---------------------->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-xl">
+    <div class="modal-dialog maodal-lg" role="document" style="max-width:70%;">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Edvidence table</h5>

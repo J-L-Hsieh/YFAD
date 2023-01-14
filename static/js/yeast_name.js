@@ -15,15 +15,15 @@ $(document).ready(function() {
     var first_feature_array = first_feature.split('$')
     var second_feature_array = second_feature.split('$')
 
-    $('#first').html(`<p>Queried : ${first_feature_array[0]}  Term : ${first_feature_array[1]}`)
-    $('#second').html(`<p>Feature : ${second_feature_array[0]}  Term : ${second_feature_array[1]}`)
+    $('#first').html(`<h4 style="width:50%";>Queried Feature : ${first_feature_array[0]}</h4> <h4 style="width:50%";>Term : ${first_feature_array[1]}</h4>`)
+    $('#second').html(`<h4 style="width:50%";>Feature : ${second_feature_array[0]}</h4> <h4 style="width:50%";> Term : ${second_feature_array[1]}</h4>`)
 
     $.ajax({
         url : '/yeast/ajax_name/',
         data : { 'first_feature' : first_feature,'second_feature' : second_feature },
         success:function(response){
             // -------------------------table1---------------
-            $('#table1').html(response.both_contain)
+            $('#table1').html(`<div class="card" style="margin-top:5%;" ><div class="card-body">${response.both_contain}</div></div>`)
             let trs1 = document.querySelectorAll('#both_name_table tr');
 
             for (let tr of trs1) {
@@ -31,7 +31,11 @@ $(document).ready(function() {
                 tr.appendChild(td);
             }
             $('#both_name_table').DataTable({
-                'scrollY':true,
+                // 'scrollY':true,
+                dom: 'Bfrtip',
+                buttons: [
+                'csv', 'pdf', 'print'
+                ],
                 'columnDefs':[
                     {   'targets':1,
                         render:function(row){
@@ -67,7 +71,7 @@ $(document).ready(function() {
             })
             // -------------------------table1---------------
             // -------------------------table2---------------
-            $('#table2').html(response.queried_contain)
+            $('#table2').html(`<div class="card" style="margin-top:5%;" ><div class="card-body">${response.queried_contain}</div></div>`)
             let trs2 = document.querySelectorAll('#queried_table tr');
 
             for (let tr of trs2) {
@@ -75,7 +79,11 @@ $(document).ready(function() {
                 tr.appendChild(td);
             }
             $('#queried_table').DataTable({
-                'scrollY':true,
+                // 'scrollY':true,
+                dom: 'Bfrtip',
+                buttons: [
+                'csv', 'pdf', 'print'
+                ],
                 'columnDefs':[
                     {   'targets':1,
                         render:function(row){
@@ -111,7 +119,7 @@ $(document).ready(function() {
             })
             // -------------------------table2---------------
             // -------------------------table3---------------
-            $('#table3').html(response.second_contain)
+            $('#table3').html(`<div class="card" style="margin-top:5%;" ><div class="card-body">${response.second_contain}</div></div>`)
             let trs3 = document.querySelectorAll('#second_table tr');
 
             for (let tr of trs3) {
@@ -119,7 +127,11 @@ $(document).ready(function() {
                 tr.appendChild(td);
             }
             $('#second_table').DataTable({
-                'scrollY':true,
+                // 'scrollY':true,
+                dom: 'Bfrtip',
+                buttons: [
+                'csv', 'pdf', 'print'
+                ],
                 'columnDefs':[
                     {   'targets':1,
                         render:function(row){
@@ -170,8 +182,8 @@ $(document).ready(function() {
                             $('#feature1').html(response.feature1_table)
                             $('#feature1_table').DataTable({
                                 'bAutoWidth':true,
-                                'scrollX':true,
-                                'scrollY':true,
+                                // 'scrollX':true,
+                                // 'scrollY':true,
                             })
                         }
                         else{
@@ -181,8 +193,8 @@ $(document).ready(function() {
                             $('#feature2').html(response.feature2_table)
                             $('#feature2_table').DataTable({
                                 'bAutoWidth':true,
-                                'scrollX':true,
-                                'scrollY':true,
+                                // 'scrollX':true,
+                                // 'scrollY':true,
                             })
                         }
                         else{
@@ -211,8 +223,8 @@ $(document).ready(function() {
                             $('#feature1').html(response.feature1_table)
                             $('#feature1_table').DataTable({
                                 'bAutoWidth':true,
-                                'scrollX':true,
-                                'scrollY':true,
+                                // 'scrollX':true,
+                                // 'scrollY':true,
                             })
                         }
                         else{
@@ -222,8 +234,8 @@ $(document).ready(function() {
                             $('#feature2').html(response.feature2_table)
                             $('#feature2_table').DataTable({
                                 'bAutoWidth':true,
-                                'scrollX':true,
-                                'scrollY':true,
+                                // 'scrollX':true,
+                                // 'scrollY':true,
                             })
                         }
                         else{
@@ -252,8 +264,8 @@ $(document).ready(function() {
                             $('#feature1').html(response.feature1_table)
                             $('#feature1_table').DataTable({
                                 'bAutoWidth':true,
-                                'scrollX':true,
-                                'scrollY':true,
+                                // 'scrollX':true,
+                                // 'scrollY':true,
                             })
                         }
                         else{
@@ -263,8 +275,8 @@ $(document).ready(function() {
                             $('#feature2').html(response.feature2_table)
                             $('#feature2_table').DataTable({
                                 'bAutoWidth':true,
-                                'scrollX':true,
-                                'scrollY':true,
+                                // 'scrollX':true,
+                                // 'scrollY':true,
                             })
                         }
                         else{

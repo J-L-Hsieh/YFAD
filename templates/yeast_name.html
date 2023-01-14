@@ -8,9 +8,9 @@
             <div class="col-10 mx-auto">
             {% csrf_token %}
                 <div class="card mb-3">
-                    <div class="card-header fs-5 fw-bold">
-                        <div id="first"></div>
-                        <div id="second"></div>
+                    <div class="card-header bg-dark text-white"">
+                        <div id="first" class="flexbox"></div>
+                        <div id="second" class="flexbox"></div>
                     </div>
                     <div id="associated_title" class='card-body'>
                         <div class="flexbox">
@@ -28,7 +28,7 @@
         </div>
         <!------------------------modal---------------------->
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-xl">
+            <div class="modal-dialog maodal-lg" role="document" style="max-width:70%;">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="exampleModalLabel">Edvidence table</h5>

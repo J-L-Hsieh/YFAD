@@ -2,12 +2,14 @@ import pandas as pd
 import sqlite3
 
 
-def associated_analysis(associated_table):
+def associated_analysis(associated_table,table_name):
     associated_table = pd.DataFrame(associated_table)
     '''-------------------------queried feature data---------------------'''
     queried_feature = associated_table.iat[0,0]
     queried_count = associated_table.iat[0,1]
     queried_name = associated_table.iat[0,2]
+    print(associated_table)
+
     '''------------------------------------------------------------------'''
     associated_table.drop(associated_table.columns[[0,1,2]],axis=1,inplace=True)
     column_name = associated_table.columns.values.tolist()
@@ -34,8 +36,8 @@ def associated_analysis(associated_table):
                 table.append(result_list)
             finally:
                 connect.close()
-        columns_title = ['Queried %s Term(A)' %queried_feature,'Associated %s Term(B)' %i,'Observed Ratio','Expext Ratio','Signficance of Associated(p-value)','Detail']
-        df_tables = pd.DataFrame(table,columns=columns_title).to_html(index= None,classes="table table-striped table-bordered")
+        columns_title = ['Queried %s Term(A)' %table_name,'Associated %s Term(B)' %i,'Observed Ratio','Expext Ratio','Signficance of Associated(p-value)','Detail']
+        df_tables = pd.DataFrame(table,columns=columns_title).to_html(index= None,classes="table table-bordered table-hover dataTable no-footer")
         df_tables =df_tables.replace('table', 'table id="%s_table"'%i, 1)
         response['%s'%i] = df_tables
         response['column_order'] = column_order

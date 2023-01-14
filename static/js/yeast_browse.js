@@ -35,11 +35,9 @@ $(document).ready(function() {
             url: '/yeast/ajax_yeast_browser/',
             data: input,
             success: function(response){
-                console.time('-----------')
+                $('#browse_result').show()
                 // $('#result').html('<div class="container"><div class="card mt-5 w-100"><div class="card-body"></div>'+response.table+'</div></div>')
-                $('#result').html('<div class="container"><div class="card mt-5 w-100"><div class="card-body"></div><table id="result_table" class="table table-striped table-bordered"></table></div></div>')
-                    console.log(response.columns)
-                    console.log(response.table)
+                $('#result').html('<div class="card"><div class="card-body"><table id="result_table" class="table table-bordered table-hover dataTable no-footer"></table></div></div>')
 
                     $('#result_table').DataTable({
                     'bAutoWidth':true,

@@ -12,7 +12,8 @@ $(document).ready(function() {
             data: $('#search_input').serialize(),
             success: function(response){
                 let feature = response.feature
-                $('#Answer').html(response.table);
+                $('#search_result').show()
+                $('#result').html(`<div class="card"><div class="card-body"> ${response.table}</div></div>`);
                 /*--------add column------*/
                 let trs = document.querySelectorAll('#result_table tr');
 
@@ -23,6 +24,9 @@ $(document).ready(function() {
                 /*--------add column------*/
 
                 $('#result_table').DataTable({
+                    'bAutoWidth':true,
+                    'scrollX':true,
+                    'scrollY':true,
                     'columnDefs':[
                         {   'targets':-1,
                             render:function(data,type,row,meta){
