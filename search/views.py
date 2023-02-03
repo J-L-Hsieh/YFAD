@@ -11,13 +11,30 @@ def search_mode(request):
     name = request.POST.get('input_name')
 
     conn = sqlite3.connect('db.sqlite3')
+
+    #Protein Domain 表中 name與輸入的字並多取出這個欄位來顯示
+    if feature == 'Protein_Domain':
+        select = """
+            SELECT `%s(Queried)`, GO_MF, GO_BP, GO_CC, Protein_Domain, Mutant_Phenotype, Pathway, Disease, Transcriptional_Regulation, Physical_Interaction, Genetic_Interaction, count, SystematicName, Protein_Domain_name FROM %s_1_to_10 WHERE %s_name LIKE '%s';
+        """%(feature, feature, feature, '%{}%'.format(name))
+
+    else:
+        select = """
+            SELECT `%s(Queried)`, GO_MF, GO_BP, GO_CC, Protein_Domain, Mutant_Phenotype, Pathway, Disease, Transcriptional_Regulation, Physical_Interaction, Genetic_Interaction, count, SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` LIKE '%s';
+        """%(feature, feature, feature, '%{}%'.format(name))
+
     try:
-        sql = """
-            SELECT * FROM %s_1_to_10 WHERE `%s(Queried)` LIKE '%s';
-        """%(feature, feature, '%{}%'.format(name))
-        table = pd.read_sql(sql, conn)
+        table = pd.read_sql(select, conn)
     finally:
         conn.close()
+
+    if feature == 'Protein_Domain':
+        table['Detail'] = table['Protein_Domain(Queried)']
+        table['Protein_Domain(Queried)'] = table['Protein_Domain_name']
+        table = table.drop(columns=['Protein_Domain_name'])
+    else:
+        table['Detail'] = table['%s(Queried)'%feature]
+
     table = table.fillna('-').drop(['count','SystematicName'],axis=1)
     table = table.to_html(index= None,classes="table table-striped table-bordered")
     table = table.replace('table', 'table id="result_table"',1)

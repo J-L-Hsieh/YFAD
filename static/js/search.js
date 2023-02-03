@@ -14,14 +14,14 @@ $(document).ready(function() {
                 let feature = response.feature
                 $('#search_result').show()
                 $('#result').html(`<div class="card"><div class="card-body"> ${response.table}</div></div>`);
-                /*--------add column------*/
-                let trs = document.querySelectorAll('#result_table tr');
+                // /*--------add column------*/
+                // let trs = document.querySelectorAll('#result_table tr');
 
-                for (let tr of trs) {
-                    let td = document.createElement('td');
-                    tr.appendChild(td);
-                }
-                /*--------add column------*/
+                // for (let tr of trs) {
+                //     let td = document.createElement('td');
+                //     tr.appendChild(td);
+                // }
+                // /*--------add column------*/
 
                 $('#result_table').DataTable({
                     'bAutoWidth':true,
@@ -30,7 +30,7 @@ $(document).ready(function() {
                     'columnDefs':[
                         {   'targets':-1,
                             render:function(data,type,row,meta){
-                                return `<a href = "/yeast/browse/associated/?id=${row[0]}&name=${feature}"> Detail </a>`;
+                                return `<a href = "/yeast/browse/associated/?id=${data}&name=${feature}"> Detail </a>`;
                             },
                         },
                     ]

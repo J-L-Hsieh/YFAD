@@ -38,25 +38,24 @@ $(document).ready(function() {
                 $('#browse_result').show()
                 // $('#result').html('<div class="container"><div class="card mt-5 w-100"><div class="card-body"></div>'+response.table+'</div></div>')
                 $('#result').html('<div class="card"><div class="card-body"><table id="result_table" class="table table-bordered table-hover dataTable no-footer"></table></div></div>')
+                console.log(response.table)
 
                     $('#result_table').DataTable({
-                    'bAutoWidth':true,
-                    'scrollX':true,
+                    // 'bAutoWidth':true,
+                    // 'scrollX':true,
                     'scrollY':true,
                     data : response.table,
                     columns : response.columns,
-
                     'columnDefs':[
                         {   'targets':-1,
-                            'data':null,
-                            render:function(row){
-                                return '<a href = "/yeast/browse/associated/?id='+row[0]+'&name='+table_name+'"> Detail </a>';
+                            render:function(data, type, row, meta){
+                                return '<a href = "/yeast/browse/associated/?id='+ data +'&name='+table_name+'"> Detail </a>';
                             },
                         }
                     ]
                 })
                 // console.log(mytable)
-                console.timeEnd('-----------')
+                // console.timeEnd('-----------')
             },
 
             error: function(){

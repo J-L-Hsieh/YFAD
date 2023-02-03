@@ -123,7 +123,7 @@ $(document).ready(function(){
             for (i=0 ;i< column_order.length;i++){
                 /*--------------------------table 容器----------------------  */
                 add_html = add_html + `<div id = ${column_order[i]}></div>`
-                add_herf = add_herf + `<input id ="${column_order[i]}_move" class="btn btn-outline-primary" type="button" name="Submit" value="${column_order[i]}"  ></input>`
+                add_herf = add_herf + `<input id ="${column_order[i]}_move" class="btn btn-primary" type="button" style="margin:2px;" name="Submit" value="${column_order[i]}"  ></input>`
             }
             // console.log(add_html)
             $('#herf_table').html(add_herf)
