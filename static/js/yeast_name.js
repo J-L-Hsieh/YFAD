@@ -14,9 +14,11 @@ $(document).ready(function() {
     const second_feature = urlParams.get('name')
     var first_feature_array = first_feature.split('$')
     var second_feature_array = second_feature.split('$')
+    console.log(first_feature_array)
+    console.log(second_feature_array)
 
-    $('#first').html(`<h4 style="width:50%";>Queried Feature : ${first_feature_array[0]}</h4> <h4 style="width:50%";>Term : ${first_feature_array[1]}</h4>`)
-    $('#second').html(`<h4 style="width:50%";>Feature : ${second_feature_array[0]}</h4> <h4 style="width:50%";> Term : ${second_feature_array[1]}</h4>`)
+    $('#first').html(`<h4 style="width:50%";>Queried Feature : ${first_feature_array[0]}</h4> <h4 style="width:50%";>Term : ${first_feature_array[2]}</h4>`)
+    $('#second').html(`<h4 style="width:50%";>Feature : ${second_feature_array[0]}</h4> <h4 style="width:50%";> Term : ${second_feature_array[2]}</h4>`)
 
     $.ajax({
         url : '/yeast/ajax_name/',

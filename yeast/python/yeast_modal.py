@@ -20,7 +20,7 @@ def modal(request):
         db_cursor = connect.cursor()
 
         select = """
-            SELECT SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ('%s');
+            SELECT SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
         """%(feature1, feature1, name1)
         db_cursor.execute(select)
         sys_name1 = db_cursor.fetchall()
@@ -28,16 +28,18 @@ def modal(request):
 
 
         select = """
-            SELECT SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ('%s');
+            SELECT SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
         """%(feature2, feature2, name2)
-        db_cursor.execute(select )
+        db_cursor.execute(select)
         sys_name2 = db_cursor.fetchall()
+        print(select)
+        print(sys_name2)
         sys_name2_set = set(eval(sys_name2[0][0]))
         intersection = str(tuple(sys_name1_set.intersection(sys_name2_set)))
         '''-------------------------依照主要的feature取出證據檔------------------'''
         if feature2 == 'Physical_Interaction':
             select = """
-                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN %s  AND `SystematicName(Hit)` IN ("%s") OR (`SystematicName(Hit)` IN %s AND `SystematicName(Bait)` IN ("%s"));
+                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN %s  AND `StandardName(Hit)` IN ("%s") OR (`SystematicName(Hit)` IN %s AND `StandardName(Bait)` IN ("%s"));
             """%(feature2, intersection, name2, intersection, name2)
             print(select)
             evidence_table = pd.read_sql(select , connect)
@@ -45,7 +47,7 @@ def modal(request):
 
         elif feature2 == 'Genetic_Interaction':
             select = """
-                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN %s  AND `SystematicName(Hit)` IN ("%s") OR (`SystematicName(Hit)` IN %s AND `SystematicName(Bait)` IN ("%s"));
+                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN %s  AND `StandardName(Hit)` IN ("%s") OR (`SystematicName(Hit)` IN %s AND `StandardName(Bait)` IN ("%s"));
             """%(feature2, intersection, name2, intersection, name2)
             print(select)
             evidence_table = pd.read_sql(select , connect)

@@ -96,13 +96,14 @@ def yeast_browser(request):
     '''---將Protein Domain id換成name 新增Detail欄位---'''
 
     if table_name == 'Protein_Domain':
+        table ['Detail'] = table['%s(Queried)'%table_name]
         table ['Protein_Domain(Queried)'] = table['Protein_Domain_name']
         table = table.drop(columns = ['Protein_Domain_name'])
     else:
         table ['Detail'] = table['%s(Queried)'%table_name]
 
     '''---將Protein Domain id換成name 新增Detail欄位---'''
-
+    print(table['Detail'])
     table = table.fillna('-')
     table_columns = table.columns.values.tolist()
     columns = []
@@ -117,13 +118,14 @@ def yeast_browser(request):
 
 def yeast_associated(request):
 
-    table_name = request.POST.get('table_name')
-    row_name = request.POST.get('row_name')
-    print(table_name)
+    table_name = request.POST.get('feature')
+    row_name = request.POST.get('id')
+    name = request.POST.get('name')
+
     try:
         connect = sqlite3.connect('db.sqlite3')
         select = """
-            SELECT `%s(Queried)`, GO_MF, GO_BP, GO_CC, Protein_Domain, Mutant_Phenotype, Pathway, Disease, Transcriptional_Regulation, Physical_Interaction, Genetic_Interaction, count, SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
+            SELECT `%s(Queried)`, GO_MF, GO_BP, GO_CC, Protein_Domain, Protein_Domain_id, Mutant_Phenotype, Pathway, Disease, Transcriptional_Regulation, Physical_Interaction, Genetic_Interaction, count, SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
         """%(table_name, table_name, table_name, row_name)
         table = pd.read_sql('%s' %select, connect)
 
@@ -134,16 +136,26 @@ def yeast_associated(request):
         # table['%s(Queried)'%table_name] = table['%s_name'%table_name]
         # table = table.drop(columns=['%s_name'%table_name])
 
-    '''---------------------刪除不必要的欄位------------------------'''
+    # 刪除空值的欄位
     associated_table = table.dropna(axis='columns')
-    all_tables = associated_analysis(associated_table, table_name)
+
+    all_tables = associated_analysis(associated_table, table_name, name)
+
+    column_name = associated_table.columns.values.tolist()
+    for i in column_name:
+        if i == 'Protein_Domain':
+            associated_table = associated_table.drop(columns = ['Protein_Domain_id'])
+
+    associated_table = associated_table.drop(columns = ['count', 'SystematicName'])
+
+    associated_table['%s(Queried)'%table_name] = name
+
     network_data = network(associated_table, table_name)
-    # associated_table = associated_table.drop(['count','SystematicName'],axis=1)
     #拿出column name
     associated_table = associated_table.to_html(index= None,classes="table table-bordered table-hover dataTable no-footer")
     associated_table = associated_table.replace('table','table id="associated_table"',1)
+
     response={'associated_table':associated_table , 'all_tables':all_tables, 'network_data':network_data}
-    # response={'associated_table':associated_table , 'network_data':network_data}
     return JsonResponse(response)
 
 '''----------------------------------------------------------------------------'''
@@ -154,20 +166,36 @@ def yeast_name(request):
     second_feature = second_feature.split('$')
     try:
         connect = sqlite3.connect('db.sqlite3')
+        db_cursor = connect.cursor()
+
         for  i in range(2):
             if i == 1:
                 select = """
-                    SELECT count,SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ('%s')
+                    SELECT count,SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s")
                 """%(first_feature[0], first_feature[0], first_feature[1])
                 first_table = pd.read_sql('%s' %select, connect)
             else:
                 select = """
-                    SELECT count,SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ('%s')
+                    SELECT count,SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s")
                 """%(second_feature[0], second_feature[0], second_feature[1])
                 second_table = pd.read_sql('%s' %select, connect)
+
+        if first_feature[0]=='Protein_Domain':
+            select = """
+                SELECT Protein_Domain_name FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
+            """%(first_feature[0], first_feature[0], first_feature[1])
+            first_pd_id = db_cursor.execute(select).fetchone()
+            first_pd_id = first_pd_id[0]
+        if second_feature[0]=='Protein_Domain':
+            select = """
+                SELECT Protein_Domain_name FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
+            """%(second_feature[0], second_feature[0], second_feature[1])
+            second_pd_id = db_cursor.execute(select).fetchone()
+            second_pd_id = second_pd_id[0]
+            print(second_pd_id)
     finally:
         connect.close()
-    print(first_feature[1])
+
     first_names = eval(first_table.iat[0,1])
     second_names = eval(second_table.iat[0,1])
     first_name_table = pd.DataFrame(list(zip(first_names,['true']*len(first_names))),columns=['all','%s'%first_feature[1]])
@@ -178,6 +206,17 @@ def yeast_name(request):
     union = union.fillna('false')
     queried_contain = union[union["%s"%first_feature[1]] == 'false']
     second_contain = union[union["%s"%second_feature[1]] == 'false']
+
+    if first_feature[0]=='Protein_Domain':
+        both_contain = both_contain.rename(columns={'%s'%first_feature[1]:'%s'%first_pd_id})
+        queried_contain = queried_contain.rename(columns={'%s'%first_feature[1]:'%s'%first_pd_id})
+        second_contain = second_contain.rename(columns={'%s'%first_feature[1]:'%s'%first_pd_id})
+
+    if second_feature[0]=='Protein_Domain':
+        both_contain = both_contain.rename(columns={"%s"%second_feature[1]:"%s"%second_pd_id})
+        queried_contain = queried_contain.rename(columns={"%s"%second_feature[1]:"%s"%second_pd_id})
+        second_contain = second_contain.rename(columns={"%s"%second_feature[1]:"%s"%second_pd_id})
+
 
     both_contain = both_contain.fillna('false')
     both_contain = both_contain.to_html(index=None, classes='table table-bordered table-hover dataTable no-footer')
@@ -216,17 +255,17 @@ def yeast_evidence(request):
     else:
         if feature1 == 'Physical_Interaction':
             select1 = """
-                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ('%s') AND `SystematicName(Hit)` IN ("%s") OR (`SystematicName(Hit)` IN ("%s") AND `SystematicName(Bait)` IN ("%s"));
+                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ("%s") AND `SystematicName(Hit)` IN ("%s") OR (`SystematicName(Hit)` IN ("%s") AND `SystematicName(Bait)` IN ("%s"));
             """%(feature1, systematice_name, name1, systematice_name, name1)
 
         elif feature1 == 'Genetic_Interaction':
             select1 = """
-                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ('%s') AND `SystematicName(Hit)` IN ("%s") OR (`SystematicName(Hit)` IN ("%s") AND `SystematicName(Bait)` IN ("%s"));
+                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ("%s") AND `SystematicName(Hit)` IN ("%s") OR (`SystematicName(Hit)` IN ("%s") AND `SystematicName(Bait)` IN ("%s"));
             """%(feature1, systematice_name, name1, systematice_name, name1)
 
         else:
             select1 = """
-                SELECT * FROM %s_evidence WHERE SystematicName IN ('%s') AND %s IN ("%s");
+                SELECT * FROM %s_evidence WHERE SystematicName IN ("%s") AND %s IN ("%s");
             """%(feature1, systematice_name, feature1, name1)
 
     if feature2 == 'false':
@@ -235,18 +274,18 @@ def yeast_evidence(request):
     else:
         if feature2 == 'Physical_Interaction':
             select2 = """
-                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ('%s') AND `SystematicName(Hit)` IN ("%s") OR (`SystematicName(Hit)` IN ("%s") AND `SystematicName(Bait)` IN ("%s"));
+                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ("%s") AND `SystematicName(Hit)` IN ("%s") OR (`SystematicName(Hit)` IN ("%s") AND `SystematicName(Bait)` IN ("%s"));
             """%(feature2, systematice_name, name2, systematice_name, name2)
 
 
         elif feature2 == 'Genetic_Interaction':
             select2 = """
-                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ('%s') AND `SystematicName(Hit)` IN ("%s") OR (`SystematicName(Hit)` IN ("%s") AND `SystematicName(Bait)` IN ("%s"));
+                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ("%s") AND `SystematicName(Hit)` IN ("%s") OR (`SystematicName(Hit)` IN ("%s") AND `SystematicName(Bait)` IN ("%s"));
             """%(feature2, systematice_name, name2, systematice_name, name2)
 
         else:
             select2 = """
-                SELECT * FROM %s_evidence WHERE SystematicName IN ('%s') AND %s IN ("%s");
+                SELECT * FROM %s_evidence WHERE SystematicName IN ("%s") AND %s IN ("%s");
             """%(feature2, systematice_name, feature2, name2)
 
 

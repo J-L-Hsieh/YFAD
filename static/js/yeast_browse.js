@@ -49,7 +49,7 @@ $(document).ready(function() {
                     'columnDefs':[
                         {   'targets':-1,
                             render:function(data, type, row, meta){
-                                return '<a href = "/yeast/browse/associated/?id='+ data +'&name='+table_name+'"> Detail </a>';
+                                return '<a href = "/yeast/browse/associated/?id='+ data + '&name='+ row[0] +'&feature='+ table_name +'"> Detail </a>';
                             },
                         }
                     ]

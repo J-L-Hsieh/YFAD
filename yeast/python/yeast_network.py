@@ -9,12 +9,14 @@ def network(associated_table, table_name):
     associated_table = pd.DataFrame(associated_table)
     '''-------------------------queried feature data---------------------'''
     queried_feature = associated_table.at[0,'%s(Queried)'%table_name]
-    queried_count = associated_table.at[0,'count']
-    queried_name = associated_table.at[0,'SystematicName']
+
     '''------------------------------------------------------------------'''
-    associated_table = associated_table.drop(columns = ['count', 'SystematicName'])
+    # associated_table = associated_table.drop(columns = ['count', 'SystematicName'])
     # associated_table.drop(associated_table.columns[[1,2]],axis=1,inplace=True)
     column_name = associated_table.columns.values.tolist()
+    # for i in column_name:
+    #     if i == 'Protein_Domain':
+    #         column_name.remove('Protein_Domain_id')
     column_order = column_name[1:]
     # associated_table.drop(associated_table.columns[[0]],axis=1,inplace=True)
     associated_table = associated_table.drop(columns = ['%s(Queried)' %table_name])

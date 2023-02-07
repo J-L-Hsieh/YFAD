@@ -14,17 +14,16 @@ $(document).ready(function(){
 
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    const row_name = urlParams.get('id')
-    const table_name = urlParams.get('name')
-    $('#queried').html(`<h2>Queried ${table_name} Term : ${row_name}<h2>`)
-    $('#associated_title').html(`<h4>Associated Term with the Queried ${table_name} Term </h4>`)
+    const id = urlParams.get('id')
+    const name = urlParams.get('name')
+    const feature = urlParams.get('feature')
+    $('#queried').html(`<h2>Queried ${feature} Term : ${name}<h2>`)
+    $('#associated_title').html(`<h4>Associated Term with the Queried ${feature} Term </h4>`)
 
-    console.log(table_name,row_name)
-    // create a network
 
     $.ajax({
         url : '/yeast/ajax_associated/',
-        data : {'table_name':table_name, 'row_name':row_name},
+        data : {'feature':feature, 'id':id, 'name':name},
         success:function(response){
             // console.log('-----')
 
@@ -35,7 +34,7 @@ $(document).ready(function(){
                 'scrollY':true,
             });
             var column_order = response.all_tables.column_order
-
+            console.log(response.all_tables)
 
             /* --------------------------network graph----------------------------*/
             for (i=0 ;i<column_order.length; i++){
@@ -133,17 +132,19 @@ $(document).ready(function(){
                 $(`#${column_order[i]}_table`).DataTable({
                     'columnDefs':[
                         {   'targets':-1,
-                            'data':null,
                             render:function(data,type,row,meta){
-                                return '<a href = "/yeast/browse/associated/detail/?id='+ table_name + '$' + row_name +'&name='+ column_order[i]+ '$' +row[1]+'"> Detail </a>';
+                                var second_name = row[1].split('>')[1].replace('</a', '')
+                                return '<a href = "/yeast/browse/associated/detail/?id='+ feature + '$' + id + '$' + name +'&name='+ column_order[i]+ '$' + data + '$' + second_name +'"> Detail </a>';
                             },
                         },
                         {   'targets':2,
                             render:function(data,type,row,meta){
                                 // console.log(row)
+                                var second_name = row[1].split('>')[1].replace('</a', '')
+
                                 a_num = data.split('/')[0]
                                 b_num = data.split('/')[1]
-                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${table_name}%${row_name}%${column_order[i]}%${row[1]}" > ${a_num} </a><a>/${b_num}</a>`
+                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${feature}%${id}%${column_order[i]}%${row[5]}" > ${a_num} </a><a>/${b_num}</a>`
                             },
                         }
                     ]

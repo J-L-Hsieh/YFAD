@@ -2,7 +2,7 @@ import pandas as pd
 import sqlite3
 
 
-def associated_analysis(associated_table,table_name):
+def associated_analysis(associated_table, table_name, name):
     associated_table = pd.DataFrame(associated_table)
     '''-------------------------queried feature data---------------------'''
     # print(associated_table)
@@ -15,42 +15,63 @@ def associated_analysis(associated_table,table_name):
     associated_table = associated_table.drop(columns = ['%s(Queried)' %table_name, 'count', 'SystematicName'])
 
     column_name = associated_table.columns.values.tolist()
-    column_order = column_name[0:]
-    print(column_order)
+
     '''------------------回傳資料為各個table及column的順序--------------------'''
-    response ={}
     for i in column_name:
-        domain_name = eval(associated_table.at[0,'%s' %i])
-        table = []
-        if i == 'Protein_Domain_id':
-            pass
-        else:
+        if i == 'Protein_Domain':
+            p_id = eval(associated_table.at[0, 'Protein_Domain'])
+            associated_table['Protein_Domain'] = associated_table['Protein_Domain_id']
+            column_name.remove('Protein_Domain_id')
+    # print(p_id)
+    response ={}
+    try:
+        connect = sqlite3.connect('db.sqlite3')
+        db_cursor = connect.cursor()
+        select ="""
+            SELECT link FROM %s_link WHERE %s IN ("%s");
+        """%(table_name, table_name, queried_feature)
+        queried_link = db_cursor.execute(select).fetchone()
+        queried_link = queried_link[0]
+        # print(queried_link)
+        for i in column_name:
+            domain_name = eval(associated_table.at[0,'%s' %i])
+            table = []
             for j in domain_name:
-                try:
-                    connect = sqlite3.connect('db.sqlite3')
-                    db_cursor = connect.cursor()
-                    select = """
-                        SELECT SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
-                    """%(i, i, j)
-                    domain_name = db_cursor.execute(select).fetchone()
-                    print(domain_name)
-                    domain_name = domain_name[0]
-                    # print(domain_name)
-                    # print(queried_name)
-                    result_list = yeast_enrichment(queried_name,domain_name)
-                    # print(result_list)
-                    result_list.insert(0,queried_feature)
-                    result_list.insert(1,j)
-                    result_list.insert(7,'-')
-                    #將每一列的資訊放進同一個list中,之後做成datatable
-                    table.append(result_list)
-                finally:
-                    connect.close()
+                select = """
+                    SELECT SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
+                """%(i, i, j)
+                domain_name = db_cursor.execute(select).fetchone()
+                domain_name = domain_name[0]
+                # print(domain_name)
+                # print(queried_name)
+                result_list = yeast_enrichment(queried_name,domain_name)
+                # print(result_list)
+                result_list.insert(0,queried_link)
+                result_list.insert(1,j)
+                result_list.insert(7,j)
+                #將每一列的資訊放進同一個list中,之後做成datatable
+                table.append(result_list)
+
             columns_title = ['Queried %s Term(A)' %table_name,'Associated %s Term(B)' %i,'Observed Ratio','Expext Ratio','Signficance of Associated(p-value)','Detail']
-            df_tables = pd.DataFrame(table,columns=columns_title).to_html(index= None,classes="table table-bordered table-hover dataTable no-footer")
+            df_tables = pd.DataFrame(table,columns=columns_title)
+            # print(df_tables)
+            name_link = df_tables['Associated %s Term(B)' %i].values.tolist()
+            name_link = '", "'.join(name_link)
+            select = """
+                SELECT link FROM %s_link WHERE %s IN ("%s");
+            """%(i, i, name_link)
+            link_table = pd.read_sql('%s' %select, connect)
+            df_tables['Associated %s Term(B)' %i] = link_table['link']
+            # if i == 'Protein_Domain':
+            #     df_tables['Associated Protein_Domain Term(B)'] = p_id
+            df_tables = df_tables.to_html(index= None,classes="table table-bordered table-hover dataTable no-footer", escape=False)
             df_tables =df_tables.replace('table', 'table id="%s_table"'%i, 1)
             response['%s'%i] = df_tables
+
+            column_order = column_name[0:]
             response['column_order'] = column_order
+    finally:
+        connect.close()
     return response
 
 
@@ -101,7 +122,7 @@ def yeast_enrichment(queried_name,domain_name):
 
     result = pd.DataFrame({"P-value":test, "FDR":P_value_corr_FDR[1], "Bonferroni":P_value_corr_Bon[1]})
     result = result[result["FDR"]<=0.01]
-    print(result)
+    # print(result)
     response = []
     response.extend([str(A)+'/'+str(B),str(C)+'/'+str(D),result.iat[0,1]])
 
