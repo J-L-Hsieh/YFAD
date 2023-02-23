@@ -28,9 +28,28 @@ $(document).ready(function() {
                     'scrollX':true,
                     'scrollY':true,
                     'columnDefs':[
+                        {   'targets': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                            render:function(data,type,row,meta){
+                                if (data == '-'){
+                                    return `<a> ${data} </a>`;
+                                }else{
+                                    data = eval(data)
+                                    if (data.length > 3){
+                                        hide_data = data.slice(2)
+                                        return `<a > ${data[0]}, ${data[1]}, ${data[2]}</a><br>
+                                                <i data-bs-toggle="collapse" href="#detail${meta.col}_${meta.row}" style="color:darkblue" class="fa fa-bars" aria-hidden="true"></i>
+                                                <div class="collapse" id="detail${meta.col}_${meta.row}">
+                                                    ${hide_data}
+                                                </div>`
+                                    }else{
+                                        return `<a> ${data} </a>`;
+                                    }
+                                }
+                            },
+                        },
                         {   'targets':-1,
                             render:function(data,type,row,meta){
-                                return `<a href = "/yeast/browse/associated/?id=${data}&name=${feature}"> Detail </a>`;
+                                 return '<a href = "/yeast/browse/associated/?id='+ data + '&name='+ row[0] +'&feature='+ feature +'"> Detail </a>';
                             },
                         },
                     ]

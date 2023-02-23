@@ -38,8 +38,9 @@ $(document).ready(function() {
                 $('#browse_result').show()
                 // $('#result').html('<div class="container"><div class="card mt-5 w-100"><div class="card-body"></div>'+response.table+'</div></div>')
                 $('#result').html('<div class="card"><div class="card-body"><table id="result_table" class="table table-bordered table-hover dataTable no-footer"></table></div></div>')
-                console.log(response.table)
-
+                // console.log(response.table)
+                let target_num = Array.from({ length: response.columns.length-2 }, (val, index) => index + 1);
+                console.log(target_num)
                     $('#result_table').DataTable({
                     // 'bAutoWidth':true,
                     // 'scrollX':true,
@@ -47,6 +48,25 @@ $(document).ready(function() {
                     data : response.table,
                     columns : response.columns,
                     'columnDefs':[
+                        {   'targets': target_num,
+                            render:function(data,type,row,meta){
+                                if (data == '-'){
+                                    return `<a> ${data} </a>`;
+                                }else{
+                                    data = eval(data)
+                                    if (data.length > 3){
+                                        hide_data = data.slice(2)
+                                        return `<a > ${data[0]}, ${data[1]}, ${data[2]}</a><br>
+                                                <i data-bs-toggle="collapse" href="#detail${meta.col}_${meta.row}" style="color:darkblue" class="fa fa-bars" aria-hidden="true"></i>
+                                                <div class="collapse" id="detail${meta.col}_${meta.row}">
+                                                    ${hide_data}
+                                                </div>`
+                                    }else{
+                                        return `<a> ${data} </a>`;
+                                    }
+                                }
+                            },
+                        },
                         {   'targets':-1,
                             render:function(data, type, row, meta){
                                 return '<a href = "/yeast/browse/associated/?id='+ data + '&name='+ row[0] +'&feature='+ table_name +'"> Detail </a>';
@@ -54,8 +74,6 @@ $(document).ready(function() {
                         }
                     ]
                 })
-                // console.log(mytable)
-                // console.timeEnd('-----------')
             },
 
             error: function(){
