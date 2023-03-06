@@ -120,6 +120,7 @@ def yeast_associated(request):
             SELECT `%s(Queried)`, GO_MF, GO_BP, GO_CC, Protein_Domain, Protein_Domain_id, Mutant_Phenotype, Pathway, Disease, Transcriptional_Regulation, Physical_Interaction, Genetic_Interaction, count, SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
         """%(table_name, table_name, table_name, row_name)
         table = pd.read_sql('%s' %select, connect)
+        print(select)
 
     finally:
         connect.close()
@@ -189,14 +190,14 @@ def yeast_name(request):
 
     first_names = eval(first_table.iat[0,1])
     second_names = eval(second_table.iat[0,1])
-    first_name_table = pd.DataFrame(list(zip(first_names,['true']*len(first_names))),columns=['all','%s'%first_feature[1]])
-    second_name_table = pd.DataFrame(list(zip(second_names,['true']*len(second_names))),columns=['all','%s'%second_feature[1]])
+    first_name_table = pd.DataFrame(list(zip(first_names,['true']*len(first_names))),columns=['all','%s'%first_feature[2]])
+    second_name_table = pd.DataFrame(list(zip(second_names,['true']*len(second_names))),columns=['all','%s'%second_feature[2]])
     both_contain = pd.merge(first_name_table, second_name_table, how="inner")
 
     union = pd.merge(first_name_table, second_name_table, how="outer")
     union = union.fillna('false')
-    queried_contain = union[union["%s"%first_feature[1]] == 'false']
-    second_contain = union[union["%s"%second_feature[1]] == 'false']
+    queried_contain = union[union["%s"%first_feature[2]] == 'false']
+    second_contain = union[union["%s"%second_feature[2]] == 'false']
 
     if first_feature[0]=='Protein_Domain':
         both_contain = both_contain.rename(columns={'%s'%first_feature[1]:'%s'%first_pd_id})

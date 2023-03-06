@@ -1,6 +1,15 @@
 import pandas as pd
 import sqlite3
 
+def round_float(p_value):
+    try:
+        # print(type(p_value))
+        p_value = str(p_value).split('e')
+        p_value[0] = round(float(p_value[0]),2)
+        p_value_round_2 = str(p_value[0]) + 'e' + str(p_value[1])
+        return p_value_round_2
+    except:
+        return p_value
 
 def associated_analysis(associated_table, table_name, name):
     associated_table = pd.DataFrame(associated_table)
@@ -11,9 +20,8 @@ def associated_analysis(associated_table, table_name, name):
     queried_name = associated_table.at[0,'SystematicName']
 
     '''------------------------------------------------------------------'''
-    # associated_table.drop(associated_table.columns[['%s' %table_name, 'count', 'SystematicName']],axis=1,inplace=True)
-    associated_table = associated_table.drop(columns = ['%s(Queried)' %table_name, 'count', 'SystematicName'])
 
+    associated_table = associated_table.drop(columns = ['%s(Queried)' %table_name, 'count', 'SystematicName'])
     column_name = associated_table.columns.values.tolist()
 
     '''------------------回傳資料為各個table及column的順序--------------------'''
@@ -31,41 +39,35 @@ def associated_analysis(associated_table, table_name, name):
         """%(table_name, table_name, queried_feature)
         queried_link = db_cursor.execute(select).fetchone()
         queried_link = queried_link[0]
-        # print(queried_link)
         for i in column_name:
             domain_name = eval(associated_table.at[0,'%s' %i])
-            table = []
-            for j in domain_name:
-                select = """
-                    SELECT SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
-                """%(i, i, j)
-                domain_name = db_cursor.execute(select).fetchone()
-                domain_name = domain_name[0]
-                # print(domain_name)
-                # print(queried_name)
-                result_list = yeast_enrichment(queried_name,domain_name)
-                # print(result_list)
-                result_list.insert(0,queried_link)
-                result_list.insert(1,j)
-                result_list.insert(7,j)
-                #將每一列的資訊放進同一個list中,之後做成datatable
-                table.append(result_list)
+            feature_name = '\",\"'.join(domain_name)
+            select  = """
+                SELECT `%s(Queried)`,SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
+            """%(i, i, i, feature_name)
+            feature_systematic = pd.read_sql('%s' %select, connect)
+            feature_systematic['Queried %s Term(A)' %table_name] = pd.Series(eval("[\'"+queried_link+"\']")*len(domain_name))
+            feature_systematic['Observed Ratio'] = feature_systematic.apply(lambda x: oberved(queried_name, x['SystematicName']), axis=1)
+            feature_systematic['Expect Ratio'] = feature_systematic.apply(lambda x: str(len(eval(x['SystematicName'])))+'/6611', axis=1)
+            feature_systematic['Signficance of Associated(p-value)'] = feature_systematic.apply(lambda x: yeast_enrichment(queried_name, x['SystematicName']), axis=1)
 
-            columns_title = ['Queried %s Term(A)' %table_name,'Associated %s Term(B)' %i,'Observed Ratio','Expext Ratio','Signficance of Associated(p-value)','Detail']
-            df_tables = pd.DataFrame(table,columns=columns_title)
-            # print(df_tables)
-            name_link = df_tables['Associated %s Term(B)' %i].values.tolist()
-            name_link = '", "'.join(name_link)
             select = """
                 SELECT link FROM %s_link WHERE %s IN ("%s");
-            """%(i, i, name_link)
+            """%(i, i, feature_name)
             link_table = pd.read_sql('%s' %select, connect)
-            df_tables['Associated %s Term(B)' %i] = link_table['link']
-            # if i == 'Protein_Domain':
-            #     df_tables['Associated Protein_Domain Term(B)'] = p_id
-            df_tables = df_tables.to_html(index= None,classes="table table-bordered table-hover dataTable no-footer", escape=False)
-            df_tables =df_tables.replace('table', 'table id="%s_table"'%i, 1)
-            response['%s'%i] = df_tables
+            feature_systematic['Associated %s Term(B)' %i] = link_table['link']
+            feature_systematic = feature_systematic.rename(columns={'%s(Queried)'%i:'Detail'})
+
+            feature_systematic = feature_systematic.drop(['SystematicName'], axis=1)
+            feature_systematic = feature_systematic[['Queried %s Term(A)' %table_name,'Associated %s Term(B)' %i,'Observed Ratio','Expect Ratio','Signficance of Associated(p-value)','Detail']]
+
+            feature_systematic = feature_systematic.sort_values(by=['Signficance of Associated(p-value)'], ascending=True)
+            print(feature_systematic)
+            feature_systematic['Signficance of Associated(p-value)'] = feature_systematic.apply(lambda x:("{:.2e}".format(x['Signficance of Associated(p-value)'])), axis=1)
+
+            feature_systematic = feature_systematic.to_html(index= None,classes="table table-bordered table-hover dataTable no-footer", escape=False)
+            feature_systematic = feature_systematic.replace('table', 'table id="%s_table"'%i, 1)
+            response['%s'%i] = feature_systematic
 
             column_order = column_name[0:]
             response['column_order'] = column_order
@@ -73,6 +75,15 @@ def associated_analysis(associated_table, table_name, name):
         connect.close()
     return response
 
+def oberved(queried_name,domain_name):
+
+    queried_name = eval(queried_name)
+    domain_name = eval(domain_name)
+    list_A = list(set(queried_name)&set(domain_name))
+    # print(list_A)
+    A = len(list_A)
+    B = len(queried_name)
+    return str(A) +'/'+ str(B)
 
 '''-----------------------------------------yeast enrichment---------------------------------------'''
 import scipy.stats
@@ -121,8 +132,8 @@ def yeast_enrichment(queried_name,domain_name):
 
     result = pd.DataFrame({"P-value":test, "FDR":P_value_corr_FDR[1], "Bonferroni":P_value_corr_Bon[1]})
     result = result[result["FDR"]<=0.01]
-    # print(result)
-    response = []
-    response.extend([str(A)+'/'+str(B),str(C)+'/'+str(D),result.iat[0,1]])
-
-    return response
+    # print(type(result.iat[0,1]))
+    # response = []
+    # response.extend([str(A)+'/'+str(B),str(C)+'/'+str(D),result.iat[0,1]])
+    # reponse = "{:.2e}".format(result.iat[0,1])
+    return result.iat[0,1]

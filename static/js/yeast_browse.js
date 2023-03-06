@@ -45,6 +45,12 @@ $(document).ready(function() {
                     // 'bAutoWidth':true,
                     // 'scrollX':true,
                     'scrollY':true,
+                    'scrollX':        true,
+                    'scrollCollapse': true,
+                    fixedHeader:           {
+                        header: true,
+                        footer: true,
+                    },
                     data : response.table,
                     columns : response.columns,
                     'columnDefs':[
