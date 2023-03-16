@@ -35,8 +35,12 @@ def search_mode(request):
     else:
         table['Detail'] = table['%s(Queried)'%feature]
 
+    count_name_table =  table[['count','SystematicName']]
+    count_name_table = count_name_table.values.tolist()
+
+
     table = table.fillna('-').drop(['count','SystematicName'],axis=1)
     table = table.to_html(index= None,classes="table table-striped table-bordered")
     table = table.replace('table', 'table id="result_table"',1)
-    response = {'table':table, 'feature':feature}
+    response = {'table':table, 'feature':feature, 'count_name_table':count_name_table}
     return JsonResponse(response)
