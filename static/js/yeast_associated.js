@@ -10,7 +10,18 @@ $(document).ready(function(){
         $($.fn.dataTable.tables( true ) ).css('width', '100%');
         $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
     } );
+    /*----- chage table and network-----*/
+    $('#view_network').hide()
 
+    $('#button_table').on('click', function(){
+        $('#view_network').hide()
+        $('#view_table').show()
+    });
+    $('#button_network').on('click', function(){
+        $('#view_table').hide()
+        $('#view_network').show()
+    });
+    /*----- chage table and network-----*/
 
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
@@ -19,22 +30,12 @@ $(document).ready(function(){
     const feature = urlParams.get('feature')
     $('#queried').html(`<h2>Queried ${feature} Term : ${name}<h2>`)
     $('#associated_title').html(`<h4>Associated Term with the Queried ${feature} Term </h4>`)
-
-
+    // console.log(name)
     $.ajax({
-        url : '/yeast/ajax_associated/',
+        url : '/yeast/ajax_network/',
         data : {'feature':feature, 'id':id, 'name':name},
         success:function(response){
-            // console.log('-----')
-
-            $('#Answer1').html(response.associated_table);
-            $('#associated_table').DataTable({
-                'bAutoWidth':true,
-                'scrollX':true,
-                'scrollY':true,
-            });
-            var column_order = response.all_tables.column_order
-            console.log(response.all_tables)
+            var column_order = response.column_order
 
             /* --------------------------network graph----------------------------*/
             for (i=0 ;i<column_order.length; i++){
@@ -116,6 +117,55 @@ $(document).ready(function(){
             startNetwork({ nodes: nodesView, edges: edgesView });
 
 
+        },
+        error :function(){
+            alert('Something error');
+        },
+    })
+    $.ajax({
+        url : '/yeast/ajax_associated/',
+        data : {'feature':feature, 'id':id, 'name':name},
+        success:function(response){
+            // console.log('-----')
+            var column_order = response.all_tables.column_order
+            console.log(column_order)
+            let target_num = Array.from({ length: column_order.length }, (val, index) => index + 1);
+            $('#Answer1').html(response.associated_table);
+            $('#associated_table').DataTable({
+                'scrollY':true,
+                'scrollX':true,
+                'scrollCollapse': true,
+                fixedHeader:{
+                    header: true,
+                    footer: true,
+                },
+                'columnDefs':[
+                    {   'targets': target_num,
+                        render:function(data,type,row,meta){
+                            data = eval(data)
+                            if (data.length > 3){
+                                hide_data = data.slice(2)
+                                return `<a > ${data[0]}, ${data[1]}, ${data[2]}</a><br>
+                                        <div data-bs-toggle="collapse" href="#detail${meta.col}_${meta.row}" >
+                                            <i href="#detail${meta.col}_${meta.row}" class=" fa fa-plus" style="color:darkblue" aria-hidden="true"></i>
+                                        </div>
+                                        <div class="collapse" id="detail${meta.col}_${meta.row}">
+                                            <i data-bs-toggle="collapse" href="#detail${meta.col}_${meta.row}" class=" fa fa-minus" style="color:darkblue" aria-hidden="true"></i>
+                                            ${hide_data}
+                                        </div>
+                                        `
+                            }else{
+                                return `<a> ${data} </a>`;
+                            }
+                        },
+                    },
+                ]
+            });
+
+            // console.log('---')
+            // console.log(target_num)
+
+
             /*-------------- 製作all table的 div 與專屬id ------------------ */
             var add_html = ''
             var add_herf = ''
@@ -177,7 +227,8 @@ $(document).ready(function(){
         },
         error :function(){
             alert('Something error');
-        }
+        },
+
     })
 
 
@@ -189,11 +240,4 @@ $(document).on('click','input:button',function(){
 
 
 
-
 });
-// $(document).on('click','#GO_CC_move ',function(){
-//     window.location.href = "#GO_CC";
-// });
-// $(document).on('click','#GO_BP_move ',function(){
-//     window.location.href = "#GO_CC";
-// });

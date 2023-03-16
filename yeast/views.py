@@ -70,15 +70,15 @@ def yeast_browser(request):
 
     if table_name == 'Protein_Domain':
         select = """
-            SELECT `%s(Queried)`, %s, %s_name FROM %s_1_to_10;
+            SELECT `%s(Queried)`, %s, %s_name, count, SystematicName  FROM %s_1_to_10;
         """%(table_name, table_column, table_name, table_name)
     else:
         select = """
-            SELECT `%s(Queried)`, %s FROM %s_1_to_10;
+            SELECT `%s(Queried)`, %s, count, SystematicName FROM %s_1_to_10;
         """%(table_name, table_column, table_name)
 
     try:
-        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+        connect = sqlite3.connect('db.sqlite3')
         table = pd.read_sql(select, connect)
 
     finally:
@@ -96,16 +96,61 @@ def yeast_browser(request):
 
     '''---將Protein Domain id換成name 新增Detail欄位---'''
     table = table.fillna('-')
+
+    count_name_table =  table[['count','SystematicName']]
+    table = table.drop(columns=['count', 'SystematicName'])
+
     table_columns = table.columns.values.tolist()
     columns = []
     for i in table_columns:
         columns.append({'title': i})
 
+    count_name_table = count_name_table.values.tolist()
     table = table.values.tolist()
-    response = {'table' : table, 'columns': columns}
+
+    response = {'table' : table, 'columns': columns, 'count_name_table':count_name_table}
     return JsonResponse(response)
 
 '''----------------------------------------------------------------------------'''
+def yeast_network(request):
+
+    table_name = request.POST.get('feature')
+    row_name = request.POST.get('id')
+    name = request.POST.get('name')
+    # print('-------------')
+    # print(table_name)
+    try:
+        connect = sqlite3.connect('db.sqlite3')
+        select = """
+            SELECT `%s(Queried)`, GO_MF, GO_BP, GO_CC, Protein_Domain, Protein_Domain_id, Mutant_Phenotype, Pathway, Disease, Transcriptional_Regulation, Physical_Interaction, Genetic_Interaction, count, SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
+        """%(table_name, table_name, table_name, row_name)
+        table = pd.read_sql('%s' %select, connect)
+        print(select)
+
+    finally:
+        connect.close()
+
+    # 刪除空值的欄位
+    associated_table = table.dropna(axis='columns')
+
+
+    column_name = associated_table.columns.values.tolist()
+    for i in column_name:
+        if i == 'Protein_Domain':
+            associated_table = associated_table.drop(columns = ['Protein_Domain_id'])
+
+    associated_table = associated_table.drop(columns = ['count', 'SystematicName'])
+
+    associated_table['%s(Queried)'%table_name] = name
+
+    network_data = network(associated_table, table_name)
+
+    column_order = associated_table.columns.values.tolist()
+    column_order = column_order[0:]
+
+    response={'network_data':network_data,"column_order":column_order}
+
+    return JsonResponse(response)
 
 def yeast_associated(request):
 
@@ -115,7 +160,7 @@ def yeast_associated(request):
     # print('-------------')
     # print(table_name)
     try:
-        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+        connect = sqlite3.connect('db.sqlite3')
         select = """
             SELECT `%s(Queried)`, GO_MF, GO_BP, GO_CC, Protein_Domain, Protein_Domain_id, Mutant_Phenotype, Pathway, Disease, Transcriptional_Regulation, Physical_Interaction, Genetic_Interaction, count, SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
         """%(table_name, table_name, table_name, row_name)
@@ -143,12 +188,12 @@ def yeast_associated(request):
 
     associated_table['%s(Queried)'%table_name] = name
 
-    network_data = network(associated_table, table_name)
+    # network_data = network(associated_table, table_name)
     #拿出column name
     associated_table = associated_table.to_html(index= None,classes="table table-bordered table-hover dataTable no-footer")
     associated_table = associated_table.replace('table','table id="associated_table"',1)
 
-    response={'associated_table':associated_table , 'all_tables':all_tables, 'network_data':network_data}
+    response={'associated_table':associated_table , 'all_tables':all_tables}
     return JsonResponse(response)
 
 '''----------------------------------------------------------------------------'''
@@ -158,7 +203,7 @@ def yeast_name(request):
     first_feature = first_feature.split('$')
     second_feature = second_feature.split('$')
     try:
-        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+        connect = sqlite3.connect('db.sqlite3')
         db_cursor = connect.cursor()
 
         for  i in range(2):
@@ -239,7 +284,7 @@ def yeast_evidence(request):
     name1 = feature[1]
     name2 = feature[3]
     systematice_name = feature[4]
-    connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+    connect = sqlite3.connect('db.sqlite3')
 
     if feature1 == 'false':
         pass

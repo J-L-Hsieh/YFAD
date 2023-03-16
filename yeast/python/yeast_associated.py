@@ -32,7 +32,7 @@ def associated_analysis(associated_table, table_name, name):
             column_name.remove('Protein_Domain_id')
     response ={}
     try:
-        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+        connect = sqlite3.connect('db.sqlite3')
         db_cursor = connect.cursor()
         select ="""
             SELECT link FROM %s_link WHERE %s IN ("%s");
@@ -62,7 +62,7 @@ def associated_analysis(associated_table, table_name, name):
             feature_systematic = feature_systematic[['Queried %s Term(A)' %table_name,'Associated %s Term(B)' %i,'Observed Ratio','Expect Ratio','Signficance of Associated(p-value)','Detail']]
 
             feature_systematic = feature_systematic.sort_values(by=['Signficance of Associated(p-value)'], ascending=True)
-            print(feature_systematic)
+            # print(feature_systematic)
             feature_systematic['Signficance of Associated(p-value)'] = feature_systematic.apply(lambda x:("{:.2e}".format(x['Signficance of Associated(p-value)'])), axis=1)
 
             feature_systematic = feature_systematic.to_html(index= None,classes="table table-bordered table-hover dataTable no-footer", escape=False)

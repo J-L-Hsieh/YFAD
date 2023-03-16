@@ -3,11 +3,11 @@
 
 {% block style %}
 <style>
-    #mynetwork {
+    .mynetwork {
     width: 1000px;
     height: 600px;
     }
-    </style>
+</style>
 {% endblock style %}
 
 {% block content %}
@@ -22,14 +22,26 @@
                 <div class="card-body " style="border: 3px solid #343a40;">
                     <div class="card" >
                         <div id="associated_title" class='card-header'></div>
+                        <ul class="nav nav-pills justify-content-center">
+                            <li class="nav-item">
+                                <a id="button_table" class="nav-link active" data-toggle="pill"  style="font-size: 1rem;padding:.2rem .5rem;margin: 1rem;">Table View</a>
+                            </li>
+                            <li class="nav-item">
+                                <a id="button_network" class="nav-link active" data-toggle="pill"  style="font-size: 1rem;padding:.2rem .5rem;margin: 1rem;">Figure View</a>
+                            </li>
+                        </ul>
                         <div class="card-body ">
-                            <div class="flexbox">
-                                <div id="Answer1" style="width: 90%;"></div>
+                            <div id="view_table" class="flexbox">
+                                <div id="Answer1"  style="width: 90%;"></div>
                             </div>
-                            <div id="checkbox_container1" class="flexbox"></div>
-                            <div id="checkbox_container2" class="flexbox"></div>
-                            <div class="flexbox">
-                                <div id="mynetwork"></div>
+                        </div>
+                        <div class="card-body ">
+                            <div id="view_network" >
+                                <div id="checkbox_container1" class="flexbox"></div>
+                                <div id="checkbox_container2" class="flexbox"></div>
+                                <!-- <div class="flexbox"> -->
+                                <div id="mynetwork" style="width: 90%;height: 600px;" ></div>
+                            </div>
                         </div>
                     </div>
                 </div>

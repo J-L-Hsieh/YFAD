@@ -123,6 +123,7 @@ $(document).ready(function() {
             // -------------------------table3---------------
             $('#table3').html(`<div class="card" style="margin-top:5%;" ><div class="card-body">${response.second_contain}</div></div>`)
             let trs3 = document.querySelectorAll('#second_table tr');
+            console.log(trs3)
 
             for (let tr of trs3) {
                 let td = document.createElement('td');
@@ -168,6 +169,12 @@ $(document).ready(function() {
                 ]
             })
             // -------------------------table3---------------
+            let intersection_num = document.getElementById('intersection_num')
+            intersection_num.innerHTML +=`${trs1.length-1}`
+            let queried_num = document.getElementById('queried_num')
+            queried_num.innerHTML +=`Queried Term Number:${trs2.length-1}`
+            let last_num = document.getElementById('last_num')
+            last_num.innerHTML +=`${trs3.length-1}`
             // -------------------modal table1---------------
             $('#both_name_table').on("click",'.modal_features',function(){
                 var feature = $(this).attr('value');
