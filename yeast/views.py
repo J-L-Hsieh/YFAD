@@ -43,7 +43,7 @@ def yeast_name_base(request):
 #         return y
 #     column_name=[]
 #     try:
-#         connect = sqlite3.connect('db.sqlite3')
+#         connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
 #         change_table = pd.read_sql("""SELECT * FROM %s_id_to_name""" %feature, connect, index_col='%s_id' %feature)
 #     finally:
 #         connect.close()
@@ -78,7 +78,7 @@ def yeast_browser(request):
         """%(table_name, table_column, table_name)
 
     try:
-        connect = sqlite3.connect('db.sqlite3')
+        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
         table = pd.read_sql(select, connect)
 
     finally:
@@ -120,7 +120,7 @@ def yeast_network(request):
     # print('-------------')
     # print(table_name)
     try:
-        connect = sqlite3.connect('db.sqlite3')
+        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
         select = """
             SELECT `%s(Queried)`, GO_MF, GO_BP, GO_CC, Protein_Domain, Protein_Domain_id, Mutant_Phenotype, Pathway, Disease, Transcriptional_Regulation, Physical_Interaction, Genetic_Interaction, count, SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
         """%(table_name, table_name, table_name, row_name)
@@ -160,7 +160,7 @@ def yeast_associated(request):
     # print('-------------')
     # print(table_name)
     try:
-        connect = sqlite3.connect('db.sqlite3')
+        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
         select = """
             SELECT `%s(Queried)`, GO_MF, GO_BP, GO_CC, Protein_Domain, Protein_Domain_id, Mutant_Phenotype, Pathway, Disease, Transcriptional_Regulation, Physical_Interaction, Genetic_Interaction, count, SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
         """%(table_name, table_name, table_name, row_name)
@@ -203,7 +203,7 @@ def yeast_name(request):
     first_feature = first_feature.split('$')
     second_feature = second_feature.split('$')
     try:
-        connect = sqlite3.connect('db.sqlite3')
+        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
         db_cursor = connect.cursor()
 
         for  i in range(2):
@@ -284,7 +284,7 @@ def yeast_evidence(request):
     name1 = feature[1]
     name2 = feature[3]
     systematice_name = feature[4]
-    connect = sqlite3.connect('db.sqlite3')
+    connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
 
     if feature1 == 'false':
         pass

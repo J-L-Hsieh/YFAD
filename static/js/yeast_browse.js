@@ -46,7 +46,6 @@ $(document).ready(function() {
 
                     var result_table = $('#result_table').DataTable({
                     // 'bAutoWidth':true,
-                    // 'scrollX':true,
                     'scrollY':true,
                     'scrollX':true,
                     'scrollCollapse': true,
@@ -103,7 +102,7 @@ $(document).ready(function() {
 
                         // 使用循環綁定 mouseover 事件到每個元素
                         mouse_element.forEach(function(element){
-                            element.addEventListener("mouseover", function(event){
+                            element.addEventListener("mouseenter", function(event){
                                 // console.log(element);
                                 var num = element.id.replace('mouse_touch','')
                                 // console.log(num)
@@ -128,7 +127,7 @@ $(document).ready(function() {
                                 // 將元素添加到頁面中
                                 document.body.appendChild(count_nameDiv);
                                 // 綁定 mouseout 事件，當滑鼠移開時，刪除剛剛建立的元素
-                                element.addEventListener("mouseout", function() {
+                                element.addEventListener("mouseleave", function() {
                                         document.body.removeChild(count_nameDiv)
                                 });
                             });

@@ -169,12 +169,16 @@ $(document).ready(function() {
                 ]
             })
             // -------------------------table3---------------
-            let intersection_num = document.getElementById('intersection_num')
-            intersection_num.innerHTML +=`${trs1.length-1}`
-            let queried_num = document.getElementById('queried_num')
-            queried_num.innerHTML +=`Queried Term Number:${trs2.length-1}`
-            let last_num = document.getElementById('last_num')
-            last_num.innerHTML +=`${trs3.length-1}`
+            $('#queried_term').html(`<h5>Queried Feature : ${first_feature_array[1]}</h5>`)
+            $('#queried_num').html(`<h5>Number:${trs1.length+trs3.length-2}</h5>`)
+            $('#queried_last').html(`<h5>${trs3.length-1}</h5>`)
+
+            $('#compare_term').html(`<h5>Comapre Feature : ${second_feature_array[1]}</h5>`)
+            $('#compare_num').html(`<h5>Number:${trs1.length+trs2.length-2}</h5>`)
+            $('#compare_last').html(`<h5>${trs2.length-1}</h5>`)
+
+            $('#intersection_num').html(`<h5>${trs1.length-1}</h5>`)
+
             // -------------------modal table1---------------
             $('#both_name_table').on("click",'.modal_features',function(){
                 var feature = $(this).attr('value');

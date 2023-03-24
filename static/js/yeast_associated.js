@@ -131,7 +131,8 @@ $(document).ready(function(){
             console.log(column_order)
             let target_num = Array.from({ length: column_order.length }, (val, index) => index + 1);
             $('#Answer1').html(response.associated_table);
-            $('#associated_table').DataTable({
+            var associated_table = $('#associated_table').DataTable({
+                'bAutoWidth':true,
                 'scrollY':true,
                 'scrollX':true,
                 'scrollCollapse': true,
@@ -165,49 +166,6 @@ $(document).ready(function(){
             // console.log('---')
             // console.log(target_num)
 
-            function AddCountName(){
-                // 抓取所有 id 開頭為 mouse_touch 的元素
-                // const mouse_element = document.querySelectorAll('#mouse_touch]');
-                // console.log(document)
-                //新增document ready來使處理非同步的問題,否則會抓取頁面還沒切換前的資訊
-                $(document).ready(function(){
-                    var mouse_element = document.querySelectorAll('[id^=mouse_touch]');
-
-                    // 使用循環綁定 mouseover 事件到每個元素
-                    mouse_element.forEach(function(element){
-                        element.addEventListener("mouseover", function(event){
-                            // console.log(element);
-                            var num = element.id.replace('mouse_touch','')
-                            // console.log(num)
-                            var count_nameDiv = document.createElement("div");
-                            count_nameDiv.innerHTML += `${response.count_name_table[num][0]} <br> ${response.count_name_table[num][1]}`;
-                            count_nameDiv.style.position = "absolute";
-                            var x = event.clientX; //滑鼠的x座標
-                            var y = event.clientY; //滑鼠的y座標
-                            var scrollX = window.pageXOffset; //水平滾動距離
-                            var scrollY = window.pageYOffset; //垂直滾動距離
-                            var newX = x + scrollX; //滾動後的x座標
-                            var newY = y + scrollY; //滾動後的y座標
-                            // console.log(newX,newY)
-                            count_nameDiv.style.top = newY+ "px";
-                            count_nameDiv.style.left = newX + "px";
-                            count_nameDiv.style.backgroundColor = "lightgray";
-                            count_nameDiv.style.border = "1px solid black";
-                            count_nameDiv.style.padding = "5px";
-                            // count_nameDiv.style.display = "block";
-
-                            // console.log(count_nameDiv)
-                            // 將元素添加到頁面中
-                            document.body.appendChild(count_nameDiv);
-                            // 綁定 mouseout 事件，當滑鼠移開時，刪除剛剛建立的元素
-                            element.addEventListener("mouseout", function() {
-                                    document.body.removeChild(count_nameDiv)
-                            });
-                        });
-                    });
-                    return;
-                    });
-            };
             function PlusHide(){
                 $(document).ready(function(){
                     var plus = document.querySelectorAll('.fa-plus-circle');
@@ -219,7 +177,7 @@ $(document).ready(function(){
                         })
                     });
                 })
-            }
+            };
 
             function MinusHide(){
                 $(document).ready(function(){
@@ -233,13 +191,11 @@ $(document).ready(function(){
                         })
                     })
                 })
-            }
+            };
 
-            AddCountName();
             PlusHide();
             MinusHide();
-            result_table.on('page.dt',function(){
-                AddCountName()
+            associated_table.on('page.dt',function(){
                 PlusHide();
                 MinusHide();
             })
