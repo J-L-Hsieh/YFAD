@@ -44,6 +44,8 @@ $(document).ready(function() {
 
                 let target_num = Array.from({ length: response.columns.length-2 }, (val, index) => index + 1);
 
+                var queried_feature = response.columns[0].title.replace("(Queried)", "")
+
                     var result_table = $('#result_table').DataTable({
                     // 'bAutoWidth':true,
                     'scrollY':true,
@@ -81,7 +83,9 @@ $(document).ready(function() {
                         },
                         {   'targets':0,
                             render:function(data, type, row, meta){
-                                return `<a id="mouse_touch${meta.row}" value="${meta.row}"> ${data} </a>`;
+                                // return `<a id="mouse_touch${meta.row}" value="${meta.row}"> {data} </a>`;
+                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${queried_feature}%${row[0]}" > ${data} </a>`
+
                             },
                         },
                         {   'targets':-1,
@@ -162,15 +166,40 @@ $(document).ready(function() {
                     })
                 }
 
-                AddCountName();
+                // AddCountName();
                 PlusHide();
                 MinusHide();
                 result_table.on('page.dt',function(){
-                    AddCountName()
+                    // AddCountName()
                     PlusHide();
                     MinusHide();
                 })
+                /*------------------------modal-----------------------*/
+                $('.modal_features').on("click",function(){
+                    var feature_name = $(this).attr('value');
+                    // console.log(feature_name)
+                    $.ajax({
+                        url : '/yeast/ajax_p1_modal/',
+                        data : {'feature_name' : feature_name},
+                        success:function(response){
+                            // console.log(response.evidence_table)
+                            $('#modal_table').html(response.evidence_table)
+                            $('#evidence_table').DataTable({
+                                'bAutoWidth' : true,
+                                // 'scrollX':true,
+                                // 'scrollY' : true,
+                                "scrollCollapse" : true,
+                                "destroy": true,
+                            })
 
+                        },
+
+                        error :function(){
+                            alert('Something error');
+                        }
+                    })
+                })
+                /*------------------------modal-----------------------*/
             },
             error: function(){
                 alert('Something error');

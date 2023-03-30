@@ -17,12 +17,14 @@ from yeast.testdb import DatabaseManager
 from yeast.python.enrichment import enrichment_program
 from yeast.python.yeast_associated import associated_analysis
 from yeast.python.yeast_network import network
-from yeast.python.yeast_modal import modal
+from yeast.python.yeast_modal import p1_modal,p2_modal
 
 import time
 
 def home(request):
     return(render(request,'base.html',locals()))
+def download(request):
+    return(render(request,'download.html',locals()))
 def yeast(request):
     return(render(request,'browse.html',locals()))
 def yeast_associated_base(request):
@@ -43,7 +45,7 @@ def yeast_name_base(request):
 #         return y
 #     column_name=[]
 #     try:
-#         connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+#         connect = sqlite3.connect('db.sqlite3')
 #         change_table = pd.read_sql("""SELECT * FROM %s_id_to_name""" %feature, connect, index_col='%s_id' %feature)
 #     finally:
 #         connect.close()
@@ -78,7 +80,7 @@ def yeast_browser(request):
         """%(table_name, table_column, table_name)
 
     try:
-        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+        connect = sqlite3.connect('db.sqlite3')
         table = pd.read_sql(select, connect)
 
     finally:
@@ -110,6 +112,13 @@ def yeast_browser(request):
 
     response = {'table' : table, 'columns': columns, 'count_name_table':count_name_table}
     return JsonResponse(response)
+'''----------------------------------------------------------------------------'''
+def yeast_p1_modal(request):
+
+    evidence_table = p1_modal(request)
+    print(evidence_table)
+    response = {"evidence_table" : evidence_table}
+    return JsonResponse(response)
 
 '''----------------------------------------------------------------------------'''
 def yeast_network(request):
@@ -120,7 +129,7 @@ def yeast_network(request):
     # print('-------------')
     # print(table_name)
     try:
-        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+        connect = sqlite3.connect('db.sqlite3')
         select = """
             SELECT `%s(Queried)`, GO_MF, GO_BP, GO_CC, Protein_Domain, Protein_Domain_id, Mutant_Phenotype, Pathway, Disease, Transcriptional_Regulation, Physical_Interaction, Genetic_Interaction, count, SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
         """%(table_name, table_name, table_name, row_name)
@@ -160,7 +169,7 @@ def yeast_associated(request):
     # print('-------------')
     # print(table_name)
     try:
-        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+        connect = sqlite3.connect('db.sqlite3')
         select = """
             SELECT `%s(Queried)`, GO_MF, GO_BP, GO_CC, Protein_Domain, Protein_Domain_id, Mutant_Phenotype, Pathway, Disease, Transcriptional_Regulation, Physical_Interaction, Genetic_Interaction, count, SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
         """%(table_name, table_name, table_name, row_name)
@@ -203,7 +212,7 @@ def yeast_name(request):
     first_feature = first_feature.split('$')
     second_feature = second_feature.split('$')
     try:
-        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+        connect = sqlite3.connect('db.sqlite3')
         db_cursor = connect.cursor()
 
         for  i in range(2):
@@ -271,7 +280,7 @@ def yeast_name(request):
 '''----------------------------------------------------------------------------'''
 
 def yeast_modal(request):
-    evidence_table = modal(request)
+    evidence_table = p2_modal(request)
     response ={'evidence_table':evidence_table}
     return JsonResponse(response)
 
@@ -284,7 +293,7 @@ def yeast_evidence(request):
     name1 = feature[1]
     name2 = feature[3]
     systematice_name = feature[4]
-    connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+    connect = sqlite3.connect('db.sqlite3')
 
     if feature1 == 'false':
         pass

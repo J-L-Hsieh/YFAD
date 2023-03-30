@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block content %}
+
+<body>
+
+    <div class="container-fluid text-center">
+        <div class="col-9 mx-auto">
+            <div class="card" >
+                <h2  class="card-header bg-dark text-white">Download Datasets</h3>
+                <td><a href="{% static 'data/data.tar.gz' %}" rel="external nofollow" ><i class="fa fa-cloud-download"></i>download all data sets</a></td>
+                <table class="table table-hover">
+                    <thead>
+                        <tr class="table-secondary">
+                            <th scope="col">Feature</th>
+                            <th scope="col">Data collated from feature</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">GO(MF)</th>
+                            <td><a href="{% static 'data/GO_MF_Enrichment.csv' %}" rel="external nofollow" ><i class="fa fa-cloud-download"></i>GO_MF_Enrichment.csv</a></td>
+                        </tr>                        <tr>
+                            <th scope="row">GO(BP)</th>
+                            <td><a href="{% static 'data/GO_BP_Enrichment.csv' %}" rel="external nofollow" ><i class="fa fa-cloud-download"></i>GO_BP_Enrichment.csv</a></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">GO(CC)</th>
+                            <td><a href="{% static 'data/GO_CC_Enrichment.csv' %}" rel="external nofollow" ><i class="fa fa-cloud-download"></i>GO_CC_Enrichment.csv</a></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Protein Domain</th>
+                            <td><a href="{% static 'data/Protein_Domain_Enrichment/csv' %}" rel="external nofollow" ><i class="fa fa-cloud-download"></i>Protein Protein_Domain_Enrichment.csv</a></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Mutant Phenotype</th>
+                            <td><a href="{% static 'data/Mutant_Phenotype_Enrichment.csv' %}" rel="external nofollow" ><i class="fa fa-cloud-download"></i>Mutant_Phenotype_Enrichment.csv</a></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Pathway</th>
+                            <td><a href="{% static 'data/Pathway_Enrichment.csv' %}" rel="external nofollow" ><i class="fa fa-cloud-download"></i>Pathway_Enrichment.csv</a></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Disease</th>
+                            <td><a href="{% static 'data/Disease_Enrichment.csv'%}" rel="external nofollow" ><i class="fa fa-cloud-download"></i>Disease_Enrichment.csv</a></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Transcriptional Regulation</th>
+                            <td><a href="{% static 'data/Transcriptional_Regulation_Enrichment.csv' %}" rel="external nofollow" ><i class="fa fa-cloud-download"></i>Transcriptional_Regulation_Enrichment.csv</a></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Physical Interation</th>
+                            <td><a href="{% static 'data/Physical_Interaction_Enrichment.csv' %}" rel="external nofollow" ><i class="fa fa-cloud-download"></i>Physical_Interaction_Enrichment.csv</a></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Genetic Interation</th>
+                            <td><a href="{% static 'data/Genetic_Interaction_Enrichment.csv' %}" rel="external nofollow" ><i class="fa fa-cloud-download"></i>Genetic_Interaction_Enrichment.csv</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+
+
+{% endblock content %}

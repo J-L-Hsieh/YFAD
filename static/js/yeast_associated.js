@@ -11,7 +11,7 @@ $(document).ready(function(){
         $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
     } );
     /*----- chage table and network-----*/
-    $('#view_network').hide()
+    // $('#view_network').hide()
 
     $('#button_table').on('click', function(){
         $('#view_network').hide()
@@ -102,8 +102,8 @@ $(document).ready(function(){
                 return nodesFilterValues[node.type];
             }
 
-            const nodesView = new vis.DataView(nodes, { filter : nodesFilter });
-            const edgesView = new vis.DataView(edges);
+            var nodesView = new vis.DataView(nodes, { filter : nodesFilter });
+            var edgesView = new vis.DataView(edges);
             console.log(edgesView)
 
             nodeFilterSelector.forEach((filter) =>
@@ -116,12 +116,18 @@ $(document).ready(function(){
 
             startNetwork({ nodes: nodesView, edges: edgesView });
 
-
+            $('#button_network').on('click', function(){
+                startNetwork({ nodes: nodesView, edges: edgesView });
+            });
         },
         error :function(){
             alert('Something error');
         },
     })
+
+
+
+
     $.ajax({
         url : '/yeast/ajax_associated/',
         data : {'feature':feature, 'id':id, 'name':name},
@@ -132,14 +138,14 @@ $(document).ready(function(){
             let target_num = Array.from({ length: column_order.length }, (val, index) => index + 1);
             $('#Answer1').html(response.associated_table);
             var associated_table = $('#associated_table').DataTable({
-                'bAutoWidth':true,
-                'scrollY':true,
-                'scrollX':true,
-                'scrollCollapse': true,
-                fixedHeader:{
-                    header: true,
-                    footer: true,
-                },
+                    'bAutoWidth':true,
+                    'scrollY':true,
+                    // 'scrollX':true,
+                    'scrollCollapse': true,
+                    fixedHeader:           {
+                        header: true,
+                        footer: true,
+                    },
                 'columnDefs':[
                     {   'targets': target_num,
                         render:function(data,type,row,meta){
@@ -162,9 +168,6 @@ $(document).ready(function(){
                     },
                 ]
             });
-
-            // console.log('---')
-            // console.log(target_num)
 
             function PlusHide(){
                 $(document).ready(function(){
@@ -259,6 +262,7 @@ $(document).ready(function(){
                     }
                 })
             })
+            /*------------------------modal-----------------------*/
         },
         error :function(){
             alert('Something error');

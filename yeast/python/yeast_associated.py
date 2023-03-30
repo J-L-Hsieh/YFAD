@@ -32,7 +32,7 @@ def associated_analysis(associated_table, table_name, name):
             column_name.remove('Protein_Domain_id')
     response ={}
     try:
-        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+        connect = sqlite3.connect('db.sqlite3')
         db_cursor = connect.cursor()
         select ="""
             SELECT link FROM %s_link WHERE %s IN ("%s");

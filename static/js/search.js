@@ -6,12 +6,13 @@ $(document).ready(function() {
 
     $('#submit').click(function(){
         var input = $('#search_input').serialize();
-        console.log(input)
+        // console.log(input)
         $.ajax({
             url: 'ajax_search/',
             data: $('#search_input').serialize(),
             success: function(response){
                 let feature = response.feature
+                // console.log(feature)
                 $('#search_result').show()
                 $('#result').html(`<div class="card"><div class="card-body"> ${response.table}</div></div>`);
                 // /*--------add column------*/
@@ -34,7 +35,9 @@ $(document).ready(function() {
                     'columnDefs':[
                         {   'targets':0,
                         render:function(data, type, row, meta){
-                            return `<a id="mouse_touch${meta.row}" value="${meta.row}"> ${data} </a>`;
+                            // return `<a id="mouse_touch${meta.row}" value="${meta.row}"> ${data} </a>`;
+                            return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${feature}%${row[0]}" > ${data} </a>`
+
                         },
                         },
                         {   'targets': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
@@ -137,15 +140,40 @@ $(document).ready(function() {
                     })
                 }
 
-                AddCountName();
+                // AddCountName();
                 PlusHide();
                 MinusHide();
                 result_table.on('page.dt',function(){
-                    AddCountName()
+                    // AddCountName()
                     PlusHide();
                     MinusHide();
                 })
+                /*------------------------modal-----------------------*/
+                $('.modal_features').on("click",function(){
+                    var feature_name = $(this).attr('value');
+                    // console.log(feature_name)
+                    $.ajax({
+                        url : '/yeast/ajax_p1_modal/',
+                        data : {'feature_name' : feature_name},
+                        success:function(response){
+                            // console.log(response.evidence_table)
+                            $('#modal_table').html(response.evidence_table)
+                            $('#evidence_table').DataTable({
+                                'bAutoWidth' : true,
+                                // 'scrollX':true,
+                                // 'scrollY' : true,
+                                "scrollCollapse" : true,
+                                "destroy": true,
+                            })
 
+                        },
+
+                        error :function(){
+                            alert('Something error');
+                        }
+                    })
+                })
+                /*------------------------modal-----------------------*/
             },
 
 
