@@ -21,8 +21,9 @@ def p1_modal(request):
         """%(feature, feature, name)
         db_cursor.execute(select)
         sys_name1 = db_cursor.fetchall()
+        print(sys_name1)
         sys_name1_set = str(eval(sys_name1[0][0])).replace("[", "(").replace("]", ")")
-        print(sys_name1[0][0])
+        # print(sys_name1[0][0])
 
         '''-------------------------依照主要的feature取出證據檔------------------'''
         if feature == 'Physical_Interaction':

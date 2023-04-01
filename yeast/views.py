@@ -72,11 +72,11 @@ def yeast_browser(request):
 
     if table_name == 'Protein_Domain':
         select = """
-            SELECT `%s(Queried)`, %s, %s_name, count, SystematicName  FROM %s_1_to_10;
+            SELECT `%s(Queried)`, %s, %s_name FROM %s_10_length;
         """%(table_name, table_column, table_name, table_name)
     else:
         select = """
-            SELECT `%s(Queried)`, %s, count, SystematicName FROM %s_1_to_10;
+            SELECT `%s(Queried)`, %s FROM %s_10_length;
         """%(table_name, table_column, table_name)
 
     try:
@@ -98,19 +98,26 @@ def yeast_browser(request):
 
     '''---將Protein Domain id換成name 新增Detail欄位---'''
     table = table.fillna('-')
-
-    count_name_table =  table[['count','SystematicName']]
-    table = table.drop(columns=['count', 'SystematicName'])
+    # print(table.head(5))
+    '''------tooltips------'''
+    # count_name_table =  table[['count','SystematicName']]
+    # table = table.drop(columns=['count', 'SystematicName'])
+    '''------tooltips------'''
 
     table_columns = table.columns.values.tolist()
     columns = []
     for i in table_columns:
         columns.append({'title': i})
 
-    count_name_table = count_name_table.values.tolist()
+    '''------tooltips------'''
+    # count_name_table = count_name_table.values.tolist()
+    '''------tooltips------'''
+
     table = table.values.tolist()
 
-    response = {'table' : table, 'columns': columns, 'count_name_table':count_name_table}
+    # response = {'table' : table, 'columns': columns, 'count_name_table':count_name_table}
+    response = {'table' : table, 'columns': columns}
+
     return JsonResponse(response)
 '''----------------------------------------------------------------------------'''
 def yeast_p1_modal(request):
@@ -122,7 +129,7 @@ def yeast_p1_modal(request):
 
 '''----------------------------------------------------------------------------'''
 def yeast_network(request):
-
+    st_time = time.time()
     table_name = request.POST.get('feature')
     row_name = request.POST.get('id')
     name = request.POST.get('name')
@@ -131,7 +138,9 @@ def yeast_network(request):
     try:
         connect = sqlite3.connect('db.sqlite3')
         select = """
-            SELECT `%s(Queried)`, GO_MF, GO_BP, GO_CC, Protein_Domain, Protein_Domain_id, Mutant_Phenotype, Pathway, Disease, Transcriptional_Regulation, Physical_Interaction, Genetic_Interaction, count, SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
+            SELECT `%s(Queried)`, GO_MF, GO_BP, GO_CC, Protein_Domain, Protein_Domain_id, Mutant_Phenotype, Pathway, Disease, Transcriptional_Regulation, Physical_Interaction, Genetic_Interaction, count, SystematicName
+            FROM %s_1_to_10
+            WHERE `%s(Queried)` IN ("%s");
         """%(table_name, table_name, table_name, row_name)
         table = pd.read_sql('%s' %select, connect)
         print(select)
@@ -139,6 +148,8 @@ def yeast_network(request):
     finally:
         connect.close()
 
+    time2 = time.time()
+    print(time2 - st_time)
     # 刪除空值的欄位
     associated_table = table.dropna(axis='columns')
 
@@ -152,6 +163,8 @@ def yeast_network(request):
 
     associated_table['%s(Queried)'%table_name] = name
 
+    time3 = time.time()
+    print(time3 - time2)
     network_data = network(associated_table, table_name)
 
     column_order = associated_table.columns.values.tolist()

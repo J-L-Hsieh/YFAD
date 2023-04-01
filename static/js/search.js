@@ -4,9 +4,50 @@ $.ajaxSetup({
 });
 $(document).ready(function() {
 
+    var select_feature = document.getElementById("select_feature");
+    var chage_placeholder = document.getElementById("placeholder")
+    console.log(select_feature)
+
+    select_feature.onchange = function(){
+        var feature = select_feature.value;
+        switch (feature){
+            case 'GO_MF':
+                chage_placeholder.placeholder = "Y-form DNA binding";
+                break;
+            case 'GO_BP':
+                chage_placeholder.placeholder = "zymogen activation";
+                break;
+            case 'GO_CC':
+                chage_placeholder.placeholder = "vacuole";
+                break;
+            case 'Protein_Domain':
+                chage_placeholder.placeholder = "MutS domain V";
+                break;
+            case 'Mutant Phenotype':
+                chage_placeholder.placeholder = "inviable";
+                break;
+            case 'Pathway':
+                chage_placeholder.placeholder = "glycolysis";
+                break;
+            case 'Disease':
+                chage_placeholder.placeholder = "cancer";
+                break;
+            case 'Transcriptional_Regulation':
+                chage_placeholder.placeholder = "SIN4";
+                break;
+            case 'Physical_Interaction':
+                chage_placeholder.placeholder = "RPN11";
+                break;
+            case 'Genetic_Interaction':
+                chage_placeholder.placeholder = "ADH3";
+                break;
+        }
+    }
+
     $('#submit').click(function(){
         var input = $('#search_input').serialize();
         // console.log(input)
+
         $.ajax({
             url: 'ajax_search/',
             data: $('#search_input').serialize(),
@@ -36,7 +77,7 @@ $(document).ready(function() {
                         {   'targets':0,
                         render:function(data, type, row, meta){
                             // return `<a id="mouse_touch${meta.row}" value="${meta.row}"> ${data} </a>`;
-                            return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${feature}%${row[0]}" > ${data} </a>`
+                            return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${feature}%${row[row.length-1]}" > ${data} </a>`
 
                         },
                         },

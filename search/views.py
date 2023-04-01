@@ -15,12 +15,12 @@ def search_mode(request):
     #Protein Domain 表中 name與輸入的字並多取出這個欄位來顯示
     if feature == 'Protein_Domain':
         select = """
-            SELECT `%s(Queried)`, GO_MF, GO_BP, GO_CC, Protein_Domain, Mutant_Phenotype, Pathway, Disease, Transcriptional_Regulation, Physical_Interaction, Genetic_Interaction, count, SystematicName, Protein_Domain_name FROM %s_1_to_10 WHERE %s_name LIKE '%s';
+            SELECT `%s(Queried)`, GO_MF, GO_BP, GO_CC, Protein_Domain, Mutant_Phenotype, Pathway, Disease, Transcriptional_Regulation, Physical_Interaction, Genetic_Interaction, Protein_Domain_name FROM %s_10_length WHERE %s_name LIKE '%s';
         """%(feature, feature, feature, '%{}%'.format(name))
 
     else:
         select = """
-            SELECT `%s(Queried)`, GO_MF, GO_BP, GO_CC, Protein_Domain, Mutant_Phenotype, Pathway, Disease, Transcriptional_Regulation, Physical_Interaction, Genetic_Interaction, count, SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` LIKE '%s';
+            SELECT `%s(Queried)`, GO_MF, GO_BP, GO_CC, Protein_Domain, Mutant_Phenotype, Pathway, Disease, Transcriptional_Regulation, Physical_Interaction, Genetic_Interaction FROM %s_10_length WHERE `%s(Queried)` LIKE '%s';
         """%(feature, feature, feature, '%{}%'.format(name))
 
     try:
@@ -35,12 +35,15 @@ def search_mode(request):
     else:
         table['Detail'] = table['%s(Queried)'%feature]
 
-    count_name_table =  table[['count','SystematicName']]
-    count_name_table = count_name_table.values.tolist()
+    '''------tooltips------'''
+    # count_name_table =  table[['count','SystematicName']]
+    # count_name_table = count_name_table.values.tolist()
+    '''------tooltips------'''
 
-
-    table = table.fillna('-').drop(['count','SystematicName'],axis=1)
+    table = table.fillna('-')
     table = table.to_html(index= None,classes="table table-striped table-bordered")
     table = table.replace('table', 'table id="result_table"',1)
-    response = {'table':table, 'feature':feature, 'count_name_table':count_name_table}
+    # response = {'table':table, 'feature':feature, 'count_name_table':count_name_table}
+    response = {'table':table, 'feature':feature}
+
     return JsonResponse(response)

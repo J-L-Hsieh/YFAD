@@ -150,20 +150,24 @@ $(document).ready(function(){
                     {   'targets': target_num,
                         render:function(data,type,row,meta){
                             data = eval(data)
-                            if (data.length > 3){
-                                hide_data = data.slice(2)
-                                return `<a > ${data[0]}, ${data[1]}, ${data[2]}</a><br>
-                                <span>
-                                    <i data-bs-toggle="collapse" id="plus${meta.col}_${meta.row}" class="fa fa-plus-circle" style="color:darkblue" aria-hidden="true"></i>
-                                </span>
-                                <span class="collapse" id="hide${meta.col}_${meta.row}" style='display:none'>
-                                    <i data-bs-toggle="collapse" id="minus${meta.col}_${meta.row}"class="fa fa-minus-circle" style="color:darkblue" aria-hidden="true"></i>
-                                    ${hide_data}
-                                </span>
-                                `
-                            }else{
-                                return `<a> ${data} </a>`;
-                            }
+                            var icon_data = data.map(item => '· '+ item.replace(/,/g,"___")).toString();
+                            console.log(typeof(icon_data))
+                            icon_data = icon_data.replace(/,/g," ").replace(/___/g,",");
+                            return `<a> ${icon_data} </a>`
+                            // if (data.length > 3){
+                            //     hide_data = data.slice(2)
+                            //     return `<a > ${data[0]}, ${data[1]}, ${data[2]}</a><br>
+                            //     <span>
+                            //         <i data-bs-toggle="collapse" id="plus${meta.col}_${meta.row}" class="fa fa-plus-circle" style="color:darkblue" aria-hidden="true"></i>
+                            //     </span>
+                            //     <span class="collapse" id="hide${meta.col}_${meta.row}" style='display:none'>
+                            //         <i data-bs-toggle="collapse" id="minus${meta.col}_${meta.row}"class="fa fa-minus-circle" style="color:darkblue" aria-hidden="true"></i>
+                            //         ${hide_data}
+                            //     </span>
+                            //     `
+                            // }else{
+                            //     return `<a> ${data} </a>`;
+                            // }
                         },
                     },
                 ]
@@ -186,7 +190,7 @@ $(document).ready(function(){
                 $(document).ready(function(){
                     var minus = document.querySelectorAll('.fa-minus-circle');
                     minus.forEach(function(element){
-                        console.log(element)
+                        // console.log(element)
                         element.addEventListener('click', function(event){
                             var coordinate = this.id.replace('minus','')
                             $(`#hide${coordinate}`).hide();

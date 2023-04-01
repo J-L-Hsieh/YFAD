@@ -25,7 +25,7 @@ $(document).ready(function() {
         data : { 'first_feature' : first_feature,'second_feature' : second_feature },
         success:function(response){
             // -------------------------table1---------------
-            $('#table1').html(`<div class="card" style="margin-top:5%;" ><div class="card-body">${response.both_contain}</div></div>`)
+            $('#table1').html(`<div class="card" style="margin-top:5%;" ><h3 class ="fs-3 card-header">table1</h3><div class="card-body">${response.both_contain}</div></div>`)
             let trs1 = document.querySelectorAll('#both_name_table tr');
 
             for (let tr of trs1) {
@@ -73,7 +73,7 @@ $(document).ready(function() {
             })
             // -------------------------table1---------------
             // -------------------------table2---------------
-            $('#table2').html(`<div class="card" style="margin-top:5%;" ><div class="card-body">${response.queried_contain}</div></div>`)
+            $('#table2').html(`<div class="card" style="margin-top:5%;" ><h3 class ="fs-3 card-header">table2</h3><div class="card-body">${response.queried_contain}</div></div>`)
             let trs2 = document.querySelectorAll('#queried_table tr');
 
             for (let tr of trs2) {
@@ -121,7 +121,7 @@ $(document).ready(function() {
             })
             // -------------------------table2---------------
             // -------------------------table3---------------
-            $('#table3').html(`<div class="card" style="margin-top:5%;" ><div class="card-body">${response.second_contain}</div></div>`)
+            $('#table3').html(`<div class="card" style="margin-top:5%;" ><h3 class ="fs-3 card-header">table3</h3><div class="card-body">${response.second_contain}</div></div>`)
             let trs3 = document.querySelectorAll('#second_table tr');
             console.log(trs3)
 
