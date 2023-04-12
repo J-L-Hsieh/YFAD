@@ -42,18 +42,18 @@ $(document).ready(function() {
                     {   'targets':1,
                         render:function(row){
                             if (row ==='true'){
-                                return '<div>&#9989</div>'
+                                return '<i class="fa fa-check" aria-hidden="true" style="color:green"></i>'
                             }else{
-                                return '<div>&#10060</div>'
+                                return '<i class="fa fa-times" aria-hidden="true" style="color:red"></i>'
                             }
                         }
                     },
                     {   "target":2,
                         render: function(row){
                             if (row ==='true'){
-                                return '<div>&#9989</div>'
+                                return '<i class="fa fa-check" aria-hidden="true" style="color:green"></i>'
                             }else{
-                                return '<div>&#10060</div>'
+                                return '<i class="fa fa-times" aria-hidden="true" style="color:red"></i>'
                             }
                         }
                     },
@@ -90,18 +90,18 @@ $(document).ready(function() {
                     {   'targets':1,
                         render:function(row){
                             if (row ==='true'){
-                                return '<div>&#9989</div>'
+                                return '<i class="fa fa-check" aria-hidden="true" style="color:green"></i>'
                             }else{
-                                return '<div>&#10060</div>'
+                                return '<i class="fa fa-times" aria-hidden="true" style="color:red"></i>'
                             }
                         }
                     },
                     {   "target":2,
                         render: function(row){
                             if (row ==='true'){
-                                return '<div>&#9989</div>'
+                                return '<i class="fa fa-check" aria-hidden="true" style="color:green"></i>'
                             }else{
-                                return '<div>&#10060</div>'
+                                return '<i class="fa fa-times" aria-hidden="true" style="color:red"></i>'
                             }
                         }
                     },
@@ -139,18 +139,18 @@ $(document).ready(function() {
                     {   'targets':1,
                         render:function(row){
                             if (row ==='true'){
-                                return '<div>&#9989</div>'
+                                return '<i class="fa fa-check" aria-hidden="true" style="color:green"></i>'
                             }else{
-                                return '<div>&#10060</div>'
+                                return '<i class="fa fa-times" aria-hidden="true" style="color:red"></i>'
                             }
                         }
                     },
                     {   "target":2,
                         render: function(row){
                             if (row ==='true'){
-                                return '<div>&#9989</div>'
+                                return '<i class="fa fa-check" aria-hidden="true" style="color:green"></i>'
                             }else{
-                                return '<div>&#10060</div>'
+                                return '<i class="fa fa-times" aria-hidden="true" style="color:red"></i>'
                             }
                         }
                     },

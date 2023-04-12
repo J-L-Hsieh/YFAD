@@ -36,7 +36,7 @@
                 </form>
             </div>
             <div class="card-footer text-center p-2">
-                <button id="submit" class="btn btn-outline-primary">送出</button>
+                <button id="submit" class="btn btn-outline-primary">Submit</button>
             </div>
         </div>
     </div>
@@ -52,15 +52,17 @@
     <div class="modal-dialog maodal-lg" role="document" style="max-width:70%;">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Edvidence table</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h3 class="modal-title" id="exampleModalLabel">Edvidence table</h3>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">x</button>
             </div>
             <div class="modal-body">
-                <div id="modal_table" class="card"></div>
+                <div class="card">
+                    <h4 class="card-header">table name</h4>
+                    <div id="modal_table" class="card-body"></div>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
             </div>
         </div>
     </div>

@@ -212,7 +212,7 @@ def yeast_associated(request):
 
     # network_data = network(associated_table, table_name)
     #拿出column name
-    associated_table = associated_table.to_html(index= None,classes="table table-bordered table-hover dataTable no-footer")
+    associated_table = associated_table.to_html(index= None,classes="table table-bordered table-hover dataTable no-footer ")
     associated_table = associated_table.replace('table','table id="associated_table"',1)
 
     response={'associated_table':associated_table , 'all_tables':all_tables}

@@ -46,7 +46,7 @@ def associated_analysis(associated_table, table_name, name):
                 SELECT `%s(Queried)`,SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
             """%(i, i, i, feature_name)
             feature_systematic = pd.read_sql('%s' %select, connect)
-            feature_systematic['Queried %s Term(A)' %table_name] = pd.Series(eval("[\'"+queried_link+"\']")*len(domain_name))
+            feature_systematic['Queried %s Term(A)' %table_name] = queried_link
             feature_systematic['Observed Ratio'] = feature_systematic.apply(lambda x: oberved(queried_name, x['SystematicName']), axis=1)
             feature_systematic['Expect Ratio'] = feature_systematic.apply(lambda x: str(len(eval(x['SystematicName'])))+'/6611', axis=1)
             feature_systematic['Signficance of Associated(p-value)'] = feature_systematic.apply(lambda x: yeast_enrichment(queried_name, x['SystematicName']), axis=1)

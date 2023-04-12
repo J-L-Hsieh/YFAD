@@ -35,11 +35,11 @@ $(document).ready(function(){
         url : '/yeast/ajax_network/',
         data : {'feature':feature, 'id':id, 'name':name},
         success:function(response){
-            var column_order = response.column_order
-
+            var column_order = response.column_order;
+            var network_judge = false;
             /* --------------------------network graph----------------------------*/
-            for (i=0 ;i<column_order.length; i++){
-                if(i<5){
+            for (i=1 ;i<column_order.length; i++){
+                if(i<6){
                     $('#checkbox_container1').append(`<div style="width: 20%;" class="flexbox"><input type="checkbox" name="nodeFilterSelect" value=${column_order[i]} checked>${column_order[i]}</input></div>`)
                 }else{
                     $('#checkbox_container2').append(`<div style="width: 20%;" class="flexbox"><input type="checkbox" name="nodeFilterSelect" value=${column_order[i]} checked>${column_order[i]}</input></div>`)
@@ -117,7 +117,10 @@ $(document).ready(function(){
             startNetwork({ nodes: nodesView, edges: edgesView });
 
             $('#button_network').on('click', function(){
-                startNetwork({ nodes: nodesView, edges: edgesView });
+                if (network_judge == false){
+                    startNetwork({ nodes: nodesView, edges: edgesView });
+                    network_judge = true;
+                }
             });
         },
         error :function(){
@@ -138,19 +141,24 @@ $(document).ready(function(){
             let target_num = Array.from({ length: column_order.length }, (val, index) => index + 1);
             $('#Answer1').html(response.associated_table);
             var associated_table = $('#associated_table').DataTable({
-                    'bAutoWidth':true,
+                    "autoWidth": false,
                     'scrollY':true,
-                    // 'scrollX':true,
+                    'scrollX':true,
                     'scrollCollapse': true,
-                    fixedHeader:           {
+                    fixedHeader: {
                         header: true,
                         footer: true,
                     },
                 'columnDefs':[
+                    {   'targets': 0,
+                        render:function(data,type,row,meta){
+                            return `<br><a"> ${data} </a>`
+                    },
+                },
                     {   'targets': target_num,
                         render:function(data,type,row,meta){
                             data = eval(data)
-                            var icon_data = data.map(item => '· '+ item.replace(/,/g,"___")).toString();
+                            var icon_data = data.map(item => '<a style="font-size: 2em; color:blue">· </a>'+ item+'<br>'.replace(/,/g,"___")).toString();
                             console.log(typeof(icon_data))
                             icon_data = icon_data.replace(/,/g," ").replace(/___/g,",");
                             return `<a> ${icon_data} </a>`
@@ -211,7 +219,7 @@ $(document).ready(function(){
             /*-------------- 製作all table的 div 與專屬id ------------------ */
             var add_html = ''
             var add_herf = ''
-            for (i=0 ;i< column_order.length;i++){
+            for (i=1 ;i< column_order.length;i++){
                 /*--------------------------table 容器----------------------  */
                 add_html = add_html + `<div id = ${column_order[i]}></div>`
                 add_herf = add_herf + `<input id ="${column_order[i]}_move" class="btn btn-primary" type="button" style="margin:2px;" name="Submit" value="${column_order[i]}"  ></input>`

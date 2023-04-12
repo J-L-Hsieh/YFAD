@@ -13,14 +13,14 @@
                         <div id="second" class="flexbox"></div>
                     </div>
                     <div class="flexbox">
-                        <div id="intersection_num" style="position: absolute;left: 52%;"></div>
+                        <div id="intersection_num" style="position: absolute;left: 50%;"></div>
 
-                        <div id="queried_term" style="position: absolute;left: 20%;top: 8%;color:blue;"></div>
-                        <div id="queried_num" style="position: absolute;left: 40%;top: 10%;color:blue;"></div>
+                        <div id="queried_term" style="position: absolute;left: 5%;top: 6%;color:blue;"></div>
+                        <div id="queried_num" style="position: absolute;left: 5%;top: 10%;color:blue;"></div>
                         <div id="queried_last" style="position: absolute;left: 40%;"></div>
 
-                        <div id="compare_term" style="position: absolute;left: 55%;top: 8%;color: green;"></div>
-                        <div id="compare_num" style="position: absolute;left: 60%;top: 10%;color:green;"></div>
+                        <div id="compare_term" style="position: absolute;right: 5%;top: 6%;color: green;"></div>
+                        <div id="compare_num" style="position: absolute;right: 5%;top: 10%;color:green;"></div>
                         <div id="compare_last" style="position: absolute;left: 60%;"></div>
 
                         <img src="{% static 'img/intersection.png'%}" style="margin: 1rem;">
@@ -44,13 +44,19 @@
             <div class="modal-dialog maodal-lg" role="document" style="max-width:70%;">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Edvidence table</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
+                        <h3 class="modal-title" id="exampleModalLabel">Edvidence table</h3>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">x</button>
+                        工作與非工作出意外                    </div>
                     <div class="modal-body">
-                        <div id="feature1" class="card"></div>
+                        <div class="card">
+                            <h4 class="card-header">table name</h4>
+                            <div id="feature1" class="card-body"></div>
+                        </div>
                         <br>
-                        <div id="feature2" class="card"></div>
+                        <div class="card">
+                            <h4 class="card-header">table name</h4>
+                            <div id="feature2" class="card-body"></div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
