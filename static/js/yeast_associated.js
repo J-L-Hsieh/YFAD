@@ -68,12 +68,16 @@ $(document).ready(function(){
                 }
             };
             const network = new vis.Network(container, data, options);
-
             // ----設置固定位置設定-----
             network.on("stabilizationIterationsDone", function () {
                 network.setOptions( { physics: false } );
+
             });
+
             // ----設置固定位置設定-----
+            network.on("afterDrawing", function(){
+                unLoading_mask();
+            });
 
             }
 
@@ -118,9 +122,11 @@ $(document).ready(function(){
 
             $('#button_network').on('click', function(){
                 if (network_judge == false){
+                    Loading_mask();
                     startNetwork({ nodes: nodesView, edges: edgesView });
                     network_judge = true;
                 }
+                // unLoading_mask()
             });
         },
         error :function(){

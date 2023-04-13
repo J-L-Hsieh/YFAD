@@ -2,6 +2,11 @@
 {% load static %}
 
 {% block style %}
+<!-- loading -->
+<script src="https://cdn.jsdelivr.net/npm/busy-load/dist/app.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/busy-load/dist/app.min.css" rel="stylesheet">
+<!-- loading -->
+
 <style>
     /* -----表格垂直置中---- */
     div.dataTables_scrollBody > table > tbody > tr > td{
@@ -13,6 +18,37 @@
         width: 1000px;
         height: 600px;
     }
+
+    .loader {
+        width: 53px;
+        height: 53px;
+        border-radius: 50%;
+        display: inline-block;
+        border-top: 3px solid #FFF;
+        border-right: 3px solid transparent;
+        box-sizing: border-box;
+        animation: rotation 1s linear infinite;
+        }
+
+        @keyframes rotation {
+        0% {
+        transform: rotate(0deg);
+        }
+
+        100% {
+        transform: rotate(360deg);
+        }
+        }
+
+        .container-mask {
+        display: flex;
+        }
+
+        .box-mask {
+        flex: 1;
+        font-size: 40px;
+    }
+
 </style>
 {% endblock style %}
 
@@ -95,4 +131,25 @@
 <script>csrf_token= "{{ csrf_token }}"</script>
 <script src="{% static 'js/yeast_associated.js'%}"></script>
 
+<script>
+    function Loading_mask() {
+        let count = 0;
+        let customElement = $("<div>", {
+        id: "countdown",
+        css: { "font-size": "40px", "background-color": 'black', "opacity": ".5", "border": 'none', "padding": '15px', "color": '#fff', "border-radius": '20px' },
+        });
+        customElement.append('<div class="container-mask"><span class="loader box-mask"></span>' + '<p class="box-mask">' + '&nbsp;Loading...' + count + '</p></div>')
+        $.busyLoadFull("show", {
+            custom: customElement
+        });
+        let interval = setInterval(function () {
+            count++;
+            customElement.empty()
+            customElement.append('<div class="container-mask"><span class="loader box-mask"></span>' + '<p class="box-mask">' + '&nbsp;Loading...' + count + '</p></div>')
+        }, 1000);
+        }
+    function unLoading_mask() {
+        $.busyLoadFull("hide");
+    }
+</script>
 {% endblock content %}
