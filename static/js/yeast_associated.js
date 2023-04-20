@@ -225,7 +225,7 @@ $(document).ready(function(){
             /*-------------- 製作all table的 div 與專屬id ------------------ */
             var add_html = ''
             var add_herf = ''
-            for (i=1 ;i< column_order.length;i++){
+            for (i=0 ;i< column_order.length;i++){
                 /*--------------------------table 容器----------------------  */
                 add_html = add_html + `<div id = ${column_order[i]}></div>`
                 add_herf = add_herf + `<input id ="${column_order[i]}_move" class="btn btn-primary" type="button" style="margin:2px;" name="Submit" value="${column_order[i]}"  ></input>`

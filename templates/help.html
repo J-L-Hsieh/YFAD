@@ -1,0 +1,457 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block content %}
+<div class="container-fluid">
+    <div class="col-9 mx-auto">
+    <h2>
+        <i class="fa fa-question-circle"></i> Help</h2>
+    <hr class="page-title-under">
+    </div>
+  <div class="col-9 mx-auto px-0">
+    <div class="card-body">
+      <div class="row mb-3 block_href">
+        <div class="col-12 mx-auto">
+          <div class="card-deck">
+            <div class="card">
+              <div class="card-header">
+                <h4 class="m-0">About YFAD</h4>
+              </div>
+              <div class="card-body">
+                <ul class="mb-0">
+                  <li>
+                    <a href="#motivation">Motivation of YFAD</a>
+                  </li>
+                  <li>
+                    <a href="#whatisYARG">What is YFAD?</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <h4 class="m-0">Construction of YFAD</h4>
+              </div>
+              <div class="card-body">
+                <ul class="mb-0">
+                </ul>
+              </div>
+            </div>
+            <div class="card">
+              <div class="card-header">
+                <h4 class="m-0">Usage of YFAD</h4>
+              </div>
+              <div class="card-body">
+                <ul class="mb-0">
+                  <li>
+                    <a href="#database_interface">Database interface</a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <hr class="mb-3" style="border-width:.15rem; border-color:grey;">
+        </div>
+      </div>
+
+      <!-- <div class="card mb-3" id="motivation">
+
+        <div class="card-header">
+          <h4 class="m-0">Motivation of YFAD</h4>
+        </div>
+
+
+        <div class="card-body">
+          <p>
+          </p>
+        </div>
+
+      </div>
+
+      <div class="card mb-3" id="whatisYARG">
+
+        <div class="card-header">
+          <h4 class="m-0">What is YFAD?</h4>
+        </div>
+
+        <div class="card-body">
+          <p>
+        </p>
+        </div>
+
+      </div>
+
+      <div class="card mb-3" id="configuration_of_YARG">
+
+        <div class="card-header">
+          <h4 class="m-0">Configuration of YFAD database</h4>
+        </div>
+
+        <div class="card-body">
+            <p>
+            </p>
+
+        </div>
+        <div class="text-center">
+        </div>
+
+      </div>
+
+      <div class="card mb-3" id="collection">
+        <div class="card-header">
+          <h4 class="m-0">Collection of 679 lipid-binding proteins</h4>
+        </div>
+        <div class="card-body">
+          <p>
+            We collected 8 sets of PI-binding yeast proteins which covers all members within PI. The first study by Zhu et al.(2001)  provided the binding protein list for PI(3)P (51), PI(4)P (85), PI(3,4)P2 (71), PI(4,5)P2 (73) and PI(3,4,5)P3 (65), respectively  [number in bracket represent total number of binding-proteins for a specific phosphatidylinositide]. Lu et al.(2012)  provided a total of 295 P(3,5)P2 and 269 PtdIns-binding yeast proteins, respectively. Herianto et al. (2020)  provided the 41 yeast PI(5)P-binding proteins which were also validated using flow-cytometry. Further, Gallego et al.(2010)  used lipid array to define the selected proteins lipid-binding spectrum which resulted in PtdIns (32), PI(3)P (35), PI(4)P (48), PI(4,5)P2 (58) and PI(3,4,5)P3 (48) interactions, respectively.
+            <br>
+            <br>
+            QuickGO based Gene Ontology and GO Annotations terms derived list of proteins additionally complemented our comprehensive interaction data list.
+            We used total eight specific GO terms [e.g. Phosphatidylinositol-binding (GO:0035091), phosphatidylinositol-3-phosphate binding (GO:0032266),  phosphatidylinositol-4-phosphate binding (GO:0070273), phosphatidylinositol-5-phosphate binding (GO:0010314), phosphatidylinositol-3,4-bisphosphate binding (GO:0043325), phosphatidylinositol-3,5-bisphosphate binding (GO:0080025), phosphatidylinositol-4,5-bisphosphate binding (GO:0005546), phosphatidylinositol-3,4,5-Trisphosphate binding (GO:0005547)] to obtain proteins defined with a particular phosphatidylinositols-binding annotations. A collection of research articles was obtained by PubMed search engine.
+            <br>
+            <br>
+            A total 869 research articles were collected, after removing any redundancy, a total 203 papers were manually read and screened. Out of 203 papers total of 79 studies defined PI-binding properties using traditional and high-throughput methodologies(Supplementary the following table)
+          </p>
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>Name of phosphoinositide</th>
+                <th>Keywords used</th>
+                <th>Number of paper(s) obtained from PubMed</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>PtdIns</td>
+                <td>"phosphatidylinositol-binding" "cerevisiae"</td>
+                <td>7</td>
+              </tr>
+              <tr>
+                <td>PI(3)P</td>
+                <td>"phosphatidylinositol 3 phosphate" "binding" "cerevisiae"</td>
+                <td>72</td>
+              </tr>
+              <tr>
+                <td>PI(4)P</td>
+                <td>"phosphatidylinositol 4 phosphate" "binding" "cerevisiae"</td>
+                <td>58</td>
+              </tr>
+              <tr>
+                <td>PI(5)P</td>
+                <td>"phosphatidylinositol 5 phosphate" "binding" "cerevisiae"</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td>PI(3,4)P2</td>
+                <td>"phosphatidylinositol 3,4 bisphosphate" "binding" "cerevisiae"</td>
+                <td>2</td>
+              </tr>
+              <tr>
+                <td>PI(3,5)P2</td>
+                <td>"phosphatidylinositol 3,5 bisphosphate" "binding" "cerevisiae"</td>
+                <td>15</td>
+              </tr>
+              <tr>
+                <td>PI(4,5)P2</td>
+                <td>"phosphatidylinositol 4,5 bisphosphate" "binding" "cerevisiae"</td>
+                <td>56</td>
+              </tr>
+              <tr>
+                <td>PI(3,4,5)P3</td>
+                <td>"phosphatidylinositol 3,4,5 triphosphate" "binding" "cerevisiae"</td>
+                <td>8</td>
+              </tr>
+              <tr>
+                <td>PtdIns(3)P</td>
+                <td>"PtdIns(3)P" "binding" "cerevisiae"</td>
+                <td>21</td>
+              </tr>
+              <tr>
+                <td>PtdIns(4)P</td>
+                <td>"PtdIns(4)P" "binding" "cerevisiae"</td>
+                <td>10</td>
+              </tr>
+              <tr>
+                <td>PtdIns(5)P</td>
+                <td>"PtdIns(5)P" "binding" "cerevisiae"</td>
+                <td>2</td>
+              </tr>
+              <tr>
+                <td>PtdIns(3,4)P2</td>
+                <td>"PtdIns(3,4)P2" "binding" "cerevisiae"</td>
+                <td>1</td>
+              </tr>
+              <tr>
+                <td>PtdIns(3,5)P2</td>
+                <td>"PtdIns(3,5)P2" "binding" "cerevisiae""</td>
+                <td>8</td>
+              </tr>
+              <tr>
+                <td>PtdIns(4,5)P2</td>
+                <td>"PtdIns(4,5)P2" "binding" "cerevisiae"</td>
+                <td>11</td>
+              </tr>
+              <tr>
+                <td>PtdIns(3,4,5)P3</td>
+                <td>"PtdIns(3,4,5)P3" "binding" "cerevisiae"</td>
+                <td>8</td>
+              </tr>
+              <tr>
+                <td>PtdIns</td>
+                <td>“PtdIns” "binding" "cerevisiae"</td>
+                <td>80</td>
+              </tr>
+              <tr>
+                <td>Phosphatidylinositol (common)</td>
+                <td>"phosphatidylinositol” “binding" "cerevisiae"</td>
+                <td>509</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+      <div class="card mb-3" id="collection_domain">
+        <div class="card-header">
+          <h4 class="m-0">Collection of lipid-binding domains and lipid-related domains</h4>
+        </div>
+        <div class="card-body">
+          <p>
+            A complete list of yeast protein domains was obtained using the SGD and YeastMine database consisting of the proteome-wide collection of identified domains present in every protein of yeast. Based on the description of the lipid-binding domain by Chiapparino et al.(2016), DiNitto et al.(2003) and Stahelin et al.(2009) .
+            Further, to define lipid-related domains, we utilized the inclusion of specific terms such as “lipid” and other unique lipid names such as “Phosphatidylserine”, “Phosphatidylinositol”, “Sterol” etc. to categorize them as lipid-related domains. The rest of the domains were categorized as “Others”.
+          </p>
+
+        </div>
+      </div>
+
+      <div class="card mb-3" id="testing_the_enrichment">
+        <div class="card-header">
+          <h4 class="m-0">Testing the enrichment of input genes</h4>
+        </div>
+        <div class="card-body">
+          <h4>Testing the enrichment of the binding proteins of 8 PI in the input genes</h4>
+          <p>For users' input genes, YFAD tests whether they are enriched with the proteins which bind to the specific phosphoinositide under study. The p-value is calculated using
+            hypergeometric test as follows.</p>
+          <p>
+            $$P_{value} = \sum^{min(A,I)}_{x=K} \frac{\left(\begin{matrix}A\\x\end{matrix} \right)\left(\begin{matrix}G-A\\I-x\end{matrix}\right)}{\left(\begin{matrix}G\\I\end{matrix}\right)}$$
+          </p>
+          <p>where G=6705 is the number of yeast genes which have protein products, A is the number of proteins which binding the specific phosphoinositide of insterest(e.g. A = 240 for PtdIns, A = 107 for PI(3,4)P2, etc.), I is
+            the number of users’ input genes, and K is the number of input protein which bind to the specific phosphoinositide under study.</p>
+          <br>
+
+          <h4>Testing the enrichment of the protein domains the input genes</h4>
+          <p>For users' input genes, YFAD tests whether they are enriched with any protein domains. The p-value is calculated using
+            hypergeometric test as follows.</p>
+          <p>
+            $$P_{value} = \sum^{min(A,I)}_{x=K} \frac{\left(\begin{matrix}A\\x\end{matrix} \right)\left(\begin{matrix}G-A\\I-x\end{matrix}\right)}{\left(\begin{matrix}G\\I\end{matrix}\right)}$$
+          </p>
+          <p>where G=6705 is the number of yeast genes which have protein products, A is the number of proteins which have the protein domain of interest(e.g. A = 8 for SM00273, A = 40 for G3DSA:2.30.29.30, etc.), I is
+            the number of users’ input genes, and K is the number of input protein which have the protein domain of interest.</p>
+        </div>
+      </div>
+
+      <div class="card mb-3" id="evidence_code">
+        <div class="card-header">
+          <h4 class="m-0">Evidence code explanations</h4>
+        </div>
+        <div class="card-body">
+          <table class="table table-bordered table-hover">
+            <thead>
+              <tr>
+                <th>Evidence code</th>
+                <th>Explanations</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              <tr>
+                <td>HDA</td>
+                <td>Inferred from High Throughput Direct Assay</td>
+              </tr>
+              <tr>
+                <td>IDA</td>
+                <td>Inferred from Direct Assay</td>
+              </tr>
+              <tr>
+                <td>IPI</td>
+                <td>Inferred from Physical Interaction</td>
+              </tr>
+              <tr>
+                <td>IBA</td>
+                <td>Inferred from Biological aspect of Ancestor</td>
+              </tr>
+              <tr>
+                <td>IMP</td>
+                <td>Inferred from Mutant Phenotype</td>
+              </tr>
+              <tr>
+                <td>IEA</td>
+                <td>Inferred from Electronic Annotation</td>
+              </tr>
+              <tr>
+                <td>IGI</td>
+                <td>Inferred from Genetic Interaction</td>
+              </tr>
+              <tr>
+                <td>IKR</td>
+                <td>Inferred from Key Residues</td>
+              </tr>
+              <tr>
+                <td>ISS</td>
+                <td>Inferred from Sequence or structural Similarity</td>
+              </tr>
+              <tr>
+                <td>EXP</td>
+                <td>Inferred from Experiment</td>
+              </tr>
+              <tr>
+                <td>TAS</td>
+                <td>Traceable Author Statement </td>
+              </tr>
+              <tr>
+                <td>RCA</td>
+                <td>Inferred from Reviewed Computational Analysis</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card mb-3" id="database_interface">
+        <div class="card-header">
+          <h4 class="m-0">Database interface</h4>
+        </div>
+        <div class="card-body">
+          <h4>YFAD provides two search modes</h4>
+          <br>
+          <h4>First search mode:</h4>
+          <a>Users can input a protein name (systematic, standard, or alias name).</a>
+          <div class="text-center">
+            <img src="{% static 'img/help/search_mode_1_a.png'%}" style="max-width:80%;margin-top:2%;margin-bottom:3%; ">
+          </div>
+          <p>After submitting a single input protein, YFAD yields an output page with results in four compartments. The first section showed the basic information such as systematic name, standard name, aliases and description of the input protein and link to SGD to see the additional characterization of protein of interest in the yeast system. Further, we also provide human homolog including OMIM human homolog representative disease phenotype(s).
+          </p>
+          <div class="text-center">
+            <img src="{% static 'img/help/search_mode_1_b.png'%}" style="max-width:80%;margin-top:2%;margin-bottom:3%; ">
+          </div>
+          <p>
+            If the input protein is any of the PI-binding protein defined by YFAD, the details regarding its PI-binding spectrum is provided with a total number of evidence(s) for each phosphatidylinositide-binding attribute.
+          </p>
+          <div class="text-center">
+            <img src="{% static 'img/help/search_mode_1_c.png'%}" style="max-width:80%;margin-top:2%;margin-bottom:3%; ">
+          </div>
+          <p>
+            Moreover, in the third section, we also provide the categorized (color-coded) description of lipid-binding (highlighted in yellow), lipid-related (highlighted in green) and other domains present in the protein of interest. Each domain is mentioned with its name, description, source of nomenclature, protein coordinates, InterPro entry (hyperlinked to InterPro) and InterPro entry description. A lipid-binding domain name is hyperlinked to a new page explaining in a detailed connection to a well-known lipid-binding domain type with a reference. And based on the literature linked most probable lipid-binding lipid(s) spectrum detail.
+          </p>
+          <div class="text-center">
+            <img src="{% static 'img/help/search_mode_1_d.png'%}" style="max-width:80%;margin-top:2%;margin-bottom:3%; ">
+          </div>
+          <p>
+            In the fourth section, we provided the cellular component information which allow user to identify specific organelle or compartment where the protein is located.
+          </p>
+          <div class="text-center">
+            <img src="{% static 'img/help/search_mode_1_e.png'%}" style="max-width:80%;margin-top:2%;margin-bottom:3%; ">
+          </div>
+
+          <br>
+          <br>
+          <h4>Second search mode:</h4>
+          <a>Users can input a list of genes.</a>
+          <div class="text-center">
+            <img src="{% static 'img/help/search_mode_2_a.png'%}" style="max-width:80%;margin-top:2%;margin-bottom:3%; ">
+          </div>
+          <p>
+            First, based on the binding evidence(s) matching, we have provided a table of PI-binding spectrum showing each PI-specific binding evidence(s)
+          </p>
+          <div class="text-center">
+            <img src="{% static 'img/help/search_mode_2_b.png'%}" style="max-width:80%;margin-top:2%;margin-bottom:3%; ">
+          </div>
+          <p>
+            Subsequently, an enriched PI-binding will be showcased in the table format  along with domain enrichment analysis as the output page. The output page will also provide the user with the expected value for a specific proportion of proteome wide-PI-binding proteins and the input derived real value proportion along with the P-value. The real value protein number which supports the enrichment is linked to the respective table, listing their systematic and standard names along with an intrinsic link showing a specific protein PI-binding characteristic within our database.
+          </p>
+          <div class="text-center">
+            <img src="{% static 'img/help/search_mode_2_c.png'%}" style="max-width:80%;margin-top:2%;margin-bottom:3%; ">
+          </div>
+          <p>
+            The domain enrichment analysis is categorized as explained earlier with additional details showing its enrichment P-value. The P-value link provides the expected, real as well as calculated P-value at specific tests such as FDR or Bonferroni or none used at particular P-value cut-off. Moreover, this P-value page also provides a table with the list of protein(s) names containing this specific domain, its protein coordinates and an individual protein internal link.
+          </p>
+          <div class="text-center">
+            <img src="{% static 'img/help/search_mode_2_d.png'%}" style="max-width:80%;margin-top:2%;margin-bottom:3%; ">
+          </div>
+          <p>
+            Selected phosphatidylinositol (PtdIns)’s binding proteins information and their enrichment test with protein-domain-phosphatidylinositol network visualization
+          </p>
+          <div class="text-center">
+            <img src="{% static 'img/help/search_mode_2_e.png'%}" style="max-width:80%;margin-top:2%;">
+          </div>
+
+          <br>
+
+          <hr style="border-top: 1px solid rgba(0, 0, 0, 0.43);">
+          <h4>YFAD provides two browse modes</h4>
+          <div class="text-center">
+            <img src="{% static 'img/help/browse_mode_a.png'%}" style="max-width:80%;margin-top:2%;">
+          </div>
+          <br>
+          <h4>First browse mode:</h4>
+          <p>
+            Users can go through all 679 phosphatidylinositols-binding proteins in table format. For each protein, YFAD provides a systematic name, a standard name and specific PI-binding evidences
+          </p>
+          <div class="text-center">
+            <img src="{% static 'img/help/browse_mode_b.png'%}" style="max-width:80%;margin-top:2%;">
+          </div>
+
+          <br>
+          <h4>Second browse mode:</h4>
+          <p>
+            Users can browse all eight PI and the total number of yeast proteins with a PtdIns-binding is mentioned. In the details, a table showing the systematic name of the protein, evidence, evidence code and its reference [linked to PubMed ID (PMID)] is provided along with its enrichment and visualization .
+          </p>
+          <div class="text-center">
+            <img src="{% static 'img/help/browse_mode_c.png'%}" style="max-width:80%;margin-top:2%;">
+          </div>
+
+
+
+
+
+        </div> -->
+      </div>
+      <!-- {% for data in help_info %}
+          <div class="card mb-3">
+            <div class="card-header"><h4 class="m-0">{{ data.title }}</h4></div>
+            <div class="card-body">{{ data.content }}</div>
+          </div>
+        {% endfor %} -->
+    </div>
+  </div>
+</div>
+{% endblock content %}
+{% block style %}
+<style>
+  table thead tr th,
+  table tbody tr td {
+    text-align: center;
+    vertical-align: middle !important;
+  }
+
+  .card-body p {
+    text-align: justify;
+  }
+
+  img {
+    margin-bottom: 16px;
+  }
+</style>
+{% endblock style %}
+
+
+{% block script %}
+  <script>
+    $(document).ready(function () {
+      $("#head-navbar li").eq(3).addClass('active');
+    });
+  </script>
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/latest.js?config=TeX-MML-AM_CHTML' async></script>
+  <script type="text/javascript" charset="utf8" src="{% static 'js/jquery/jquery.easing.min.js' %}"></script>
+{% endblock script %}

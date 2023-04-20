@@ -106,7 +106,7 @@ $(document).ready(function() {
                         },
                         {   'targets':-1,
                             render:function(data,type,row,meta){
-                                return '<a href = "/yeast/browse/associated/?id='+ data + '&name='+ row[0] +'&feature='+ feature +'"> Detail </a>';
+                                return `<a href = "/yeast/browse/associated/?id=${data}&name=${row[0]}&feature=${feature}" target="_blank"> Detail </a>`;
                             },
                         },
                     ]

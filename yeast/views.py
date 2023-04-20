@@ -25,6 +25,11 @@ def home(request):
     return(render(request,'base.html',locals()))
 def download(request):
     return(render(request,'download.html',locals()))
+def contact(request):
+    return(render(request,'contact.html',locals()))
+def help(request):
+    return(render(request,'help.html',locals()))
+
 def yeast(request):
     return(render(request,'browse.html',locals()))
 def yeast_associated_base(request):

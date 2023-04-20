@@ -11,6 +11,9 @@ urlpatterns = [
     path('',views.home),
 
     path('yeast/download/', views.download),
+    path('yeast/contact/', views.contact),
+    path('yeast/help/', views.help),
+
 
     path('yeast/browse/',views.yeast),
     path('yeast/ajax_yeast_browser/',views.yeast_browser),

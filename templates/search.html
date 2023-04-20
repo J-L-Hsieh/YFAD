@@ -4,10 +4,32 @@
 
 {% block content %}
 
+<div class="container-fluid mb-5" id="introduce">
+    <div class="row">
+        <div class="col-9 mx-auto">
+            <h2><i class="fa fa-info-circle"></i> About YFAD (Yeast Feature Association Database)</h2>
+            <hr class="page-title-under">
+            <!--
+            <div style="margin-top:1%;margin-right:2%;margin-bottom:1%;max-width:55%;float: left;text-align:center;" >
+                <h4 style="color:#3e2723;"> Phosphoinositide-protein interactions in Yeast</h4>
+                <img src="{% static 'img/test.png' %}" style="margin-top:2%;float: left;max-width:100%;" ></img>
+            </div>
+            <p class="text-justify" >
+            &emsp;&emsp;YPIBP is a yeast phosphoinositide-binding protein database aiming to provide a unique interface to the lipid research community working on phosphoinositides (PIs) whose binding to specific proteins (effectors) are important for performing their functions. Structurally, phosphoinositides are glycerophospholipids which contain a diacylglycerol (DAG) lipid membrane-embedded backbone and a myoinositol polar head group. Although phosphoinositides constitute only a tiny fraction of phospholipids within eukaryotic cells, they play a profound role in cell signaling, trafficking and regulatory events. Multiple studies have identified hundreds of PI-binding proteins in yeast and these proteins can be used to study the functions of PIs.
+            <div style="margin-left:2%;max-width:40%;float: right;text-align:center;" >
+                <h4 style="color:#3e2723;">Major Lipid-binding domains</h4>
+                <img src="{% static 'img/domain_picture.png' %}" style="margin-top:2%;max-width:100%;" ></img>
+            </div><br>
+            &emsp;&emsp;YPIBP is a comprehensive database which deposits the binding proteins of all the eight members of PIs (i.e., PtdIns, PI3P, PI4P, PI5P, PI(3,4)P2, PI(4,5)P2, PI(3,5)P2, and PI(3,4,5)P3) collected from rigorous literature mining, QuickGO, SGD and high-throughput screenings. Cumulatively, a total of 679 PI-binding proteins were collected. YPIBP also contains the information of protein domains which are categorized as lipid-binding domains, lipid-related domains and others. The domain information could help researchers identify the domains responsible for the PI-protein interactions.
+            </p> -->
+        </div>
+    </div>
+</div>
+
 
 <div class="container-fluid">
     <div class="col-9 mx-auto">
-        <h2><i class="fa fa-search"></i> Search Modes</h2>
+        <h2 style="white-space: nowrap;display: inline;"><i class="fa fa-search"></i> Search feature terms</h2><h2 style="display: inline;color:red;white-space: nowrap;"> ASSOCIATED </h2><h2 style="display: inline;white-space: nowrap;">with the input term from the chosen feature</h2>
         <hr class="page-title-under">
     </div>
     <div class="col-9 mx-auto">
@@ -15,7 +37,7 @@
             <div class="form-floating">
                 <form id ="search_input" method="post">
                     <div class="flexbox card-header" style="width:100%;height:100px;font-size:26px;">
-                        <div style="width:25%; margin: 5%;">Feature : </div>
+                        <div style="width:25%; margin: 5%;">The chosen feature: </div>
                         <select id="select_feature" style="width:75%; margin: 5%;" type="text" name="input_feature">Queried Feature :
                             <option value="GO_MF">GO(MF)</option>
                             <option value="GO_BP">GO(BP)</option>
