@@ -28,8 +28,8 @@ $(document).ready(function(){
     const id = urlParams.get('id')
     const name = urlParams.get('name')
     const feature = urlParams.get('feature')
-    $('#queried').html(`<h2>Queried ${feature} Term : ${name}<h2>`)
-    $('#associated_title').html(`<h4>Associated Term with the Queried ${feature} Term </h4>`)
+    $('#queried').html(`<h2>The queried term ${feature} from the feature ${name}<h2>`)
+    $('#associated_title').html(`<h4><a>The feature terms </a><a style="color:#007bff;">ASSOCIATED </a><a>with the queried term </a><a style="color:red;">${name} </a><a>from the feature </a><a style="color:red;">${feature}</h4>`)
     // console.log(name)
     $.ajax({
         url : '/yeast/ajax_network/',

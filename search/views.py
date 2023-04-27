@@ -9,7 +9,6 @@ def search_base(request):
 def search_mode(request):
     feature = request.POST.get('input_feature')
     name = request.POST.get('input_name')
-
     conn = sqlite3.connect('db.sqlite3')
 
     #Protein Domain 表中 name與輸入的字並多取出這個欄位來顯示

@@ -35,35 +35,41 @@
     <div class="col-9 mx-auto">
         <div class="card">
             <div class="form-floating">
-                <form id ="search_input" method="post">
-                    <div class="flexbox card-header" style="width:100%;height:100px;font-size:26px;">
-                        <div style="width:25%; margin: 5%;">The chosen feature: </div>
-                        <select id="select_feature" style="width:75%; margin: 5%;" type="text" name="input_feature">Queried Feature :
-                            <option value="GO_MF">GO(MF)</option>
-                            <option value="GO_BP">GO(BP)</option>
-                            <option value="GO_CC">GO(CC)</option>
-                            <option value="Protein_Domain">Protein Domain</option>
-                            <option value="Mutant_Phenotype">Mutant Phenotype</option>
-                            <option value="Pathway">Pathway</option>
-                            <option value="Disease">Disease</option>
-                            <option value="Transcriptional_Regulation">Transcriptional Regulation</option>
-                            <option value="Physical_Interaction">Physical Interation</option>
-                            <option value="Genetic_Interaction">Genetic Interaction</option>
-                        </select>
+                <form id ="search_input" method="post"  contenteditable="plaintext-only">
+                    <div class=" card-header" style="width:100%;height:auto;font-size:26px;">
+                        <div class="flexbox" style="margin: 1%;">
+                            <div style="width:25%;">The chosen feature: </div>
+                            <select id="select_feature" style="width:75%;" type="text" name="input_feature">Queried Feature :
+                                <option value="GO_MF">GO(MF)</option>
+                                <option value="GO_BP">GO(BP)</option>
+                                <option value="GO_CC">GO(CC)</option>
+                                <option value="Protein_Domain">Protein Domain</option>
+                                <option value="Mutant_Phenotype">Mutant Phenotype</option>
+                                <option value="Pathway">Pathway</option>
+                                <option value="Disease">Disease</option>
+                                <option value="Transcriptional_Regulation">Transcriptional Regulation</option>
+                                <option value="Physical_Interaction">Physical Interation</option>
+                                <option value="Genetic_Interaction">Genetic Interaction</option>
+                            </select>
+                        </div>
+                        <div class="flexbox">
+                            <a style="font-size:26px;width: 25%;">e.g.:</a>
+                            <a id="example" style="font-size:26px;width: 75%;">Y-form DNA binding</a>
+                        </div>
                     </div>
-                    <div class="flexbox" style="margin: 5%;">
-                        <textarea id ="placeholder" type="text" class="form-control" placeholder="Y-form DNA binding" style="width:75%;height:100px;" id="floatingTextarea" name = input_name></textarea>
+                    <div class="flexbox" style="margin: 1%;">
+                        <textarea id ="feature_name" type="text" class="form-control" style="width:100%;height: 200px;" id="floatingTextarea" name = input_name></textarea>
                         <label for="floatingTextarea"></label>
                     </div>
                 </form>
             </div>
             <div class="card-footer text-center p-2">
-                <button id="submit" class="btn btn-outline-primary">Submit</button>
+                <button id="submit" class="btn btn-outline-primary">Search</button>
             </div>
         </div>
     </div>
-    <div id="search_result" class="col-9 mx-auto" style="margin-top: 5%;display: none;">
-        <h2><i class="fa fa-table"></i> Result</h2>
+    <div id="search_result" class="col-9 mx-auto" style="margin-top: 5%;display: none;" accept-charset="utf-8">
+        <h2><i class="fa fa-table"></i> <a># of feature terms </a><a style="color: #007bff;">ASSOCIATED </a><a>with the queried term </a><a id="search_name" style="color: red;"></a><a> from the chosen feature </a><a id="search_feature" style="color: red;"></a></h2>
         <hr class="page-title-under">
         <div id="result"></div>
     </div>
@@ -74,12 +80,12 @@
     <div class="modal-dialog maodal-lg" role="document" style="max-width:70%;">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title" id="exampleModalLabel">Edvidence table</h3>
+                <!-- <h3 class="modal-title" id="exampleModalLabel">Edvidence table</h3> -->
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">x</button>
             </div>
             <div class="modal-body">
                 <div class="card">
-                    <h4 class="card-header">table name</h4>
+                    <h4 id="model_table_name" class="card-header"></h4>
                     <div id="modal_table" class="card-body"></div>
                 </div>
             </div>

@@ -5,55 +5,59 @@ $.ajaxSetup({
 $(document).ready(function() {
 
     var select_feature = document.getElementById("select_feature");
-    var chage_placeholder = document.getElementById("placeholder")
+    var chage_example = document.getElementById("example")
     console.log(select_feature)
 
     select_feature.onchange = function(){
         var feature = select_feature.value;
         switch (feature){
             case 'GO_MF':
-                chage_placeholder.placeholder = "Y-form DNA binding";
+                chage_example.innerHTML = "Y-form DNA binding";
                 break;
             case 'GO_BP':
-                chage_placeholder.placeholder = "zymogen activation";
+                chage_example.innerHTML = "zymogen activation";
                 break;
             case 'GO_CC':
-                chage_placeholder.placeholder = "vacuole";
+                chage_example.innerHTML = "vacuole";
                 break;
             case 'Protein_Domain':
-                chage_placeholder.placeholder = "MutS domain V";
+                chage_example.innerHTML = "MutS domain V";
                 break;
             case 'Mutant Phenotype':
-                chage_placeholder.placeholder = "inviable";
+                chage_example.innerHTML = "inviable";
                 break;
             case 'Pathway':
-                chage_placeholder.placeholder = "glycolysis";
+                chage_example.innerHTML = "glycolysis";
                 break;
             case 'Disease':
-                chage_placeholder.placeholder = "cancer";
+                chage_example.innerHTML = "cancer";
                 break;
             case 'Transcriptional_Regulation':
-                chage_placeholder.placeholder = "SIN4";
+                chage_example.innerHTML = "SIN4";
                 break;
             case 'Physical_Interaction':
-                chage_placeholder.placeholder = "RPN11";
+                chage_example.innerHTML = "RPN11";
                 break;
             case 'Genetic_Interaction':
-                chage_placeholder.placeholder = "ADH3";
+                chage_example.innerHTML = "ADH3";
                 break;
         }
     }
 
     $('#submit').click(function(){
-        var input = $('#search_input').serialize();
-        // console.log(input)
+
+        var term_name = $("#feature_name").val(); //Y-form DNA binding
+        var feature = $("#select_feature").val(); //GO_MF
 
         $.ajax({
             url: 'ajax_search/',
             data: $('#search_input').serialize(),
             success: function(response){
-                let feature = response.feature
-                // console.log(feature)
+                var search_feature = document.getElementById("search_feature");
+                search_feature.innerHTML = feature;
+                var search_name = document.getElementById("search_name")
+                search_name.innerHTML = term_name;
+
                 $('#search_result').show()
                 $('#result').html(`<div class="card"><div class="card-body"> ${response.table}</div></div>`);
                 // /*--------add column------*/
@@ -77,7 +81,9 @@ $(document).ready(function() {
                         {   'targets':0,
                         render:function(data, type, row, meta){
                             // return `<a id="mouse_touch${meta.row}" value="${meta.row}"> ${data} </a>`;
-                            return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${feature}%${row[row.length-1]}" > ${data} </a>`
+                            data = data.replace(term_name,`</span><span style="background-color:yellow">${term_name}</span><span>`)
+                            // console.log(data)
+                            return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${feature}%${row[row.length-1]}" ><span>${data}</span></a>`
 
                         },
                         },
@@ -192,13 +198,18 @@ $(document).ready(function() {
                 /*------------------------modal-----------------------*/
                 $('.modal_features').on("click",function(){
                     var feature_name = $(this).attr('value');
-                    // console.log(feature_name)
+                    var feature = feature_name.split("%")[0];
+                    var name = feature_name.split("%")[1];
+                    console.log(feature);
+
                     $.ajax({
                         url : '/yeast/ajax_p1_modal/',
                         data : {'feature_name' : feature_name},
                         success:function(response){
-                            // console.log(response.evidence_table)
+                            // console.log(response.evidence_table.rows.length)
                             $('#modal_table').html(response.evidence_table)
+                            var evidence_table = document.getElementById("evidence_table");
+                            var table_row = evidence_table.rows.length-1;
                             $('#evidence_table').DataTable({
                                 'bAutoWidth' : true,
                                 // 'scrollX':true,
@@ -206,6 +217,7 @@ $(document).ready(function() {
                                 "scrollCollapse" : true,
                                 "destroy": true,
                             })
+                            $("#model_table_name").html(`<a>${table_row} </a><a>genes are annotated in the queried term </a><a style="color:red;">${name} </a><a>from the chosen feature </a><a style="color:red;">${feature}</a>`)
 
                         },
 
