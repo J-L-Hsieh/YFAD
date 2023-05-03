@@ -17,8 +17,8 @@ $(document).ready(function() {
     console.log(first_feature_array)
     console.log(second_feature_array)
 
-    $('#first').html(`<h4 style="width:50%";>Queried Feature : ${first_feature_array[0]}</h4> <h4 style="width:50%";>Term : ${first_feature_array[2]}</h4>`)
-    $('#second').html(`<h4 style="width:50%";>Feature : ${second_feature_array[0]}</h4> <h4 style="width:50%";> Term : ${second_feature_array[2]}</h4>`)
+    $('#first').html(`<h4 ><a>The qureied term </a> <a style="color:red"> ${first_feature_array[0]} </a> <a> from the feature</a><a style="color:red"> ${first_feature_array[2]}</a></h4>`)
+    $('#second').html(`<h4 ><a>The associated term </a> <a style="color:red"> ${second_feature_array[0]} </a> <a> from the feature</a><a style="color:red"> ${second_feature_array[2]}</a></h4>`)
 
     $.ajax({
         url : '/yeast/ajax_name/',

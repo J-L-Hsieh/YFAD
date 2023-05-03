@@ -19,6 +19,12 @@
         height: 600px;
     }
 
+    .nav-link.button{
+    font-size: 1.6rem;
+    color: black;
+    background-color: #D0D0D0 ;
+    border: 1px solid #2b2b2bde;
+    }
     .loader {
         width: 53px;
         height: 53px;
@@ -62,17 +68,17 @@
             <!-- black title -->
             <!-- first table and network -->
             <div class="card-body " style="border: 3px solid #343a40;">
+                <ul class="nav nav-pills justify-content-center">
+                    <li class="nav-item">
+                        <a id="button_table" class="nav-link button  active" data-toggle="pill"  style="font-size: 1rem;padding:.2rem .5rem;margin: 1rem;">Table View</a>
+                    </li>
+                    <li class="nav-item">
+                        <a id="button_network" class="nav-link button" data-toggle="pill"  style="font-size: 1rem;padding:.2rem .5rem;margin: 1rem;">Figure View</a>
+                    </li>
+                </ul>
                 <div class="card" >
                     <div id="associated_title" class='card-header'></div>
                     <div class="card-body ">
-                        <ul class="nav nav-pills justify-content-center">
-                            <li class="nav-item">
-                                <button id="button_table" class="nav-link " data-toggle="pill"  style="font-size: 1rem;padding:.2rem .5rem;margin: 1rem;">Table View</button>
-                            </li>
-                            <li class="nav-item">
-                                <button id="button_network" class="nav-link " data-toggle="pill"  style="font-size: 1rem;padding:.2rem .5rem;margin: 1rem;">Figure View</button>
-                            </li>
-                        </ul>
                         <div id="view_table" class="flexbox">
                             <div id="Answer1"  style="width: 90%;"></div>
                         </div>
@@ -92,10 +98,17 @@
         <div style=" margin-top:5%;"></div>
         <div class="card" style="margin-top:5%;" >
 
-            <div id="herf_table" class="fs-5 fw-bold flexbox card-header bg-dark "></div>
+            <div id="href_table" class="fs-5 fw-bold flexbox card-header bg-dark text-white"></div>
             <!-- <hr class="page-title-under"> -->
             <div class="card-body " style="border: 3px solid #343a40;">
-
+                <h3>How to determine whether two feature terms (e.g. Term A and Term B) are associated or not?</h3>
+                <h5><a>• </a><a style="color: red;">N<sub>A</sub><a> :the number of genes annotated in Term A. </a></h5>
+                <h5><a>• </a><a style="color: red;">N<sub>B</sub><a> :the number of genes annotated in Term B. </a></h5>
+                <h5><a>• </a><a style="color: red;">N<sub>AB</sub><a> :the number of genes annotated in both Term A & Term B. </a></h5>
+                <h5><a>• </a><a style="color: red;">N<sub>Y</sub>=6611<a> :the number of ORFs (open reading frames) in the yeast genome. </a></h5>
+                <h5><a>• Term A and Term B are regarded as </a><a style="color: red;">ASSOCIATED </a><a style="color: #007bff;">if their member genes have significant overlap</a><a> (i.e. </a><a style="color: red;">N<sub>AB</sub> is big enough</a><a>).</a></h5>
+                <h5><a>• The p-value of significant overlap is calculated using the hypergeometric test as follows. </a></h5>
+                <h5><a>• Finally, Term A and Term B are said to be </a><a style="color: red;">ASSOCIATED<a> with each other if the </a><a style="color: red;">corrected p-value <= 0.01</a><a>.</a></h5>
             <!-- <div class="card"> -->
                 <!-- <div class='card-body'></div> -->
                 <div class="flexbox">

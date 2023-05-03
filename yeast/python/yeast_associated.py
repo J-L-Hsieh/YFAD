@@ -32,13 +32,14 @@ def associated_analysis(associated_table, table_name, name):
             column_name.remove('Protein_Domain_id')
     response ={}
     try:
-        connect = sqlite3.connect('db.sqlite3')
+        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
         db_cursor = connect.cursor()
         select ="""
             SELECT link FROM %s_link WHERE %s IN ("%s");
         """%(table_name, table_name, queried_feature)
         queried_link = db_cursor.execute(select).fetchone()
         queried_link = queried_link[0]
+
         for i in column_name:
             domain_name = eval(associated_table.at[0,'%s' %i])
             feature_name = '\",\"'.join(domain_name)
@@ -46,24 +47,25 @@ def associated_analysis(associated_table, table_name, name):
                 SELECT `%s(Queried)`,SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
             """%(i, i, i, feature_name)
             feature_systematic = pd.read_sql('%s' %select, connect)
-            feature_systematic['Queried %s Term(A)' %table_name] = queried_link
-            feature_systematic['Observed Ratio'] = feature_systematic.apply(lambda x: oberved(queried_name, x['SystematicName']), axis=1)
-            feature_systematic['Expect Ratio'] = feature_systematic.apply(lambda x: str(len(eval(x['SystematicName'])))+'/6611', axis=1)
-            feature_systematic['Signficance of Associated(p-value)'] = feature_systematic.apply(lambda x: yeast_enrichment(queried_name, x['SystematicName']), axis=1)
+            feature_systematic["Term A (The Queried Term)"] = queried_link
+            feature_systematic['N<sub>A</sub>'] = str(len(eval(queried_name)))
+            feature_systematic["N<sub>B</sub>"] = feature_systematic.apply(lambda x: str(len(eval(x['SystematicName']))), axis=1)
+            feature_systematic['N<sub>AB</sub>'] = feature_systematic.apply(lambda x: intersection(queried_name, x['SystematicName']), axis=1)
+            feature_systematic['Corrected p-value'] = feature_systematic.apply(lambda x: yeast_enrichment(queried_name, x['SystematicName']), axis=1)
 
             select = """
                 SELECT link FROM %s_link WHERE %s IN ("%s");
             """%(i, i, feature_name)
             link_table = pd.read_sql('%s' %select, connect)
-            feature_systematic['Associated %s Term(B)' %i] = link_table['link']
+            feature_systematic["Term B (The Associated Term)"] = link_table['link']
             feature_systematic = feature_systematic.rename(columns={'%s(Queried)'%i:'Detail'})
 
             feature_systematic = feature_systematic.drop(['SystematicName'], axis=1)
-            feature_systematic = feature_systematic[['Queried %s Term(A)' %table_name,'Associated %s Term(B)' %i,'Observed Ratio','Expect Ratio','Signficance of Associated(p-value)','Detail']]
+            feature_systematic = feature_systematic[['Term A (The Queried Term)', 'Term B (The Associated Term)', 'Corrected p-value', 'N<sub>A</sub>', 'N<sub>B</sub>', 'N<sub>AB</sub>', 'Detail']]
 
-            feature_systematic = feature_systematic.sort_values(by=['Signficance of Associated(p-value)'], ascending=True)
+            feature_systematic = feature_systematic.sort_values(by=['Corrected p-value'], ascending=True)
             # print(feature_systematic)
-            feature_systematic['Signficance of Associated(p-value)'] = feature_systematic.apply(lambda x:("{:.2e}".format(x['Signficance of Associated(p-value)'])), axis=1)
+            feature_systematic['Corrected p-value'] = feature_systematic.apply(lambda x:("{:.2e}".format(x['Corrected p-value'])), axis=1)
 
             feature_systematic = feature_systematic.to_html(index= None,classes="table table-bordered table-hover dataTable no-footer", escape=False)
             feature_systematic = feature_systematic.replace('table', 'table id="%s_table"'%i, 1)
@@ -75,15 +77,15 @@ def associated_analysis(associated_table, table_name, name):
         connect.close()
     return response
 
-def oberved(queried_name,domain_name):
+def intersection(queried_name,domain_name):
 
     queried_name = eval(queried_name)
     domain_name = eval(domain_name)
     list_A = list(set(queried_name)&set(domain_name))
     # print(list_A)
     A = len(list_A)
-    B = len(queried_name)
-    return str(A) +'/'+ str(B)
+    # B = len(queried_name)
+    return str(A)
 
 '''-----------------------------------------yeast enrichment---------------------------------------'''
 import scipy.stats

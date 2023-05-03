@@ -16,10 +16,15 @@ $(document).ready(function(){
     $('#button_table').on('click', function(){
         $('#view_network').hide()
         $('#view_table').show()
+        $('#button_table').addClass("active")
+        $('#button_network').removeClass("active")
+
     });
     $('#button_network').on('click', function(){
         $('#view_table').hide()
         $('#view_network').show()
+        $('#button_table').removeClass("active")
+        $('#button_network').addClass("active")
     });
     /*----- chage table and network-----*/
 
@@ -142,9 +147,11 @@ $(document).ready(function(){
         data : {'feature':feature, 'id':id, 'name':name},
         success:function(response){
             // console.log('-----')
-            var column_order = response.all_tables.column_order
-            console.log(column_order)
+            var column_order = response.all_tables.column_order;
+            // console.log(column_order)
             let target_num = Array.from({ length: column_order.length }, (val, index) => index + 1);
+            var feature_num = [];
+            console.log(target_num)
             $('#Answer1').html(response.associated_table);
             var associated_table = $('#associated_table').DataTable({
                     "autoWidth": false,
@@ -158,30 +165,34 @@ $(document).ready(function(){
                 'columnDefs':[
                     {   'targets': 0,
                         render:function(data,type,row,meta){
-                            return `<br><a"> ${data} </a>`
+                            return `<a"> ${data} </a>`
+                        },
                     },
-                },
                     {   'targets': target_num,
                         render:function(data,type,row,meta){
-                            data = eval(data)
-                            var icon_data = data.map(item => '<a style="font-size: 2em; color:blue">· </a>'+ item+'<br>'.replace(/,/g,"___")).toString();
-                            console.log(typeof(icon_data))
-                            icon_data = icon_data.replace(/,/g," ").replace(/___/g,",");
-                            return `<a> ${icon_data} </a>`
-                            // if (data.length > 3){
-                            //     hide_data = data.slice(2)
-                            //     return `<a > ${data[0]}, ${data[1]}, ${data[2]}</a><br>
-                            //     <span>
-                            //         <i data-bs-toggle="collapse" id="plus${meta.col}_${meta.row}" class="fa fa-plus-circle" style="color:darkblue" aria-hidden="true"></i>
-                            //     </span>
-                            //     <span class="collapse" id="hide${meta.col}_${meta.row}" style='display:none'>
-                            //         <i data-bs-toggle="collapse" id="minus${meta.col}_${meta.row}"class="fa fa-minus-circle" style="color:darkblue" aria-hidden="true"></i>
-                            //         ${hide_data}
-                            //     </span>
-                            //     `
-                            // }else{
-                            //     return `<a> ${data} </a>`;
-                            // }
+                            feature_num.push(data);
+                            return `<a id ="${column_order[meta.col-1]}_move" href="#${column_order[meta.col-1]}" name="Submit" value="${column_order[i]}"  >${data}</a>`
+
+                    //             return `<input id ="${row[0]}_move" class="btn btn-primary" type="button" style="margin:2px;" name="Submit" value="${row[0]}"  ></input>`
+                    //         data = eval(data)
+                    //         var icon_data = data.map(item => '<a style="font-size: 2em; color:blue">· </a>'+ item+'<br>'.replace(/,/g,"___")).toString();
+                    //         console.log(typeof(icon_data))
+                    //         icon_data = icon_data.replace(/,/g," ").replace(/___/g,",");
+                    //         return `<a> ${icon_data} </a>`
+                    //         // if (data.length > 3){
+                    //         //     hide_data = data.slice(2)
+                    //         //     return `<a > ${data[0]}, ${data[1]}, ${data[2]}</a><br>
+                    //         //     <span>
+                    //         //         <i data-bs-toggle="collapse" id="plus${meta.col}_${meta.row}" class="fa fa-plus-circle" style="color:darkblue" aria-hidden="true"></i>
+                    //         //     </span>
+                    //         //     <span class="collapse" id="hide${meta.col}_${meta.row}" style='display:none'>
+                    //         //         <i data-bs-toggle="collapse" id="minus${meta.col}_${meta.row}"class="fa fa-minus-circle" style="color:darkblue" aria-hidden="true"></i>
+                    //         //         ${hide_data}
+                    //         //     </span>
+                    //         //     `
+                    //         // }else{
+                    //         //     return `<a> ${data} </a>`;
+                    //         // }
                         },
                     },
                 ]
@@ -224,33 +235,30 @@ $(document).ready(function(){
 
             /*-------------- 製作all table的 div 與專屬id ------------------ */
             var add_html = ''
-            var add_herf = ''
+            var add_href = ''
             for (i=0 ;i< column_order.length;i++){
                 /*--------------------------table 容器----------------------  */
                 add_html = add_html + `<div id = ${column_order[i]}></div>`
-                add_herf = add_herf + `<input id ="${column_order[i]}_move" class="btn btn-primary" type="button" style="margin:2px;" name="Submit" value="${column_order[i]}"  ></input>`
+                add_href = add_href + `<input id ="${column_order[i]}_move" class="btn btn-primary" type="button" style="margin:2px;" name="Submit" value="${column_order[i]}"  ></input>`
             }
-            // console.log(add_html)
-            $('#herf_table').html(add_herf)
+            console.log(feature_num)
+            $('#href_table').html(`<h4><a>The feature terms </a><a style="color:#007bff;">ASSOCIATED </a><a>with the queried term </a><a style="color:red;">${name} </a><a>from the feature </a><a style="color:red;">${feature}</h4>`)
+
             $('#Answer2').html(add_html)
             for (i=0 ;i< column_order.length;i++){
-                $(`#${column_order[i]}`).html(`<div class="card" style="margin-top:5%;" ><h3 class ="fs-3 card-header">Feature Name : ${column_order[i]}</h3> <div class="card-body">${response.all_tables[column_order[i]]}</div></div>`)
+                $(`#${column_order[i]}`).html(`<div class="card" style="margin-top:5%;" ><h3 class ="fs-3 card-header"><a>${feature_num[i]} terms of the feature</a> <a style="color:red">${column_order[i]}</a><a> are</a><a style="color:#007bff"> ASSOCIATED</a><a> with the queried term</a><a style="color:red"> ${name}</a><a> from the feature</a><a style="color:red"> ${feature}</a></h3> <div class="card-body">${response.all_tables[column_order[i]]}</div></div>`)
                 $(`#${column_order[i]}_table`).DataTable({
                     'columnDefs':[
                         {   'targets':-1,
                             render:function(data,type,row,meta){
                                 var second_name = row[1].split('>')[1].replace('</a', '')
-                                return '<a href = "/yeast/browse/associated/detail/?id='+ feature + '$' + id + '$' + name +'&name='+ column_order[i]+ '$' + data + '$' + second_name +'"> Detail </a>';
+                                return '<a href = "/yeast/browse/associated/detail/?id='+ feature + '$' + id + '$' + name +'&name='+ column_order[i]+ '$' + data + '$' + second_name +'" target="_blank"> Detail </a>';
                             },
                         },
-                        {   'targets':2,
+                        {   'targets':5,
                             render:function(data,type,row,meta){
                                 // console.log(row)
-                                var second_name = row[1].split('>')[1].replace('</a', '')
-
-                                a_num = data.split('/')[0]
-                                b_num = data.split('/')[1]
-                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${feature}%${id}%${column_order[i]}%${row[5]}" > ${a_num} </a><a>/${b_num}</a>`
+                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${feature}%${id}%${column_order[i]}%${row[6]}" > ${data} </a></a>`
                             },
                         }
                     ]
