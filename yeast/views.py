@@ -50,7 +50,7 @@ def yeast_name_base(request):
 #         return y
 #     column_name=[]
 #     try:
-#         connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+#         connect = sqlite3.connect('db.sqlite3')
 #         change_table = pd.read_sql("""SELECT * FROM %s_id_to_name""" %feature, connect, index_col='%s_id' %feature)
 #     finally:
 #         connect.close()
@@ -85,7 +85,7 @@ def yeast_browser(request):
         """%(table_name, table_column, table_name)
 
     try:
-        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+        connect = sqlite3.connect('db.sqlite3')
         table = pd.read_sql(select, connect)
 
     finally:
@@ -141,7 +141,7 @@ def yeast_network(request):
     # print('-------------')
     # print(table_name)
     try:
-        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+        connect = sqlite3.connect('db.sqlite3')
         select = """
             SELECT `%s(Queried)`, GO_MF, GO_BP, GO_CC, Protein_Domain, Protein_Domain_id, Mutant_Phenotype, Pathway, Disease, Transcriptional_Regulation, Physical_Interaction, Genetic_Interaction, count, SystematicName
             FROM %s_1_to_10
@@ -187,7 +187,7 @@ def yeast_associated(request):
     # print('-------------')
     # print(table_name)
     try:
-        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+        connect = sqlite3.connect('db.sqlite3')
         select = """
             SELECT `%s(Queried)`, GO_MF, GO_BP, GO_CC, Protein_Domain, Protein_Domain_id, Mutant_Phenotype, Pathway, Disease, Transcriptional_Regulation, Physical_Interaction, Genetic_Interaction, count, SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
         """%(table_name, table_name, table_name, row_name)
@@ -243,7 +243,7 @@ def yeast_name(request):
     first_feature = first_feature.split('$')
     second_feature = second_feature.split('$')
     try:
-        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+        connect = sqlite3.connect('db.sqlite3')
         db_cursor = connect.cursor()
 
         for  i in range(2):
@@ -281,31 +281,32 @@ def yeast_name(request):
 
     union = pd.merge(first_name_table, second_name_table, how="outer")
     union = union.fillna('false')
-    queried_contain = union[union["%s"%first_feature[2]] == 'false']
-    second_contain = union[union["%s"%second_feature[2]] == 'false']
+    second_contain = union[union["%s"%first_feature[2]] == 'false']
+    queried_contain = union[union["%s"%second_feature[2]] == 'false']
 
     if first_feature[0]=='Protein_Domain':
         both_contain = both_contain.rename(columns={'%s'%first_feature[1]:'%s'%first_pd_id})
-        queried_contain = queried_contain.rename(columns={'%s'%first_feature[1]:'%s'%first_pd_id})
         second_contain = second_contain.rename(columns={'%s'%first_feature[1]:'%s'%first_pd_id})
+        queried_contain = queried_contain.rename(columns={'%s'%first_feature[1]:'%s'%first_pd_id})
 
     if second_feature[0]=='Protein_Domain':
         both_contain = both_contain.rename(columns={"%s"%second_feature[1]:"%s"%second_pd_id})
-        queried_contain = queried_contain.rename(columns={"%s"%second_feature[1]:"%s"%second_pd_id})
         second_contain = second_contain.rename(columns={"%s"%second_feature[1]:"%s"%second_pd_id})
+        queried_contain = queried_contain.rename(columns={"%s"%second_feature[1]:"%s"%second_pd_id})
 
 
     both_contain = both_contain.fillna('false')
     both_contain = both_contain.to_html(index=None, classes='table table-bordered table-hover dataTable no-footer')
     both_contain = both_contain.replace('table', 'table id="both_name_table"')
+    print(second_contain)
 
-    queried_contain = queried_contain.to_html(index=None, classes='table table-bordered table-hover dataTable no-footer')
-    queried_contain = queried_contain.replace('table', 'table id="queried_table"')
-
-    second_contain = second_contain.to_html(index=None, classes='table table-bordered table-hover dataTable no-footer ')
+    second_contain = second_contain.to_html(index=None, classes='table table-bordered table-hover dataTable no-footer')
     second_contain = second_contain.replace('table', 'table id="second_table"')
 
-    response = {'both_contain':both_contain, 'queried_contain':queried_contain, 'second_contain':second_contain}
+    queried_contain = queried_contain.to_html(index=None, classes='table table-bordered table-hover dataTable no-footer ')
+    queried_contain = queried_contain.replace('table', 'table id="queried_table"')
+
+    response = {'both_contain':both_contain, 'second_contain':second_contain, 'queried_contain':queried_contain}
     return JsonResponse(response)
 
 '''----------------------------------------------------------------------------'''
@@ -324,7 +325,7 @@ def yeast_evidence(request):
     name1 = feature[1]
     name2 = feature[3]
     systematice_name = feature[4]
-    connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+    connect = sqlite3.connect('db.sqlite3')
 
     if feature1 == 'false':
         pass
@@ -373,6 +374,7 @@ def yeast_evidence(request):
         else:
 
             feature1_table = pd.read_sql(select1, connect)
+            print(select1)
 
             if feature1 == 'Physical_Interaction':
                 feature1_table['SystematicName(Bait)']=feature1_table['Bait_link']
@@ -423,6 +425,8 @@ def yeast_evidence(request):
     finally:
         connect.close()
 
+    print('----')
 
+    print(feature2_table)
     response = {'feature1_table' : feature1_table, 'feature2_table' : feature2_table}
     return JsonResponse(response)

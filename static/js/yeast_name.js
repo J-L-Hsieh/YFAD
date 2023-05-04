@@ -25,7 +25,7 @@ $(document).ready(function() {
         data : { 'first_feature' : first_feature,'second_feature' : second_feature },
         success:function(response){
             // -------------------------table1---------------
-            $('#table1').html(`<div class="card" style="margin-top:5%;" ><h3 class ="fs-3 card-header">table1</h3><div class="card-body">${response.both_contain}</div></div>`)
+            $('#table1').html(`<div class="card" style="margin-top:5%;" ><h3 id="table1_header" class ="fs-3 card-header"></h3><div class="card-body">${response.both_contain}</div></div>`)
             let trs1 = document.querySelectorAll('#both_name_table tr');
 
             for (let tr of trs1) {
@@ -73,7 +73,7 @@ $(document).ready(function() {
             })
             // -------------------------table1---------------
             // -------------------------table2---------------
-            $('#table2').html(`<div class="card" style="margin-top:5%;" ><h3 class ="fs-3 card-header">table2</h3><div class="card-body">${response.queried_contain}</div></div>`)
+            $('#table2').html(`<div class="card" style="margin-top:5%;" ><h3 id="table2_header" class ="fs-3 card-header"></h3><div class="card-body">${response.queried_contain}</div></div>`)
             let trs2 = document.querySelectorAll('#queried_table tr');
 
             for (let tr of trs2) {
@@ -113,7 +113,7 @@ $(document).ready(function() {
                                 return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${first_feature_array[0]}%${first_feature_array[1]}%${row[2]}%${second_feature_array[1]}%${row[0]}"> Evidence </a>`
                             }
                             else{
-                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${first_feature_array[0]}%${first_feature_array[1]}%${second_feature_array[0]}%${second_feature_array[1]}%${row[0]}"}"> Evidence </a>`
+                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${first_feature_array[0]}%${first_feature_array[1]}%${second_feature_array[0]}%${second_feature_array[1]}%${row[0]}"> Evidence </a>`
                             }
                         },
                     },
@@ -121,7 +121,7 @@ $(document).ready(function() {
             })
             // -------------------------table2---------------
             // -------------------------table3---------------
-            $('#table3').html(`<div class="card" style="margin-top:5%;" ><h3 class ="fs-3 card-header">table3</h3><div class="card-body">${response.second_contain}</div></div>`)
+            $('#table3').html(`<div class="card" style="margin-top:5%;" ><h3 id="table3_header" class ="fs-3 card-header"></h3><div class="card-body">${response.second_contain}</div></div>`)
             let trs3 = document.querySelectorAll('#second_table tr');
             console.log(trs3)
 
@@ -179,19 +179,33 @@ $(document).ready(function() {
 
             $('#intersection_num').html(`<h5>${trs1.length-1}</h5>`)
 
+            $('#explain_text').html(`<h5>• ${trs1.length+trs3.length-2} genes are annotated in the queried term</h5><h5>• ${trs1.length+trs2.length-2} genes are annotated in the associated term</h5><h5>• ${trs1.length-1} genes are annotated both in the queried term & the associated term</h5>`)
+
+            $('#table1_header').html(`${trs1.length-1} genes are annotated <a style="color:red">BOTH</a> in the queried term & the associated term`)
+            $('#table2_header').html(`${trs2.length-1} genes are annotated <a style="color:red">ONLY</a> in the queried term but <a style="color:red">NOT</a> in the associated term`)
+            $('#table3_header').html(`${trs3.length-1} genes are annotated <a style="color:red">ONLY</a> in the associated term but <a style="color:red">NOT</a> in the queried term`)
+
+
             // -------------------modal table1---------------
             $('#both_name_table').on("click",'.modal_features',function(){
                 var feature = $(this).attr('value');
                 var exist = feature.split('%')
                 var feature1_exist = exist[0]
                 var feature2_exist = exist[2]
+                var queried_term = exist[1]
+                var associated_term = exist[3]
+                var systematic_name = exist[4]
+
                 console.log(exist)
 
                 $.ajax({
                     url : '/yeast/ajax_evidence/',
                     data : {'feature' : feature},
                     success:function(response){
+                        $('#modal_title').html(`${systematic_name} is annotated <a style="color:#007bff">BOTH</a> in the queried term <a style="color:red">${queried_term}</a> & the associated term <a style="color:red">${associated_term}</a>`)
                         if (feature1_exist != 'false'){
+                            $('#modal_table1').show()
+                            $('#modal_table1_header').html(`${systematic_name} is ammotated in the queried term <a style="color:red">${queried_term}</a>`)
                             $('#feature1').html(response.feature1_table)
                             $('#feature1_table').DataTable({
                                 'bAutoWidth':true,
@@ -200,9 +214,11 @@ $(document).ready(function() {
                             })
                         }
                         else{
-                            $('#feature1').html('<div></div>')
+                            $('#modal_table1').hide()
                         }
                         if (feature2_exist != 'false'){
+                            $('#modal_table2').show()
+                            $('#modal_table2_header').html(`${systematic_name} is ammotated in the queried term <a style="color:red">${associated_term}</a>`)
                             $('#feature2').html(response.feature2_table)
                             $('#feature2_table').DataTable({
                                 'bAutoWidth':true,
@@ -211,7 +227,7 @@ $(document).ready(function() {
                             })
                         }
                         else{
-                            $('#feature2').html('<div></div>')
+                            $('#modal_table2').hide()
                         }
                     },
                     error :function(){
@@ -226,13 +242,19 @@ $(document).ready(function() {
                 var exist = feature.split('%')
                 var feature1_exist = exist[0]
                 var feature2_exist = exist[2]
+                var queried_term = exist[1]
+                var associated_term = exist[3]
+                var systematic_name = exist[4]
                 console.log(exist)
 
                 $.ajax({
                     url : '/yeast/ajax_evidence/',
                     data : {'feature' : feature},
                     success:function(response){
+                        $('#modal_title').html(`${systematic_name} is annotated <a style="color:#007bff">ONLY</a> in the queried term <a style="color:red">${queried_term}</a> but <a style="color:#007bff">NOT</a> in the associated term <a style="color:red">${associated_term}</a>`)
                         if (feature1_exist != 'false'){
+                            $('#modal_table1').show()
+                            $('#modal_table1_header').html(`${systematic_name} is ammotated in the queried term <a style="color:red">${queried_term}</a>`)
                             $('#feature1').html(response.feature1_table)
                             $('#feature1_table').DataTable({
                                 'bAutoWidth':true,
@@ -241,9 +263,11 @@ $(document).ready(function() {
                             })
                         }
                         else{
-                            $('#feature1').html('<div></div>')
+                            $('#modal_table1').hide()
                         }
                         if (feature2_exist != 'false'){
+                            $('#modal_table2').show()
+                            $('#modal_table2_header').html(`${systematic_name} is ammotated in the queried term <a style="color:red">${associated_term}</a>`)
                             $('#feature2').html(response.feature2_table)
                             $('#feature2_table').DataTable({
                                 'bAutoWidth':true,
@@ -252,7 +276,7 @@ $(document).ready(function() {
                             })
                         }
                         else{
-                            $('#feature2').html('<div></div>')
+                            $('#modal_table2').hide()
                         }
                     },
                     error :function(){
@@ -267,13 +291,20 @@ $(document).ready(function() {
                 var exist = feature.split('%')
                 var feature1_exist = exist[0]
                 var feature2_exist = exist[2]
+                var queried_term = exist[1]
+                var associated_term = exist[3]
+                var systematic_name = exist[4]
+
                 console.log(exist)
 
                 $.ajax({
                     url : '/yeast/ajax_evidence/',
                     data : {'feature' : feature},
                     success:function(response){
+                        $('#modal_title').html(`${systematic_name} is annotated <a style="color:#007bff">ONLY</a> in the associated term <a style="color:red">${associated_term}</a> but <a style="color:#007bff">NOT</a> in the queried term <a style="color:red">${queried_term}</a>`)
                         if (feature1_exist != 'false'){
+                            $('#modal_table1').show()
+                            $('#modal_table1_header').html(`${systematic_name} is ammotated in the queried term <a style="color:red">${queried_term}</a>`)
                             $('#feature1').html(response.feature1_table)
                             $('#feature1_table').DataTable({
                                 'bAutoWidth':true,
@@ -282,9 +313,11 @@ $(document).ready(function() {
                             })
                         }
                         else{
-                            $('#feature1').html(' ')
+                            $('#modal_table1').hide()
                         }
                         if (feature2_exist != 'false'){
+                            $('#modal_table2').show()
+                            $('#modal_table2_header').html(`${systematic_name} is ammotated in the queried term <a style="color:red">${associated_term}</a>`)
                             $('#feature2').html(response.feature2_table)
                             $('#feature2_table').DataTable({
                                 'bAutoWidth':true,
@@ -293,7 +326,7 @@ $(document).ready(function() {
                             })
                         }
                         else{
-                            $('#feature2').html(' ')
+                            $('#modal_table2').hide()
                         }
                     },
                     error :function(){

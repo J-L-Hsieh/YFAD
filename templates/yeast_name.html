@@ -26,6 +26,8 @@
                         <img src="{% static 'img/intersection.png'%}" style="margin: 1rem;">
                     </div>
                     <div id="associated_title" class='card-body'>
+                        <div id="explain_text" ></div>
+
                         <div class="flexbox">
                             <div id="table1" style="width: 90%;"></div>
                         </div>
@@ -44,17 +46,17 @@
             <div class="modal-dialog maodal-lg" role="document" style="max-width:70%;">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h3 class="modal-title" id="exampleModalLabel">Edvidence table</h3>
+                        <h3 id="modal_title" class="modal-title" id="exampleModalLabel"></h3>
                         <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">x</button>
-                        工作與非工作出意外                    </div>
+                    </div>
                     <div class="modal-body">
-                        <div class="card">
-                            <h4 class="card-header">table name</h4>
+                        <div id="modal_table1" class="card">
+                            <h4 id="modal_table1_header" class="card-header"></h4>
                             <div id="feature1" class="card-body"></div>
                         </div>
                         <br>
-                        <div class="card">
-                            <h4 class="card-header">table name</h4>
+                        <div id="modal_table2" class="card">
+                            <h4 id="modal_table2_header" class="card-header"></h4>
                             <div id="feature2" class="card-body"></div>
                         </div>
                     </div>

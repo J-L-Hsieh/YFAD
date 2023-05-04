@@ -3,63 +3,102 @@ $.ajaxSetup({
     type: 'POST',
 });
 $(document).ready(function() {
+    //------search (change feature)------
+    // var select_feature = document.getElementById("select_feature");
+    // var chage_example = document.getElementById("example")
+    // console.log(select_feature)
 
-    var select_feature = document.getElementById("select_feature");
-    var chage_example = document.getElementById("example")
-    console.log(select_feature)
-
-    select_feature.onchange = function(){
-        var feature = select_feature.value;
-        switch (feature){
-            case 'GO_MF':
-                chage_example.innerHTML = "Y-form DNA binding";
-                break;
-            case 'GO_BP':
-                chage_example.innerHTML = "zymogen activation";
-                break;
-            case 'GO_CC':
-                chage_example.innerHTML = "vacuole";
-                break;
-            case 'Protein_Domain':
-                chage_example.innerHTML = "MutS domain V";
-                break;
-            case 'Mutant Phenotype':
-                chage_example.innerHTML = "inviable";
-                break;
-            case 'Pathway':
-                chage_example.innerHTML = "glycolysis";
-                break;
-            case 'Disease':
-                chage_example.innerHTML = "cancer";
-                break;
-            case 'Transcriptional_Regulation':
-                chage_example.innerHTML = "SIN4";
-                break;
-            case 'Physical_Interaction':
-                chage_example.innerHTML = "RPN11";
-                break;
-            case 'Genetic_Interaction':
-                chage_example.innerHTML = "ADH3";
-                break;
-        }
-    }
+    // select_feature.onchange = function(){
+    //     var feature = select_feature.value;
+    //     switch (feature){
+    //         case 'GO_MF':
+    //             chage_example.innerHTML = "Y-form DNA binding";
+    //             break;
+    //         case 'GO_BP':
+    //             chage_example.innerHTML = "zymogen activation";
+    //             break;
+    //         case 'GO_CC':
+    //             chage_example.innerHTML = "vacuole";
+    //             break;
+    //         case 'Protein_Domain':
+    //             chage_example.innerHTML = "MutS domain V";
+    //             break;
+    //         case 'Mutant Phenotype':
+    //             chage_example.innerHTML = "inviable";
+    //             break;
+    //         case 'Pathway':
+    //             chage_example.innerHTML = "glycolysis";
+    //             break;
+    //         case 'Disease':
+    //             chage_example.innerHTML = "cancer";
+    //             break;
+    //         case 'Transcriptional_Regulation':
+    //             chage_example.innerHTML = "SIN4";
+    //             break;
+    //         case 'Physical_Interaction':
+    //             chage_example.innerHTML = "RPN11";
+    //             break;
+    //         case 'Genetic_Interaction':
+    //             chage_example.innerHTML = "ADH3";
+    //             break;
+    //     }
+    // }
+    //------search (change feature)------
 
     $('#submit').click(function(){
 
-        var term_name = $("#feature_name").val(); //Y-form DNA binding
+        var term_name = $("#term_name").val(); //Y-form DNA binding
         var feature = $("#select_feature").val(); //GO_MF
-
+        // console.log($('#search_input').serialize())
         $.ajax({
             url: 'ajax_search/',
             data: $('#search_input').serialize(),
             success: function(response){
+                var find_feature = response.find_feature
+                var add_nav = ''
+                var chosen_featute
+                for (i=0; i<find_feature.length; i++){
+                    add_nav = add_nav + `<li class="nav-item"><a class="nav-link show_hide_table" value="${find_feature[i]}">${find_feature[i]}</a></li>`
+                    $(`#${find_feature[i]}`).html(response.all_table[i])
+                    $(`#${find_feature[i]}_table`).DataTable({
+                        'scrollY':true,
+                        'scrollX':true,
+                        'scrollCollapse': true,
+                        fixedHeader:{
+                            header: true,
+                            footer: true,
+                        },
+                        'columnDefs':[
+                            {   'targets':-1,
+                            render:function(data,type,row,meta){
+                                return `<a href = "/yeast/browse/associated/?id=${data}&name=${row[0]}&feature=${find_feature[i]}" target="_blank"> Detail </a>`;
+                            },
+                        },
+                        ]
+                    })
+                    if (i==0){
+                        $(`#${find_feature[0]}`).show()
+                        chosen_featute = find_feature[0]
+                    }
+                }
+                // console.log(add_nav)
+                $('#nav_header').html(add_nav);
+                // -------show and hide different feature table-------
+                $('.show_hide_table').on("click", function(){
+                    $(`#${chosen_featute}`).hide();
+                    chosen_featute = $(this).attr('value');
+                    $(this)
+                    $(`#${chosen_featute}`).show();
+                })
+                // -------show and hide different feature table-------
+
                 var search_feature = document.getElementById("search_feature");
                 search_feature.innerHTML = feature;
                 var search_name = document.getElementById("search_name")
                 search_name.innerHTML = term_name;
 
                 $('#search_result').show()
-                $('#result').html(`<div class="card"><div class="card-body"> ${response.table}</div></div>`);
+                // $('#result').html(`<div class="card"><div class="card-body"> ${response.table}</div></div>`);
                 // /*--------add column------*/
                 // let trs = document.querySelectorAll('#result_table tr');
 
