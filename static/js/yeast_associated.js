@@ -33,8 +33,8 @@ $(document).ready(function(){
     const id = urlParams.get('id')
     const name = urlParams.get('name')
     const feature = urlParams.get('feature')
-    $('#queried').html(`<h2>The queried term ${feature} from the feature ${name}<h2>`)
-    $('#associated_title').html(`<h4><a>The feature terms </a><a style="color:#007bff;">ASSOCIATED </a><a>with the queried term </a><a style="color:red;">${name} </a><a>from the feature </a><a style="color:red;">${feature}</h4>`)
+    $('#queried').html(`<h2>The queried term <a style="color:red;">${name}</a> from [${feature}]<h2>`)
+    $('#associated_title').html(`<h4><a># of terms (from each feature) that are </a><a style="color:#007bff;">ASSOCIATED </a><a>with the queried term </a><a style="color:red;">${name} </a>from [${feature}]</h4>`)
     // console.log(name)
     $.ajax({
         url : '/yeast/ajax_network/',
@@ -242,11 +242,15 @@ $(document).ready(function(){
                 add_href = add_href + `<input id ="${column_order[i]}_move" class="btn btn-primary" type="button" style="margin:2px;" name="Submit" value="${column_order[i]}"  ></input>`
             }
             console.log(feature_num)
-            $('#href_table').html(`<h4><a>The feature terms </a><a style="color:#007bff;">ASSOCIATED </a><a>with the queried term </a><a style="color:red;">${name} </a><a>from the feature </a><a style="color:red;">${feature}</h4>`)
+            $('#href_table').html(`<h4>The terms (from each feature) that are <a style="color:#007bff;">ASSOCIATED </a>with the queried term <a style="color:red;">${name} </a>from [${feature}]</h4>`)
 
             $('#Answer2').html(add_html)
             for (i=0 ;i< column_order.length;i++){
-                $(`#${column_order[i]}`).html(`<div class="card" style="margin-top:5%;" ><h3 class ="fs-3 card-header"><a>${feature_num[i]} terms of the feature</a> <a style="color:red">${column_order[i]}</a><a> are</a><a style="color:#007bff"> ASSOCIATED</a><a> with the queried term</a><a style="color:red"> ${name}</a><a> from the feature</a><a style="color:red"> ${feature}</a></h3> <div class="card-body">${response.all_tables[column_order[i]]}</div></div>`)
+                if (feature_num[i]==1){
+                    $(`#${column_order[i]}`).html(`<div class="card" style="margin-top:5%;" ><h3 class ="fs-3 card-header"><a style="color:red">${feature_num[i]} term </a> from [${column_order[i]}] <a> are</a><a style="color:#007bff"> ASSOCIATED</a> with the queried <a style="color:red"> ${name}</a> from [${feature}]</h3> <div class="card-body">${response.all_tables[column_order[i]]}</div></div>`)
+                }else{
+                    $(`#${column_order[i]}`).html(`<div class="card" style="margin-top:5%;" ><h3 class ="fs-3 card-header"><a style="color:red">${feature_num[i]} terms </a> from [${column_order[i]}] <a> are</a><a style="color:#007bff"> ASSOCIATED</a> with the queried <a style="color:red"> ${name}</a> from [${feature}]</h3> <div class="card-body">${response.all_tables[column_order[i]]}</div></div>`)
+                }
                 $(`#${column_order[i]}_table`).DataTable({
                     'columnDefs':[
                         {   'targets':-1,
@@ -255,12 +259,12 @@ $(document).ready(function(){
                                 return '<a href = "/yeast/browse/associated/detail/?id='+ feature + '$' + id + '$' + name +'&name='+ column_order[i]+ '$' + data + '$' + second_name +'" target="_blank"> Detail </a>';
                             },
                         },
-                        {   'targets':5,
-                            render:function(data,type,row,meta){
-                                // console.log(row)
-                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${feature}%${id}%${column_order[i]}%${row[6]}" > ${data} </a></a>`
-                            },
-                        }
+                        // {   'targets':5,
+                        //     render:function(data,type,row,meta){
+                        //         // console.log(row)
+                        //         return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${feature}%${id}%${column_order[i]}%${row[6]}" > ${data} </a></a>`
+                        //     },
+                        // }
                     ]
                 })
             }

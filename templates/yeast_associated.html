@@ -24,7 +24,12 @@
     color: black;
     background-color: #D0D0D0 ;
     border: 1px solid #2b2b2bde;
+    font-size: 1rem;
+    padding:.2rem .5rem;
+    margin: 1rem;
     }
+
+
     .loader {
         width: 53px;
         height: 53px;
@@ -70,10 +75,10 @@
             <div class="card-body " style="border: 3px solid #343a40;">
                 <ul class="nav nav-pills justify-content-center">
                     <li class="nav-item">
-                        <a id="button_table" class="nav-link button  active" data-toggle="pill"  style="font-size: 1rem;padding:.2rem .5rem;margin: 1rem;">Table View</a>
+                        <a id="button_table" class="nav-link button active" data-toggle="pill">Table View</a>
                     </li>
                     <li class="nav-item">
-                        <a id="button_network" class="nav-link button" data-toggle="pill"  style="font-size: 1rem;padding:.2rem .5rem;margin: 1rem;">Figure View</a>
+                        <a id="button_network" class="nav-link button" data-toggle="pill">Figure View</a>
                     </li>
                 </ul>
                 <div class="card" >
@@ -108,6 +113,8 @@
                 <h5><a>• </a><a style="color: red;">N<sub>Y</sub>=6611<a> :the number of ORFs (open reading frames) in the yeast genome. </a></h5>
                 <h5><a>• Term A and Term B are regarded as </a><a style="color: red;">ASSOCIATED </a><a style="color: #007bff;">if their member genes have significant overlap</a><a> (i.e. </a><a style="color: red;">N<sub>AB</sub> is big enough</a><a>).</a></h5>
                 <h5><a>• The p-value of significant overlap is calculated using the hypergeometric test as follows. </a></h5>
+                <h5 class="text-center"><img src="{% static 'img/formula.jpg'%}"></img></h5>
+
                 <h5><a>• Finally, Term A and Term B are said to be </a><a style="color: red;">ASSOCIATED<a> with each other if the </a><a style="color: red;">corrected p-value <= 0.01</a><a>.</a></h5>
             <!-- <div class="card"> -->
                 <!-- <div class='card-body'></div> -->

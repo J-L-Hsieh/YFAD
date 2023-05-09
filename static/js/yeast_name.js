@@ -17,15 +17,15 @@ $(document).ready(function() {
     console.log(first_feature_array)
     console.log(second_feature_array)
 
-    $('#first').html(`<h4 ><a>The qureied term </a> <a style="color:red"> ${first_feature_array[0]} </a> <a> from the feature</a><a style="color:red"> ${first_feature_array[2]}</a></h4>`)
-    $('#second').html(`<h4 ><a>The associated term </a> <a style="color:red"> ${second_feature_array[0]} </a> <a> from the feature</a><a style="color:red"> ${second_feature_array[2]}</a></h4>`)
+    $('#first').html(`<h4 ><a>The qureied term </a> <a style="color:red"> ${first_feature_array[2]} </a> <a> from [${first_feature_array[0]}]</a></h4>`)
+    $('#second').html(`<h4 ><a>The associated term </a> <a style="color:red"> ${second_feature_array[2]} </a> <a> from [${second_feature_array[0]}]</a></h4>`)
 
     $.ajax({
         url : '/yeast/ajax_name/',
         data : { 'first_feature' : first_feature,'second_feature' : second_feature },
         success:function(response){
             // -------------------------table1---------------
-            $('#table1').html(`<div class="card" style="margin-top:5%;" ><h3 id="table1_header" class ="fs-3 card-header"></h3><div class="card-body">${response.both_contain}</div></div>`)
+            $('#table1').html(`<div class="card" style="margin-top:5%;" ><h3 class ="fs-3 card-header"><a id="table1_header_num"></a>annotated <a style="color:red">BOTH</a> in the queried term & the associated term</h3><div class="card-body">${response.both_contain}</div></div>`)
             let trs1 = document.querySelectorAll('#both_name_table tr');
 
             for (let tr of trs1) {
@@ -73,7 +73,7 @@ $(document).ready(function() {
             })
             // -------------------------table1---------------
             // -------------------------table2---------------
-            $('#table2').html(`<div class="card" style="margin-top:5%;" ><h3 id="table2_header" class ="fs-3 card-header"></h3><div class="card-body">${response.queried_contain}</div></div>`)
+            $('#table2').html(`<div class="card" style="margin-top:5%;" ><h3 class ="fs-3 card-header"><a id="table2_header_num"></a>annotated <a style="color:red">ONLY</a> in the queried term but <a style="color:red">NOT</a> in the associated term</h3><div class="card-body">${response.queried_contain}</div></div>`)
             let trs2 = document.querySelectorAll('#queried_table tr');
 
             for (let tr of trs2) {
@@ -121,7 +121,7 @@ $(document).ready(function() {
             })
             // -------------------------table2---------------
             // -------------------------table3---------------
-            $('#table3').html(`<div class="card" style="margin-top:5%;" ><h3 id="table3_header" class ="fs-3 card-header"></h3><div class="card-body">${response.second_contain}</div></div>`)
+            $('#table3').html(`<div class="card" style="margin-top:5%;" ><h3 class ="fs-3 card-header"><a id="table3_header_num"></a>annotated <a style="color:red">ONLY</a> in the associated term but <a style="color:red">NOT</a> in the queried term</h3><div class="card-body">${response.second_contain}</div></div>`)
             let trs3 = document.querySelectorAll('#second_table tr');
             console.log(trs3)
 
@@ -169,21 +169,29 @@ $(document).ready(function() {
                 ]
             })
             // -------------------------table3---------------
-            $('#queried_term').html(`<h5>Queried Feature : ${first_feature_array[1]}</h5>`)
-            $('#queried_num').html(`<h5>Number:${trs1.length+trs3.length-2}</h5>`)
-            $('#queried_last').html(`<h5>${trs3.length-1}</h5>`)
+            $('#queried_term').html(`<h5>Queried term : ${first_feature_array[2]}</h5>`)
+            $('#queried_num').html(`<h5>Number:${trs1.length+trs2.length-2}</h5>`)
+            $('#queried_last').html(`<h5>${trs2.length-1}</h5>`)
 
-            $('#compare_term').html(`<h5>Comapre Feature : ${second_feature_array[1]}</h5>`)
-            $('#compare_num').html(`<h5>Number:${trs1.length+trs2.length-2}</h5>`)
-            $('#compare_last').html(`<h5>${trs2.length-1}</h5>`)
+            $('#compare_term').html(`<h5>Comapre term : ${second_feature_array[2]}</h5>`)
+            $('#compare_num').html(`<h5>Number:${trs1.length+trs3.length-2}</h5>`)
+            $('#compare_last').html(`<h5>${trs3.length-1}</h5>`)
 
             $('#intersection_num').html(`<h5>${trs1.length-1}</h5>`)
 
             $('#explain_text').html(`<h5>• ${trs1.length+trs3.length-2} genes are annotated in the queried term</h5><h5>• ${trs1.length+trs2.length-2} genes are annotated in the associated term</h5><h5>• ${trs1.length-1} genes are annotated both in the queried term & the associated term</h5>`)
 
-            $('#table1_header').html(`${trs1.length-1} genes are annotated <a style="color:red">BOTH</a> in the queried term & the associated term`)
-            $('#table2_header').html(`${trs2.length-1} genes are annotated <a style="color:red">ONLY</a> in the queried term but <a style="color:red">NOT</a> in the associated term`)
-            $('#table3_header').html(`${trs3.length-1} genes are annotated <a style="color:red">ONLY</a> in the associated term but <a style="color:red">NOT</a> in the queried term`)
+            if (trs1.length-1 == 0||trs1.length-1 == 1){
+                $('#table1_header_num').html(`${trs1.length-1} gene is `)
+            }else{$('#table1_header_num').html(`${trs1.length-1} genes are `)}
+
+            if (trs2.length-1 == 0||trs2.length-1 == 1){
+                $('#table2_header_num').html(`${trs2.length-1} gene is `)
+            }else{$('#table2_header_num').html(`${trs2.length-1} genes are `)}
+
+            if (trs3.length-1 == 0||trs3.length-1 == 1){
+                $('#table3_header_num').html(`${trs3.length-1} gene is `)
+            }else{$('#table3_header_num').html(`${trs3.length-1} genes are `)}
 
 
             // -------------------modal table1---------------
@@ -205,7 +213,7 @@ $(document).ready(function() {
                         $('#modal_title').html(`${systematic_name} is annotated <a style="color:#007bff">BOTH</a> in the queried term <a style="color:red">${queried_term}</a> & the associated term <a style="color:red">${associated_term}</a>`)
                         if (feature1_exist != 'false'){
                             $('#modal_table1').show()
-                            $('#modal_table1_header').html(`${systematic_name} is ammotated in the queried term <a style="color:red">${queried_term}</a>`)
+                            $('#modal_table1_header').html(`${systematic_name} is annotated in the queried term <a style="color:red">${queried_term}</a>`)
                             $('#feature1').html(response.feature1_table)
                             $('#feature1_table').DataTable({
                                 'bAutoWidth':true,
@@ -218,7 +226,7 @@ $(document).ready(function() {
                         }
                         if (feature2_exist != 'false'){
                             $('#modal_table2').show()
-                            $('#modal_table2_header').html(`${systematic_name} is ammotated in the queried term <a style="color:red">${associated_term}</a>`)
+                            $('#modal_table2_header').html(`${systematic_name} is annotated in the queried term <a style="color:red">${associated_term}</a>`)
                             $('#feature2').html(response.feature2_table)
                             $('#feature2_table').DataTable({
                                 'bAutoWidth':true,
@@ -254,7 +262,7 @@ $(document).ready(function() {
                         $('#modal_title').html(`${systematic_name} is annotated <a style="color:#007bff">ONLY</a> in the queried term <a style="color:red">${queried_term}</a> but <a style="color:#007bff">NOT</a> in the associated term <a style="color:red">${associated_term}</a>`)
                         if (feature1_exist != 'false'){
                             $('#modal_table1').show()
-                            $('#modal_table1_header').html(`${systematic_name} is ammotated in the queried term <a style="color:red">${queried_term}</a>`)
+                            $('#modal_table1_header').html(`${systematic_name} is annotated in the queried term <a style="color:red">${queried_term}</a>`)
                             $('#feature1').html(response.feature1_table)
                             $('#feature1_table').DataTable({
                                 'bAutoWidth':true,
@@ -267,7 +275,7 @@ $(document).ready(function() {
                         }
                         if (feature2_exist != 'false'){
                             $('#modal_table2').show()
-                            $('#modal_table2_header').html(`${systematic_name} is ammotated in the queried term <a style="color:red">${associated_term}</a>`)
+                            $('#modal_table2_header').html(`${systematic_name} is annotated in the queried term <a style="color:red">${associated_term}</a>`)
                             $('#feature2').html(response.feature2_table)
                             $('#feature2_table').DataTable({
                                 'bAutoWidth':true,
@@ -304,7 +312,7 @@ $(document).ready(function() {
                         $('#modal_title').html(`${systematic_name} is annotated <a style="color:#007bff">ONLY</a> in the associated term <a style="color:red">${associated_term}</a> but <a style="color:#007bff">NOT</a> in the queried term <a style="color:red">${queried_term}</a>`)
                         if (feature1_exist != 'false'){
                             $('#modal_table1').show()
-                            $('#modal_table1_header').html(`${systematic_name} is ammotated in the queried term <a style="color:red">${queried_term}</a>`)
+                            $('#modal_table1_header').html(`${systematic_name} is annotated in the queried term <a style="color:red">${queried_term}</a>`)
                             $('#feature1').html(response.feature1_table)
                             $('#feature1_table').DataTable({
                                 'bAutoWidth':true,
@@ -317,7 +325,7 @@ $(document).ready(function() {
                         }
                         if (feature2_exist != 'false'){
                             $('#modal_table2').show()
-                            $('#modal_table2_header').html(`${systematic_name} is ammotated in the queried term <a style="color:red">${associated_term}</a>`)
+                            $('#modal_table2_header').html(`${systematic_name} is annotated in the queried term <a style="color:red">${associated_term}</a>`)
                             $('#feature2').html(response.feature2_table)
                             $('#feature2_table').DataTable({
                                 'bAutoWidth':true,

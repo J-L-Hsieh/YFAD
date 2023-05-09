@@ -23,7 +23,7 @@ $(document).ready(function() {
     //         case 'Protein_Domain':
     //             chage_example.innerHTML = "MutS domain V";
     //             break;
-    //         case 'Mutant Phenotype':
+    //         case 'Mutant_Phenotype':
     //             chage_example.innerHTML = "inviable";
     //             break;
     //         case 'Pathway':
@@ -45,11 +45,18 @@ $(document).ready(function() {
     // }
     //------search (change feature)------
 
+    $('.example_text').click(function(){
+        var example = $(this).attr("value")
+        // console.log(example)
+        $('#term_name').html(example)
+    })
+
     $('#submit').click(function(){
 
         var term_name = $("#term_name").val(); //Y-form DNA binding
         var feature = $("#select_feature").val(); //GO_MF
         // console.log($('#search_input').serialize())
+        $('.term_name_table').hide()
         $.ajax({
             url: 'ajax_search/',
             data: $('#search_input').serialize(),
@@ -58,7 +65,12 @@ $(document).ready(function() {
                 var add_nav = ''
                 var chosen_featute
                 for (i=0; i<find_feature.length; i++){
-                    add_nav = add_nav + `<li class="nav-item"><a class="nav-link show_hide_table" value="${find_feature[i]}">${find_feature[i]}</a></li>`
+                    if (i ==0){
+                        add_nav = add_nav + `<li class="nav-item"><a class="nav-link button active show_hide_table" value="${find_feature[i]}">${find_feature[i]}</a></li>`
+                    }
+                    else{
+                        add_nav = add_nav + `<li class="nav-item"><a class="nav-link button show_hide_table" value="${find_feature[i]}">${find_feature[i]}</a></li>`
+                    }
                     $(`#${find_feature[i]}`).html(response.all_table[i])
                     $(`#${find_feature[i]}_table`).DataTable({
                         'scrollY':true,
@@ -69,33 +81,43 @@ $(document).ready(function() {
                             footer: true,
                         },
                         'columnDefs':[
-                            {   'targets':-1,
-                            render:function(data,type,row,meta){
-                                return `<a href = "/yeast/browse/associated/?id=${data}&name=${row[0]}&feature=${find_feature[i]}" target="_blank"> Detail </a>`;
+                            {   'targets':0,
+                                render:function(data, type, row, meta){
+                                    // return `<a id="mouse_touch${meta.row}" value="${meta.row}"> ${data} </a>`;
+                                    data = data.replace(term_name,`</span><span style="background-color:yellow">${term_name}</span><span>`)
+                                    return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${feature}%${row[row.length-1]}" ><span>${data}</span></a>`
+
+                                },
                             },
-                        },
+                            {   'targets':-1,
+                                render:function(data,type,row,meta){
+                                    return `<a href = "/yeast/browse/associated/?id=${data}&name=${row[0]}&feature=${find_feature[i]}" target="_blank"> Detail </a>`;
+                                },
+                                },
                         ]
                     })
                     if (i==0){
                         $(`#${find_feature[0]}`).show()
                         chosen_featute = find_feature[0]
+
                     }
                 }
                 // console.log(add_nav)
+                $('#result_title_keyword').html(term_name)
                 $('#nav_header').html(add_nav);
                 // -------show and hide different feature table-------
                 $('.show_hide_table').on("click", function(){
+
+                    $('.show_hide_table').removeClass("active")
+                    $(this).addClass("active")
                     $(`#${chosen_featute}`).hide();
                     chosen_featute = $(this).attr('value');
-                    $(this)
                     $(`#${chosen_featute}`).show();
                 })
                 // -------show and hide different feature table-------
 
-                var search_feature = document.getElementById("search_feature");
-                search_feature.innerHTML = feature;
-                var search_name = document.getElementById("search_name")
-                search_name.innerHTML = term_name;
+                // var search_feature = document.getElementById("search_feature");
+                // search_feature.innerHTML = feature;
 
                 $('#search_result').show()
                 // $('#result').html(`<div class="card"><div class="card-body"> ${response.table}</div></div>`);
@@ -118,13 +140,13 @@ $(document).ready(function() {
                     },
                     'columnDefs':[
                         {   'targets':0,
-                        render:function(data, type, row, meta){
-                            // return `<a id="mouse_touch${meta.row}" value="${meta.row}"> ${data} </a>`;
-                            data = data.replace(term_name,`</span><span style="background-color:yellow">${term_name}</span><span>`)
-                            // console.log(data)
-                            return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${feature}%${row[row.length-1]}" ><span>${data}</span></a>`
+                            render:function(data, type, row, meta){
+                                // return `<a id="mouse_touch${meta.row}" value="${meta.row}"> ${data} </a>`;
+                                data = data.replace(term_name,`</span><span style="background-color:yellow">${term_name}</span><span>`)
+                                console.log(data)
+                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${feature}%${row[row.length-1]}" ><span>${data}</span></a>`
 
-                        },
+                            },
                         },
                         {   'targets': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
                             render:function(data,type,row,meta){

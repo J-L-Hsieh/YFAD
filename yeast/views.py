@@ -302,6 +302,7 @@ def yeast_name(request):
 
     second_contain = second_contain.to_html(index=None, classes='table table-bordered table-hover dataTable no-footer')
     second_contain = second_contain.replace('table', 'table id="second_table"')
+    print("queried_contain",queried_contain)
 
     queried_contain = queried_contain.to_html(index=None, classes='table table-bordered table-hover dataTable no-footer ')
     queried_contain = queried_contain.replace('table', 'table id="queried_table"')
@@ -326,20 +327,24 @@ def yeast_evidence(request):
     name2 = feature[3]
     systematice_name = feature[4]
     connect = sqlite3.connect('db.sqlite3')
-
+    print(feature)
     if feature1 == 'false':
         pass
     else:
         if feature1 == 'Physical_Interaction':
             select1 = """
-                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ("%s") AND `SystematicName(Hit)` IN ("%s") OR (`SystematicName(Hit)` IN ("%s") AND `SystematicName(Bait)` IN ("%s"));
+                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ("%s") AND `StandardName(Hit)` IN ("%s") OR (`SystematicName(Hit)` IN ("%s") AND `StandardName(Bait)` IN ("%s"));
             """%(feature1, systematice_name, name1, systematice_name, name1)
 
         elif feature1 == 'Genetic_Interaction':
             select1 = """
-                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ("%s") AND `SystematicName(Hit)` IN ("%s") OR (`SystematicName(Hit)` IN ("%s") AND `SystematicName(Bait)` IN ("%s"));
+                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ("%s") AND `StandardName(Hit)` IN ("%s") OR (`SystematicName(Hit)` IN ("%s") AND `StandardName(Bait)` IN ("%s"));
             """%(feature1, systematice_name, name1, systematice_name, name1)
-
+        elif feature1 == 'Transcriptional_Regulation':
+            select1 = """
+                SELECT * FROM %s_evidence WHERE SystematicName IN ("%s") AND StandardName IN ("%s");
+            """%(feature1, systematice_name, name1)
+            print('---asd')
         else:
             select1 = """
                 SELECT * FROM %s_evidence WHERE SystematicName IN ("%s") AND %s IN ("%s");
@@ -351,15 +356,18 @@ def yeast_evidence(request):
     else:
         if feature2 == 'Physical_Interaction':
             select2 = """
-                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ("%s") AND `SystematicName(Hit)` IN ("%s") OR (`SystematicName(Hit)` IN ("%s") AND `SystematicName(Bait)` IN ("%s"));
+                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ("%s") AND `StandardName(Hit)` IN ("%s") OR (`SystematicName(Hit)` IN ("%s") AND `StandardName(Bait)` IN ("%s"));
             """%(feature2, systematice_name, name2, systematice_name, name2)
 
 
         elif feature2 == 'Genetic_Interaction':
             select2 = """
-                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ("%s") AND `SystematicName(Hit)` IN ("%s") OR (`SystematicName(Hit)` IN ("%s") AND `SystematicName(Bait)` IN ("%s"));
+                SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ("%s") AND `StandardName(Hit)` IN ("%s") OR (`SystematicName(Hit)` IN ("%s") AND `StandardName(Bait)` IN ("%s"));
             """%(feature2, systematice_name, name2, systematice_name, name2)
-
+        elif feature2 == 'Transcriptional_Rugulation':
+            select2 = """
+                SELECT * FROM %s_evidence WHERE SystematicName IN ("%s") AND %s IN ("%s");
+            """%(feature2, systematice_name, feature2, name2)
         else:
             select2 = """
                 SELECT * FROM %s_evidence WHERE SystematicName IN ("%s") AND %s IN ("%s");
@@ -375,6 +383,8 @@ def yeast_evidence(request):
 
             feature1_table = pd.read_sql(select1, connect)
             print(select1)
+            print(feature1_table)
+            print(select2)
 
             if feature1 == 'Physical_Interaction':
                 feature1_table['SystematicName(Bait)']=feature1_table['Bait_link']
@@ -425,8 +435,5 @@ def yeast_evidence(request):
     finally:
         connect.close()
 
-    print('----')
-
-    print(feature2_table)
     response = {'feature1_table' : feature1_table, 'feature2_table' : feature2_table}
     return JsonResponse(response)

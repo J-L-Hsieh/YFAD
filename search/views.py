@@ -8,7 +8,8 @@ def search_base(request):
 
 def search_mode(request):
     # feature = request.POST.get('input_feature')  #GO_MF
-    name = request.POST.get('input_name')  #Y-form DNA binding
+    name = request.POST.get('term_name')  #Y-form DNA binding
+    print(name)
     conn = sqlite3.connect('db.sqlite3')
     feature_list=["GO_MF", "GO_BP", "GO_CC", "Protein_Domain", "Mutant_Phenotype", "Pathway", "Disease", "Transcriptional_Regulation", "Physical_Interaction", "Genetic_Interaction"]
     find_feature = []
