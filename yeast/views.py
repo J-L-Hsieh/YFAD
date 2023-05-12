@@ -128,7 +128,7 @@ def yeast_browser(request):
 def yeast_p1_modal(request):
 
     evidence_table = p1_modal(request)
-    print(evidence_table)
+    # print(evidence_table)
     response = {"evidence_table" : evidence_table}
     return JsonResponse(response)
 

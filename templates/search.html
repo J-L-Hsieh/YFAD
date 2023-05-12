@@ -78,13 +78,13 @@
                     <h5>Example queried term from the feature [GO_MF]: <a href="javascript:void(0)" class="example_text" value="Y-form DNA binding">Y-form DNA binding</a></h3>
                     <h5>Example queried term from the feature [GO_BP]: <a href="javascript:void(0)" class="example_text" value="zymogen activation">zymogen activation</a></h3>
                     <h5>Example queried term from the feature [GO_CC]: <a href="javascript:void(0)" class="example_text" value="vacuole">vacuole</a></h3>
-                    <h5>Example queried term from the feature [Protein_Domain]: <a href="javascript:void(0)" class="example_text" value="MutS domain V">MutS domain V</a></h3>
-                    <h5>Example queried term from the feature [Mutant_Phenotype]: <a href="javascript:void(0)" class="example_text" value="inviable">inviable</a></h3>
+                    <h5>Example queried term from the feature [Protein Domain]: <a href="javascript:void(0)" class="example_text" value="MutS domain V">MutS domain V</a></h3>
+                    <h5>Example queried term from the feature [Mutant Phenotype]: <a href="javascript:void(0)" class="example_text" value="inviable">inviable</a></h3>
                     <h5>Example queried term from the feature [Pathway]: <a href="javascript:void(0)" class="example_text" value="glycolysis">glycolysis</a></h3>
                     <h5>Example queried term from the feature [Disease]: <a href="javascript:void(0)" class="example_text" value="cancer">cancer</a></h3>
-                    <h5>Example queried term from the feature [Transcriptional_Regulation]: <a href="javascript:void(0)" class="example_text" value="SIN4">SIN4</a></h3>
-                    <h5>Example queried term from the feature [Physical_Interaction]: <a href="javascript:void(0)" class="example_text" value="RPN11">RPN11</a></h3>
-                    <h5>Example queried term from the feature [Genetic_Interaction]: <a href="javascript:void(0)" class="example_text" value="ADH3">ADH3</a></h3>
+                    <h5>Example queried term from the feature [Transcriptional Regulation]: <a href="javascript:void(0)" class="example_text" value="SIN4">SIN4</a></h3>
+                    <h5>Example queried term from the feature [Physical Interaction]: <a href="javascript:void(0)" class="example_text" value="RPN11">RPN11</a></h3>
+                    <h5>Example queried term from the feature [Genetic Interaction]: <a href="javascript:void(0)" class="example_text" value="ADH3">ADH3</a></h3>
                 </div>
                 <form id ="search_input" method="post"  contenteditable="plaintext-only">
                     <div class="flexbox" >
@@ -98,23 +98,34 @@
         </div>
     </div>
     <div id="search_result" class="col-9 mx-auto" style="margin-top: 5%;display: none;" accept-charset="utf-8">
-        <h2><i class="fa fa-table"></i> <a># of terms </a><a style="color: #007bff;">ASSOCIATED </a><a>with the </a><a style="color: red;">queried term </a>(i.e. the term containing the input keyword <a id="result_title_keyword" style="background-color: yellow;"></a> )</h2>
+        <h2><i class="fa fa-table"></i> Search table</h2>
         <hr class="page-title-under">
         <div id="result" class="card">
-            <div class="card-body">
-                <h4>The <a style="color: red;">queried term</a> is found in the following biological features</h4>
-                <ul id="nav_header" class="nav nav-pills justify-content-center" role="tablist"></ul>
-                <div id="name_table"></div>
-                <div id="GO_MF" class="term_name_table" style="display: none;"></div>
-                <div id="GO_BP" class="term_name_table" style="display: none;"></div>
-                <div id="GO_CC" class="term_name_table" style="display: none;"></div>
-                <div id="Protein_Domain" class="term_name_table" style="display: none;"></div>
-                <div id="Mutant_Phenotype" class="term_name_table" style="display: none;"></div>
-                <div id="Pathway" class="term_name_table" style="display: none;"></div>
-                <div id="Disease" class="term_name_table" style="display: none;"></div>
-                <div id="Transcriptional_Regulation" class="term_name_table" style="display: none;"></div>
-                <div id="Physical_Interaction" class="term_name_table" style="display: none;"></div>
-                <div id="Genetic_Interaction" class="term_name_table" style="display: none;"></div>
+            <div class="card-header bg-dark text-white">
+                <h2># of terms <a style="color:#007bff;"> ASSOCIATED </a>with the <a style="color: red;">queried term </a>(i.e. the term containing the input keyword <a id="result_title_keyword"></a>)</h2>
+            </div>
+            <div class="card-body " style="border: 3px solid #343a40;">
+
+                <div class="card" >
+                    <div class='card-header'>
+                        <h2># of terms (from each feature) that are ASSOCIATED with the  <a style="color: red;">queried term</a> from [<a id="show_feature"></a>]</h2>
+                    </div>
+
+                    <div class="card-body">
+                        <ul id="nav_header" class="nav nav-pills justify-content-center" role="tablist"></ul>
+                        <div id="name_table"></div>
+                        <div id="GO_MF" class="term_name_table" style="display: none;"></div>
+                        <div id="GO_BP" class="term_name_table" style="display: none;"></div>
+                        <div id="GO_CC" class="term_name_table" style="display: none;"></div>
+                        <div id="Protein_Domain" class="term_name_table" style="display: none;"></div>
+                        <div id="Mutant_Phenotype" class="term_name_table" style="display: none;"></div>
+                        <div id="Pathway" class="term_name_table" style="display: none;"></div>
+                        <div id="Disease" class="term_name_table" style="display: none;"></div>
+                        <div id="Transcriptional_Regulation" class="term_name_table" style="display: none;"></div>
+                        <div id="Physical_Interaction" class="term_name_table" style="display: none;"></div>
+                        <div id="Genetic_Interaction" class="term_name_table" style="display: none;"></div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

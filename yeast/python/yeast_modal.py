@@ -5,23 +5,30 @@ pd.set_option('display.max_columns', None)
 pd.set_option('display.width', None)
 # pd.set_option('display.max_colwidth', -1)
 
+feature_name_dict = {"GO_MF":"GO_MF", "GO_BP":"GO_BP", "GO_CC":"GO_CC", "Disease":"Disease", "Pathway":"Pathway", "Protein_Domain":"Protein Domain", "Mutant_Phenotype":"Mutant Phenotype", "Transcriptional_Regulation":"Transcriptional Regulation", "Physical_Interaction":"Physical Interaction", "Genetic_Interaction":"Genetic Interaction"}
 def p1_modal(request):
 
     feature_name = request.POST.get('feature_name').split('%')
 
     feature = feature_name[0]
-    name = feature_name[1]
+    id = feature_name[1]
+    name = feature_name[2]
 
     try:
         connect = sqlite3.connect('db.sqlite3')
         db_cursor = connect.cursor()
-
-        select = """
-            SELECT SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
-        """%(feature, feature, name)
+        if feature == 'Transcriptional_Regulation':
+            select = """
+                SELECT SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
+            """%(feature, feature, name)
+        else:
+            select = """
+                SELECT SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
+            """%(feature, feature, id)
+        # print(select)
         db_cursor.execute(select)
         sys_name1 = db_cursor.fetchall()
-        print(sys_name1)
+        # print(sys_name1)
         sys_name1_set = str(eval(sys_name1[0][0])).replace("[", "(").replace("]", ")")
         # print(sys_name1[0][0])
 
@@ -41,10 +48,18 @@ def p1_modal(request):
             # print(select)
             evidence_table = pd.read_sql(select , connect)
 
+        # elif feature == 'Transcriptional_Regulation':
+        #     select = """
+        #         SELECT * FROM %s_evidence WHERE SystematicName IN %s AND StandardName IN ("%s");
+        #     """%(feature, sys_name1_set, name)
+        #     print(select)
+
+        #     evidence_table = pd.read_sql(select , connect)
+
         else:
             select = """
                 SELECT * FROM %s_evidence WHERE SystematicName IN %s AND %s IN ("%s");
-            """%(feature, sys_name1_set, feature, name)
+            """%(feature, sys_name1_set, feature, id)
             # print(select)
             evidence_table = pd.read_sql(select , connect)
     finally:
@@ -62,10 +77,12 @@ def p1_modal(request):
         evidence_table = evidence_table.drop(columns=['Bait_link', 'Hit_link', 'term_link'])
 
     else:
+        # print(evidence_table)
         evidence_table['SystematicName']=evidence_table['gene_link']
         evidence_table['%s'%feature]=evidence_table['term_link']
         evidence_table = evidence_table.drop(columns=['gene_link', 'term_link'])
     # print(evidence_table)
+    evidence_table = evidence_table.rename(columns=feature_name_dict)
     evidence_table = evidence_table.to_html(index= None, classes="table table-bordered table-hover dataTable no-footer", escape=False)
     # evidence_table = evidence_table.to_html(index= None, classes = "table", escape=False)
 

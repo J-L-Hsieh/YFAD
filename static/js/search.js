@@ -2,6 +2,7 @@ $.ajaxSetup({
     headers: { 'X-CSRFToken': csrf_token },
     type: 'POST',
 });
+var name_dict = {"GO_MF":"GO_MF", "GO_BP":"GO_BP", "GO_CC":"GO_CC", "Disease":"Disease", "Pathway":"Pathway", "Protein_Domain":"Protein Domain", "Mutant_Phenotype":"Mutant Phenotype", "Transcriptional_Regulation":"Transcriptional Regulation", "Physical_Interaction":"Physical Interaction", "Genetic_Interaction":"Genetic Interaction"}
 $(document).ready(function() {
     //------search (change feature)------
     // var select_feature = document.getElementById("select_feature");
@@ -66,15 +67,22 @@ $(document).ready(function() {
                 var chosen_featute
                 for (i=0; i<find_feature.length; i++){
                     if (i ==0){
-                        add_nav = add_nav + `<li class="nav-item"><a class="nav-link button active show_hide_table" value="${find_feature[i]}">${find_feature[i]}</a></li>`
+                        add_nav = add_nav + `<li class="nav-item"><a class="nav-link button active show_hide_table" value="${find_feature[i]}">${name_dict[find_feature[i]]}</a></li>`
                     }
                     else{
-                        add_nav = add_nav + `<li class="nav-item"><a class="nav-link button show_hide_table" value="${find_feature[i]}">${find_feature[i]}</a></li>`
+                        add_nav = add_nav + `<li class="nav-item"><a class="nav-link button show_hide_table" value="${find_feature[i]}">${name_dict[find_feature[i]]}</a></li>`
                     }
-                    $(`#${find_feature[i]}`).html(response.all_table[i])
+                    // $(`#${find_feature[i]}`).html(response.all_table[i])
+                    var table = response.all_table[i]
+                    table = table.replace("Queried Term", "<a style='color:red;'>Queried Term</a>")
+                    $(`#${find_feature[i]}`).html(table)
+
+                    // console.log(table)
+                    // table.rows[0].cells[0].addClass("query_feature")
                     $(`#${find_feature[i]}_table`).DataTable({
-                        'scrollY':true,
-                        'scrollX':true,
+                        "autoWidth": true,
+                        // 'scrollY':true,
+                        // 'scrollX':true,
                         'scrollCollapse': true,
                         fixedHeader:{
                             header: true,
@@ -84,8 +92,9 @@ $(document).ready(function() {
                             {   'targets':0,
                                 render:function(data, type, row, meta){
                                     // return `<a id="mouse_touch${meta.row}" value="${meta.row}"> ${data} </a>`;
-                                    data = data.replace(term_name,`</span><span style="background-color:yellow">${term_name}</span><span>`)
-                                    return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${feature}%${row[row.length-1]}" ><span>${data}</span></a>`
+                                    mark_data = data.replace(term_name,`</span><span style="background-color:yellow">${term_name}</span><span>`)
+                                    // data = data.replace(term_name,`</span><span style="background-color:yellow">${term_name}</span><span>`)
+                                    return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${find_feature[i]}%${row[row.length-1]}%${data}" ><span>${mark_data}</span></a>`
 
                                 },
                             },
@@ -99,6 +108,8 @@ $(document).ready(function() {
                     if (i==0){
                         $(`#${find_feature[0]}`).show()
                         chosen_featute = find_feature[0]
+                        $('#show_feature').html(name_dict[chosen_featute])
+                        console.log(name_dict[chosen_featute])
 
                     }
                 }
@@ -107,12 +118,13 @@ $(document).ready(function() {
                 $('#nav_header').html(add_nav);
                 // -------show and hide different feature table-------
                 $('.show_hide_table').on("click", function(){
-
                     $('.show_hide_table').removeClass("active")
                     $(this).addClass("active")
                     $(`#${chosen_featute}`).hide();
                     chosen_featute = $(this).attr('value');
                     $(`#${chosen_featute}`).show();
+                    $('#show_feature').html(name_dict[chosen_featute])
+
                 })
                 // -------show and hide different feature table-------
 
@@ -120,6 +132,8 @@ $(document).ready(function() {
                 // search_feature.innerHTML = feature;
 
                 $('#search_result').show()
+                const element = document.getElementById("search_result");
+                element.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"})
                 // $('#result').html(`<div class="card"><div class="card-body"> ${response.table}</div></div>`);
                 // /*--------add column------*/
                 // let trs = document.querySelectorAll('#result_table tr');
@@ -142,7 +156,7 @@ $(document).ready(function() {
                         {   'targets':0,
                             render:function(data, type, row, meta){
                                 // return `<a id="mouse_touch${meta.row}" value="${meta.row}"> ${data} </a>`;
-                                data = data.replace(term_name,`</span><span style="background-color:yellow">${term_name}</span><span>`)
+                                mark_data = data.replace(term_name,`</span><span style="background-color:yellow">${term_name}</span><span>`)
                                 console.log(data)
                                 return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${feature}%${row[row.length-1]}" ><span>${data}</span></a>`
 
@@ -256,6 +270,7 @@ $(document).ready(function() {
                     PlusHide();
                     MinusHide();
                 })
+
                 /*------------------------modal-----------------------*/
                 $('.modal_features').on("click",function(){
                     var feature_name = $(this).attr('value');

@@ -176,7 +176,7 @@ $(document).ready(function() {
                 $('#queried_last').html(`<h5>${trs2.length-1}</h5>`)
             }else{
                 $('#queried_last').html(`<h5><a href="#table2">${trs2.length-1}</a></h5>`)
-            }
+000            }
 
             $('#compare_term').html(`<h5>Comapre term : ${second_feature_array[2]}</h5>`)
             $('#compare_num').html(`<h5>Number:${trs1.length+trs3.length-2}</h5>`)
