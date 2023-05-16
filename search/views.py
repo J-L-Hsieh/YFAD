@@ -10,8 +10,8 @@ def search_mode(request):
     fature_name_dict = {"GO_MF(Queried)":"Queried term", "GO_BP(Queried)":"Queried Term", "GO_CC(Queried)":"Queried Term", "Protein_Domain(Queried)":"Queried Term", "Mutant_Phenotype(Queried)":"Queried Term", "Pathway(Queried)":"Queried Term", "Disease(Queried)":"Queried Term", "Transcriptional_Regulation(Queried)":"Queried Term", "Physical_Interaction(Queried)":"Queried Term", "Genetic_Interaction(Queried)":"Queried Term",
                         "GO_MF":"GO_MF", "GO_BP":"GO_BP", "GO_CC":"GO_CC", "Disease":"Disease", "Pathway":"Pathway", "Protein_Domain":"Protein Domain", "Mutant_Phenotype":"Mutant Phenotype", "Transcriptional_Regulation":"Transcriptional Regulation", "Physical_Interaction":"Physical Interaction", "Genetic_Interaction":"Genetic Interaction"}
     # feature = request.POST.get('input_feature')  #GO_MF
-    name = request.POST.get('term_name')  #Y-form DNA binding
-    print(name)
+    name = request.POST.get('search_name')  #Y-form DNA binding
+    # print(name)
     conn = sqlite3.connect('db.sqlite3')
     feature_list=["GO_MF", "GO_BP", "GO_CC", "Protein_Domain", "Mutant_Phenotype", "Pathway", "Disease", "Transcriptional_Regulation", "Physical_Interaction", "Genetic_Interaction"]
     find_feature = []
@@ -38,25 +38,25 @@ def search_mode(request):
             locals()[feature+"_table"] = pd.read_sql(select, conn)
 
 
-
-            if feature == 'Protein_Domain':
-                locals()[feature+"_table"]['Detail'] = locals()[feature+"_table"]['Protein_Domain(Queried)']
-                locals()[feature+"_table"]['Protein_Domain(Queried)'] = locals()[feature+"_table"]['Protein_Domain_name']
-                locals()[feature+"_table"] = locals()[feature+"_table"].drop(columns=['Protein_Domain_name'])
-            elif feature == 'Transcriptional_Regulation':
-                locals()[feature+"_table"] = locals()[feature+"_table"].rename(columns={"Transcriptional_Regulation_id":"Detail"})
-            else:
-                locals()[feature+"_table"]['Detail'] = locals()[feature+"_table"]['%s(Queried)'%feature]
-
-            '''------tooltips------'''
-            # count_name_table =  table[['count','SystematicName']]
-            # count_name_table = count_name_table.values.tolist()
-            '''------tooltips------'''
-
             if locals()[feature+"_table"].empty == False:
+                print(feature)
+                if feature == 'Protein_Domain':
+                    locals()[feature+"_table"]['Detail'] = locals()[feature+"_table"]['Protein_Domain(Queried)']
+                    locals()[feature+"_table"]["Protein_Domain(Queried)"] = locals()[feature+"_table"].apply(lambda x: x["Protein_Domain_name"]+'%'+x["Protein_Domain(Queried)"], axis=1)
+                    locals()[feature+"_table"] = locals()[feature+"_table"].drop(columns=['Protein_Domain_name'])
+
+                elif feature == 'Transcriptional_Regulation':
+                    locals()[feature+"_table"]["Transcriptional_Regulation(Queried)"] = locals()[feature+"_table"].apply(lambda x: x["Transcriptional_Regulation(Queried)"]+'%'+x["Transcriptional_Regulation_id"], axis=1)
+                    locals()[feature+"_table"] = locals()[feature+"_table"].drop(columns=['Transcriptional_Regulation_id'])
+
+                else:
+                    locals()[feature+"_table"]['Detail'] = locals()[feature+"_table"]['%s(Queried)'%feature]
+                    locals()[feature+"_table"]['%s(Queried)'%feature] = locals()[feature+"_table"].apply(lambda x: x['%s(Queried)'%feature]+'%'+x['%s(Queried)'%feature], axis=1)
+
+
                 find_feature.append(feature)
+                locals()[feature+"_table"]["Detail"] = locals()[feature+"_table"].sum(axis=1)
                 locals()[feature+"_table"] = locals()[feature+"_table"].rename(columns=fature_name_dict)
-                locals()[feature+"_table"] = locals()[feature+"_table"].fillna('-')
                 locals()[feature+"_table"] = locals()[feature+"_table"].to_html(index= None,classes="table table-striped table-bordered")
                 locals()[feature+"_table"] = locals()[feature+"_table"].replace('table', 'table id="%s_table"'%feature, 1)
 

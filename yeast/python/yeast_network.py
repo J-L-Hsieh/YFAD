@@ -8,6 +8,7 @@ color_dict = {'GO_MF':'darkseagreen' ,'GO_BP':'red' ,'GO_CC':'lightskyblue' ,'Pr
 def network(associated_table, table_name):
     associated_table = pd.DataFrame(associated_table)
     '''-------------------------queried feature data---------------------'''
+    print(associated_table)
     queried_feature = associated_table.at[0,'%s(Queried)'%table_name]
 
     '''------------------------------------------------------------------'''

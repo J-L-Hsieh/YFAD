@@ -21,6 +21,9 @@ from yeast.python.yeast_modal import p1_modal,p2_modal
 
 import time
 
+fature_name_dict = {"GO_MF(Queried)":"Queried term", "GO_BP(Queried)":"Queried Term", "GO_CC(Queried)":"Queried Term", "Protein_Domain(Queried)":"Queried Term", "Mutant_Phenotype(Queried)":"Queried Term", "Pathway(Queried)":"Queried Term", "Disease(Queried)":"Queried Term", "Transcriptional_Regulation(Queried)":"Queried Term", "Physical_Interaction(Queried)":"Queried Term", "Genetic_Interaction(Queried)":"Queried Term",
+                    "GO_MF":"GO_MF", "GO_BP":"GO_BP", "GO_CC":"GO_CC", "Disease":"Disease", "Pathway":"Pathway", "Protein_Domain":"Protein Domain", "Mutant_Phenotype":"Mutant Phenotype", "Transcriptional_Regulation":"Transcriptional Regulation", "Physical_Interaction":"Physical Interaction", "Genetic_Interaction":"Genetic Interaction"}
+
 def home(request):
     return(render(request,'base.html',locals()))
 def download(request):
@@ -44,7 +47,7 @@ def yeast_name_base(request):
 #             return x
 #         x = eval(x)
 #         # y = change_table.loc[x, :]
-#         y = [change_table.loc[name]['%s_name'%feature] for name in x]
+#         y = [change_table.loc[term_name]['%s_name'%feature] for term_name in x]
 
 
 #         return y
@@ -63,7 +66,7 @@ def yeast_name_base(request):
 #     #         column_name.append(value)
 #     #     else:
 #     #         value = eval(value)
-#             # name = change_table.loc[value, :]
+#             # term_name = change_table.loc[value, :]
 #     return column_name
 #     pass
 
@@ -71,18 +74,18 @@ def yeast_name_base(request):
 
 
 def yeast_browser(request):
-    table_name = request.POST.get('first_feature')
+    feature = request.POST.get('first_feature')
     table_column = request.POST.get('other_feature')[:-1]
     search_feature = table_column.split(',')
 
-    if table_name == 'Protein_Domain':
+    if feature == 'Protein_Domain':
         select = """
             SELECT `%s(Queried)`, %s, %s_name FROM %s_10_length;
-        """%(table_name, table_column, table_name, table_name)
+        """%(feature, table_column, feature, feature)
     else:
         select = """
             SELECT `%s(Queried)`, %s FROM %s_10_length;
-        """%(table_name, table_column, table_name)
+        """%(feature, table_column, feature)
 
     try:
         connect = sqlite3.connect('db.sqlite3')
@@ -94,12 +97,12 @@ def yeast_browser(request):
 
     '''---將Protein Domain id換成name 新增Detail欄位---'''
 
-    if table_name == 'Protein_Domain':
-        table ['Detail'] = table['%s(Queried)'%table_name]
+    if feature == 'Protein_Domain':
+        table ['Detail'] = table['%s(Queried)'%feature]
         table ['Protein_Domain(Queried)'] = table['Protein_Domain_name']
         table = table.drop(columns = ['Protein_Domain_name'])
     else:
-        table ['Detail'] = table['%s(Queried)'%table_name]
+        table ['Detail'] = table['%s(Queried)'%feature]
 
     '''---將Protein Domain id換成name 新增Detail欄位---'''
     table = table.fillna('-')
@@ -134,27 +137,30 @@ def yeast_p1_modal(request):
 
 '''----------------------------------------------------------------------------'''
 def yeast_network(request):
-    st_time = time.time()
-    table_name = request.POST.get('feature')
-    row_name = request.POST.get('id')
-    name = request.POST.get('name')
+    feature = request.POST.get('feature')
+    term_id = request.POST.get('id')
+    term_name = request.POST.get('name')
     # print('-------------')
-    # print(table_name)
+    # print(feature)
     try:
         connect = sqlite3.connect('db.sqlite3')
-        select = """
-            SELECT `%s(Queried)`, GO_MF, GO_BP, GO_CC, Protein_Domain, Protein_Domain_id, Mutant_Phenotype, Pathway, Disease, Transcriptional_Regulation, Physical_Interaction, Genetic_Interaction, count, SystematicName
-            FROM %s_1_to_10
-            WHERE `%s(Queried)` IN ("%s");
-        """%(table_name, table_name, table_name, row_name)
+        if feature =="Protein_Domain":
+            select = """
+                SELECT `%s(Queried)`, GO_MF, GO_BP, GO_CC, Protein_Domain, Protein_Domain_id, Mutant_Phenotype, Pathway, Disease, Transcriptional_Regulation, Physical_Interaction, Genetic_Interaction, count, SystematicName
+                FROM %s_1_to_10
+                WHERE `%s(Queried)` IN ("%s");
+            """%(feature, feature, feature, term_id)
+        else:
+            select = """
+                SELECT `%s(Queried)`, GO_MF, GO_BP, GO_CC, Protein_Domain, Protein_Domain_id, Mutant_Phenotype, Pathway, Disease, Transcriptional_Regulation, Physical_Interaction, Genetic_Interaction, count, SystematicName
+                FROM %s_1_to_10
+                WHERE `%s(Queried)` IN ("%s");
+            """%(feature, feature, feature, term_name)
         table = pd.read_sql('%s' %select, connect)
-        print(select)
 
     finally:
         connect.close()
 
-    time2 = time.time()
-    print(time2 - st_time)
     # 刪除空值的欄位
     associated_table = table.dropna(axis='columns')
 
@@ -166,11 +172,9 @@ def yeast_network(request):
 
     associated_table = associated_table.drop(columns = ['count', 'SystematicName'])
 
-    associated_table['%s(Queried)'%table_name] = name
+    associated_table['%s(Queried)'%feature] = term_name
 
-    time3 = time.time()
-    print(time3 - time2)
-    network_data = network(associated_table, table_name)
+    network_data = network(associated_table, feature)
 
     column_order = associated_table.columns.values.tolist()
     column_order = column_order[0:]
@@ -181,40 +185,54 @@ def yeast_network(request):
 
 def yeast_associated(request):
 
-    table_name = request.POST.get('feature')
-    row_name = request.POST.get('id')
-    name = request.POST.get('name')
-    # print('-------------')
-    # print(table_name)
+    feature = request.POST.get('feature')
+    term_id = request.POST.get('id')
+    term_name = request.POST.get('name')
+
     try:
         connect = sqlite3.connect('db.sqlite3')
-        select = """
-            SELECT `%s(Queried)`, GO_MF, GO_BP, GO_CC, Protein_Domain, Protein_Domain_id, Mutant_Phenotype, Pathway, Disease, Transcriptional_Regulation, Physical_Interaction, Genetic_Interaction, count, SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
-        """%(table_name, table_name, table_name, row_name)
+        if feature == "Protein_Domain":
+            select = """
+                SELECT `%s(Queried)`, GO_MF, GO_BP, GO_CC, Protein_Domain, Protein_Domain_id, Mutant_Phenotype, Pathway, Disease, Transcriptional_Regulation, Physical_Interaction, Genetic_Interaction, count, SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
+            """%(feature, feature, feature, term_id)
+            print("asdfasdf")
+        else:
+            select = """
+                SELECT `%s(Queried)`, GO_MF, GO_BP, GO_CC, Protein_Domain, Protein_Domain_id, Mutant_Phenotype, Pathway, Disease, Transcriptional_Regulation, Physical_Interaction, Genetic_Interaction, count, SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
+            """%(feature, feature, feature, term_name)
         table = pd.read_sql('%s' %select, connect)
-        print(select)
 
+        if feature == "Protein_Domain":
+            select = """
+                SELECT * FROM %s_10_length WHERE `%s(Queried)` IN ("%s");
+            """%(feature, feature, term_id)
+        else:
+            select = """
+                SELECT * FROM %s_10_length WHERE `%s(Queried)` IN ("%s");
+            """%(feature, feature, term_name)
 
-        select = """
-            SELECT * FROM %s_10_length WHERE `%s(Queried)` IN ("%s");
-        """%(table_name, table_name, row_name)
         number_table =  pd.read_sql('%s' %select, connect)
-        if table_name == "Protein_Domain":
+
+        if feature == "Protein_Domain":
+            number_table["Protein_Domain(Queried)"] = number_table["Protein_Domain_name"]
             number_table = number_table.drop(columns=["Protein_Domain_name"])
+        elif feature == "Transcriptional_Regulation":
+            number_table = number_table.drop(columns=["Transcriptional_Regulation_id"])
+
         number_table = number_table.mask(number_table == 0).dropna(axis=1)
         # print(number_table)
 
     finally:
         connect.close()
     '''----處理id 換成name----'''
-    # if table_name =='Transcriptional_Regulation' or table_name =='Physical_Interaction' or table_name =='Genetic_Interaction' or table_name =='Protein_Domain':
-        # table['%s(Queried)'%table_name] = table['%s_name'%table_name]
-        # table = table.drop(columns=['%s_name'%table_name])
+    # if feature =='Transcriptional_Regulation' or feature =='Physical_Interaction' or feature =='Genetic_Interaction' or feature =='Protein_Domain':
+        # table['%s(Queried)'%feature] = table['%s_name'%feature]
+        # table = table.drop(columns=['%s_name'%feature])
 
     # 刪除空值的欄位
     associated_table = table.dropna(axis='columns')
 
-    all_tables = associated_analysis(associated_table, table_name, name)
+    all_tables = associated_analysis(associated_table, feature, term_name)
 
     column_name = associated_table.columns.values.tolist()
     for i in column_name:
@@ -223,13 +241,13 @@ def yeast_associated(request):
 
     associated_table = associated_table.drop(columns = ['count', 'SystematicName'])
 
-    associated_table['%s(Queried)'%table_name] = name
+    associated_table['%s(Queried)'%feature] = term_name
 
-    # network_data = network(associated_table, table_name)
-    #拿出column name
+    # network_data = network(associated_table, feature)
+    #拿出column term_name
     # associated_table = associated_table.to_html(index= None,classes="table table-bordered table-hover dataTable no-footer ")
     # associated_table = associated_table.replace('table','table id="associated_table"',1)
-
+    number_table = number_table.rename(columns=fature_name_dict)
     number_table = number_table.to_html(index= None,classes="table table-bordered table-hover dataTable no-footer ")
     number_table = number_table.replace('table','table id="associated_table"',1)
 

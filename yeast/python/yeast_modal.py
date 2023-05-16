@@ -11,8 +11,8 @@ def p1_modal(request):
     feature_name = request.POST.get('feature_name').split('%')
 
     feature = feature_name[0]
-    id = feature_name[1]
-    name = feature_name[2]
+    name = feature_name[1]
+    id = feature_name[2]
 
     try:
         connect = sqlite3.connect('db.sqlite3')

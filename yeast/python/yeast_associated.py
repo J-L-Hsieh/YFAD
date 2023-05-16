@@ -14,7 +14,7 @@ def round_float(p_value):
 def associated_analysis(associated_table, table_name, name):
     associated_table = pd.DataFrame(associated_table)
     '''-------------------------queried feature data---------------------'''
-    # print(associated_table)
+    print(associated_table)
     queried_feature = associated_table.at[0,'%s(Queried)'%table_name]
     queried_count = associated_table.at[0,'count']
     queried_name = associated_table.at[0,'SystematicName']
