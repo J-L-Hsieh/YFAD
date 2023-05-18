@@ -7,7 +7,7 @@ def search_base(request):
     return(render(request, 'search.html',locals()))
 
 def search_mode(request):
-    fature_name_dict = {"GO_MF(Queried)":"Queried term", "GO_BP(Queried)":"Queried Term", "GO_CC(Queried)":"Queried Term", "Protein_Domain(Queried)":"Queried Term", "Mutant_Phenotype(Queried)":"Queried Term", "Pathway(Queried)":"Queried Term", "Disease(Queried)":"Queried Term", "Transcriptional_Regulation(Queried)":"Queried Term", "Physical_Interaction(Queried)":"Queried Term", "Genetic_Interaction(Queried)":"Queried Term",
+    fature_name_dict = {"GO_MF(Queried)":"Queried Term", "GO_BP(Queried)":"Queried Term", "GO_CC(Queried)":"Queried Term", "Protein_Domain(Queried)":"Queried Term", "Mutant_Phenotype(Queried)":"Queried Term", "Pathway(Queried)":"Queried Term", "Disease(Queried)":"Queried Term", "Transcriptional_Regulation(Queried)":"Queried Term", "Physical_Interaction(Queried)":"Queried Term", "Genetic_Interaction(Queried)":"Queried Term",
                         "GO_MF":"GO_MF", "GO_BP":"GO_BP", "GO_CC":"GO_CC", "Disease":"Disease", "Pathway":"Pathway", "Protein_Domain":"Protein Domain", "Mutant_Phenotype":"Mutant Phenotype", "Transcriptional_Regulation":"Transcriptional Regulation", "Physical_Interaction":"Physical Interaction", "Genetic_Interaction":"Genetic Interaction"}
     # feature = request.POST.get('input_feature')  #GO_MF
     name = request.POST.get('search_name')  #Y-form DNA binding
@@ -55,11 +55,10 @@ def search_mode(request):
 
 
                 find_feature.append(feature)
-                locals()[feature+"_table"]["Detail"] = locals()[feature+"_table"].sum(axis=1)
+                locals()[feature+"_table"]["Detail"] = locals()[feature+"_table"].iloc[:,1:-1].sum(axis=1)
                 locals()[feature+"_table"] = locals()[feature+"_table"].rename(columns=fature_name_dict)
                 locals()[feature+"_table"] = locals()[feature+"_table"].to_html(index= None,classes="table table-striped table-bordered")
                 locals()[feature+"_table"] = locals()[feature+"_table"].replace('table', 'table id="%s_table"'%feature, 1)
-
                 all_table.append(locals()[feature+"_table"])
 
     finally:

@@ -77,6 +77,8 @@ $(document).ready(function() {
                         // $(`#${find_feature[i]}`).html(response.all_table[i])
                         var table = response.all_table[i]
                         table = table.replace("Queried Term", "<a style='color:red;'>Queried Term</a>")
+                        console.log(table)
+
                         $(`#${find_feature[i]}`).html(table)
 
                         // console.log(table)
@@ -302,7 +304,11 @@ $(document).ready(function() {
                                     "scrollCollapse" : true,
                                     "destroy": true,
                                 })
-                                $("#model_table_name").html(`<a>${table_row} </a><a>genes are annotated in the queried term </a><a style="color:red;">${name} </a><a>from the chosen feature </a><a style="color:red;">${feature.replace("_", " ")}</a>`)
+                                if (feature =="Transcriptional_Regulation"||feature =="Physical_Interaction"||feature =="Genetic_Interaction")
+                                    $("#modal_table_name").html(`<a style="color:red;">${table_row} genes</a><a> are annotated in the queried term [</a><a style="color:red;">${name}</a><a>] from the chosen feature </a><a>[${feature.replace("_", " ")}]:</a><a style="color:red;">${table_row} genes </a><a> have ${feature.replace("_", " ").toLowerCase()} with <a style="color:red;">${name}</a>`)
+                                else{
+                                    $("#modal_table_name").html(`<a style="color:red;">${table_row} genes</a><a> are annotated in the queried term [</a><a style="color:red;">${name}</a><a>] from the chosen feature </a><a>[${feature.replace("_", " ")}]</a>`)
+                                }
 
                             },
 

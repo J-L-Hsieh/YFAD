@@ -5,14 +5,19 @@ pd.set_option('display.max_columns', None)
 pd.set_option('display.width', None)
 # pd.set_option('display.max_colwidth', -1)
 
-feature_name_dict = {"GO_MF":"GO_MF", "GO_BP":"GO_BP", "GO_CC":"GO_CC", "Disease":"Disease", "Pathway":"Pathway", "Protein_Domain":"Protein Domain", "Mutant_Phenotype":"Mutant Phenotype", "Transcriptional_Regulation":"Transcriptional Regulation", "Physical_Interaction":"Physical Interaction", "Genetic_Interaction":"Genetic Interaction"}
+feature_name_dict = {"GO_MF":"GO_MF", "GO_BP":"GO_BP", "GO_CC":"GO_CC", "Disease":"Disease", "Pathway":"Pathway", "Protein_Domain":"Protein Domain", "Mutant_Phenotype":"Mutant Phenotype", "Transcriptional_Regulation":"Transcriptional Regulation", "Physical_Interaction":"Physical Interaction", "Genetic_Interaction":"Genetic Interaction",
+                    "SystematicName":"Systematic Name", "StandardName":"Strandard Name", "GeneDescription":"Gene Description", "EvidenceCode":"Evidence Code", "DomainDescription":"Domain Description", "StartCoordinate":"Start Coordinate", "EndCoordinate":"End Coordinate"}
+
+def Protein_Domain_href(term_id, term_name):
+    return "<a href='https://www.ebi.ac.uk/interpro/entry/pfam/%s/' target='_blank'>%s</a>"%(term_id, term_name)
+
 def p1_modal(request):
 
     feature_name = request.POST.get('feature_name').split('%')
 
     feature = feature_name[0]
     name = feature_name[1]
-    id = feature_name[2]
+    term_id = feature_name[2]
 
     try:
         connect = sqlite3.connect('db.sqlite3')
@@ -24,7 +29,7 @@ def p1_modal(request):
         else:
             select = """
                 SELECT SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
-            """%(feature, feature, id)
+            """%(feature, feature, term_id)
         # print(select)
         db_cursor.execute(select)
         sys_name1 = db_cursor.fetchall()
@@ -59,22 +64,42 @@ def p1_modal(request):
         else:
             select = """
                 SELECT * FROM %s_evidence WHERE SystematicName IN %s AND %s IN ("%s");
-            """%(feature, sys_name1_set, feature, id)
+            """%(feature, sys_name1_set, feature, term_id)
             # print(select)
             evidence_table = pd.read_sql(select , connect)
     finally:
         connect.close()
     if feature == 'Physical_Interaction':
-        evidence_table['SystematicName(Bait)']=evidence_table['Bait_link']
+        # evidence_table['SystematicName(Bait)']=evidence_table['Bait_link']
         evidence_table['SystematicName(Hit)']=evidence_table['Hit_link']
         evidence_table['StandardName(Bait)']=evidence_table['term_link']
         evidence_table = evidence_table.drop(columns=['Bait_link', 'Hit_link', 'term_link'])
 
     elif feature == 'Genetic_Interaction':
-        evidence_table['SystematicName(Bait)']=evidence_table['Bait_link']
+        # evidence_table['SystematicName(Bait)']=evidence_table['Bait_link']
         evidence_table['SystematicName(Hit)']=evidence_table['Hit_link']
         evidence_table['StandardName(Bait)']=evidence_table['term_link']
         evidence_table = evidence_table.drop(columns=['Bait_link', 'Hit_link', 'term_link'])
+
+    elif feature =="GO_MF" or feature =="GO_BP" or feature =="GO_CC":
+        evidence_table["EvidenceCode"] = evidence_table.apply(lambda x: x["EvidenceCode"].replace('<a ', '<a target="_blank"'), axis=1)
+        evidence_table['SystematicName']=evidence_table['gene_link']
+        evidence_table['%s'%feature]=evidence_table['term_link']
+        evidence_table = evidence_table.drop(columns=['gene_link', 'term_link'])
+
+    elif feature =="Transcriptional_Regulation":
+        evidence_table = evidence_table.drop(['Transcriptional_Regulation', 'Transcriptional_Regulation_'],axis=1)
+        evidence_table['SystematicName']=evidence_table['gene_link']
+        evidence_table['%s'%feature]=evidence_table['term_link']
+        evidence_table = evidence_table.drop(columns=['gene_link', 'term_link'])
+
+    elif feature =="Protein_Domain":
+        evidence_table['SystematicName']=evidence_table['gene_link']
+        # evidence_table['%s'%feature]=evidence_table['term_link']
+        # evidence_table["Protein_Domain"] = evidence_table.apply(lambda x :Protein_Domain_href(x['Protein_Domain'], name), axis=1)
+        evidence_table = evidence_table.drop(columns=['gene_link', 'term_link'])
+        # print(evidence_table)
+
 
     else:
         # print(evidence_table)
@@ -83,6 +108,7 @@ def p1_modal(request):
         evidence_table = evidence_table.drop(columns=['gene_link', 'term_link'])
     # print(evidence_table)
     evidence_table = evidence_table.rename(columns=feature_name_dict)
+    evidence_table = evidence_table.fillna('-')
     evidence_table = evidence_table.to_html(index= None, classes="table table-bordered table-hover dataTable no-footer", escape=False)
     # evidence_table = evidence_table.to_html(index= None, classes = "table", escape=False)
 
@@ -165,6 +191,6 @@ def p2_modal(request):
     evidence_table = evidence_table.to_html(index= None, classes="table table-bordered table-hover dataTable no-footer", escape=False)
     # evidence_table = evidence_table.to_html(index= None, classes = "table", escape=False)
 
-    evidence_table = evidence_table.replace('table', 'table id="evidence_table"', 1)
+    evidence_table = evidence_table.replace('table', 'table term_id="evidence_table"', 1)
 
     return evidence_table
