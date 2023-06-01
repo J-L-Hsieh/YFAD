@@ -98,7 +98,7 @@ $(document).ready(function() {
                                         var term_name = data.split('%')[0]
                                         var term_id = data.split('%')[1]
                                         var mark_data = term_name.replace(search_name,`</span><span style="background-color:yellow">${search_name}</span><span>`)
-                                        return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${find_feature[i]}%${term_name}%${term_id}" ><span>${mark_data}</span></a>`
+                                        return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${find_feature[i]}*${term_name}*${term_id}" ><span>${mark_data}</span></a>`
 
                                     },
                                 },
@@ -285,8 +285,8 @@ $(document).ready(function() {
                     /*------------------------modal-----------------------*/
                     $('.modal_features').on("click",function(){
                         var feature_name = $(this).attr('value');
-                        var feature = feature_name.split("%")[0];
-                        var name = feature_name.split("%")[1];
+                        var feature = feature_name.split("*")[0];
+                        var name = feature_name.split("*")[1];
                         console.log(feature);
 
                         $.ajax({
@@ -307,6 +307,7 @@ $(document).ready(function() {
                                 if (feature =="Physical_Interaction"||feature =="Genetic_Interaction"){
                                     $("#modal_table_name").html(`<a style="color:red;">${table_row} genes</a><a> are annotated in the queried term [</a><a style="color:red;">${name}</a><a>] from the feature </a><a>[${feature.replace("_", " ")}]: </a><a style="color:red;">${table_row} genes </a><a> have ${feature.replace("_", " ").toLowerCase()} with <a style="color:red;">${name}</a>`)
                                 }else if(feature =="Transcriptional_Regulation"){
+                                    console.log(feature)
                                     $("#modal_table_name").html(`<a style="color:red;">${table_row} genes</a><a> are annotated in the queried term [</a><a style="color:red;">${name}</a><a>] from the feature </a><a>[${feature.replace("_", " ")}]: </a><a style="color:red;">${table_row} genes </a><a> are the targets of ${feature.replace("_", " ").toLowerCase()} <a style="color:red;">${name}</a>`)
                                 }else if(feature =="GO_MF"||feature =="GO_BP"||feature =="GO_CC"){
                                     $("#modal_table_name").html(`<a style="color:red;">${table_row} genes</a><a> are annotated in the queried term [</a><a style="color:red;">${name}</a><a>] from the feature </a><a>[${feature}]</a>`)

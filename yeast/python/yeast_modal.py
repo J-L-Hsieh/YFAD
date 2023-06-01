@@ -3,7 +3,7 @@ import sqlite3
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width', None)
-pd.set_option('display.max_colwidth', -1)
+# pd.set_option('display.max_colwidth', -1)
 
 feature_name_dict = {"GO_MF":"GO_MF", "GO_BP":"GO_BP", "GO_CC":"GO_CC", "Disease":"Disease", "Pathway":"Pathway", "Protein_Domain":"Protein Domain", "Mutant_Phenotype":"Mutant Phenotype", "Transcriptional_Regulation":"Transcriptional Regulation", "Physical_Interaction":"Physical Interaction", "Genetic_Interaction":"Genetic Interaction",
                     "SystematicName":"Systematic Name", "StandardName":"Strandard Name", "GeneDescription":"Gene Description", "EvidenceCode":"Evidence Code", "DomainDescription":"Domain Description", "StartCoordinate":"Start Coordinate", "EndCoordinate":"End Coordinate",
@@ -14,14 +14,14 @@ def Protein_Domain_href(term_id, term_name):
 
 def p1_modal(request):
 
-    feature_name = request.POST.get('feature_name').split('%')
+    feature_name = request.POST.get('feature_name').split('*')
 
     feature = feature_name[0]
     name = feature_name[1]
     term_id = feature_name[2]
-
+    print(feature_name)
     try:
-        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+        connect = sqlite3.connect('db.sqlite3')
         db_cursor = connect.cursor()
         if feature == 'Transcriptional_Regulation':
             select = """
@@ -127,7 +127,7 @@ def p2_modal(request):
     # print(name1)
     # print(name2)
     try:
-        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+        connect = sqlite3.connect('db.sqlite3')
         db_cursor = connect.cursor()
 
         select = """

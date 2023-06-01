@@ -32,13 +32,13 @@ def associated_analysis(associated_table, table_name, name):
             column_name.remove('Protein_Domain_id')
     response ={}
     try:
-        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
-        db_cursor = connect.cursor()
-        select ="""
-            SELECT link FROM %s_link WHERE %s IN ("%s");
-        """%(table_name, table_name, queried_feature)
-        queried_link = db_cursor.execute(select).fetchone()
-        queried_link = queried_link[0]
+        connect = sqlite3.connect('db.sqlite3')
+        # db_cursor = connect.cursor()
+        # select ="""
+        #     SELECT link FROM %s_link WHERE %s IN ("%s");
+        # """%(table_name, table_name, queried_feature)
+        # queried_link = db_cursor.execute(select).fetchone()
+        # queried_link = queried_link[0]
 
         for i in column_name:
             domain_name = eval(associated_table.at[0,'%s' %i])
@@ -47,7 +47,8 @@ def associated_analysis(associated_table, table_name, name):
                 SELECT `%s(Queried)`,SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
             """%(i, i, i, feature_name)
             feature_systematic = pd.read_sql('%s' %select, connect)
-            feature_systematic["Term A (The Queried Term)"] = queried_link
+            print(feature_systematic)
+            feature_systematic["Term A (The Queried Term)"] = queried_feature
             feature_systematic['N<sub>A</sub>'] = str(len(eval(queried_name)))
             feature_systematic["N<sub>B</sub>"] = feature_systematic.apply(lambda x: str(len(eval(x['SystematicName']))), axis=1)
             feature_systematic['N<sub>AB</sub>'] = feature_systematic.apply(lambda x: intersection(queried_name, x['SystematicName']), axis=1)

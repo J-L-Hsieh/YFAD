@@ -3,7 +3,7 @@ $.ajaxSetup({
     type: 'POST',
 })
 
-
+feature_dict = {"GO_MF":"GO_MF", "GO_BP":"GO_BP", "GO_CC":"GO_CC", "Protein_Domain":"Protein Domain", "Mutant_Phenotype":"Mutant Phenotype", "Pathway":"Pathway", "Disease":"Disease", "Transcriptional_Regulation":"Transcriptional Regulation", "Pysical_Interaction":"Pysical Interaction", "Genetic_Interaction":"Genetic Interaction"}
 
 $(document).ready(function(){
     $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
@@ -33,8 +33,8 @@ $(document).ready(function(){
     const id = urlParams.get('id')
     const name = urlParams.get('name')
     const feature = urlParams.get('feature')
-    $('#queried').html(`<h2>The queried term <a style="color:red;">${name}</a> from [${feature}]<h2>`)
-    $('#associated_title').html(`<h4><a># of terms (from each feature) that are </a><a style="color:#007bff;">ASSOCIATED </a><a>with the queried term </a><a style="color:red;">${name} </a>from [${feature}]</h4>`)
+    $('#queried').html(`<h2>The queried term <a style="color:red;">${name}</a> from [${feature_dict[feature]}]<h2>`)
+    $('#associated_title').html(`<h4><a># of terms (from each feature) that are </a><a style="color:#007bff;">ASSOCIATED </a><a>with the queried term </a><a style="color:red;">${name} </a>from [${feature_dict[feature]}]</h4>`)
     // console.log(name)
     $.ajax({
         url : '/yeast/ajax_network/',
@@ -43,15 +43,32 @@ $(document).ready(function(){
             var column_order = response.column_order;
             var network_judge = false;
             /* --------------------------network graph----------------------------*/
+            const nodeFilterValue = {
+                main: true,
+                GO_MF: false,
+                GO_BP: false,
+                GO_CC: false,
+                Protein_Domain: false,
+                Mutant_Phenotype: false,
+                Pathway: false,
+                Disease: false,
+                Transcriptional_Regulation: false,
+                Physical_Interaction: false,
+                Genetic_Interaction: false,
+            };
             for (i=1 ;i<column_order.length; i++){
-                if(i<6){
-                    $('#checkbox_container1').append(`<div style="width: 20%;" class="flexbox"><input type="checkbox" name="nodeFilterSelect" value=${column_order[i]} checked>${column_order[i]}</input></div>`)
-                }else{
-                    $('#checkbox_container2').append(`<div style="width: 20%;" class="flexbox"><input type="checkbox" name="nodeFilterSelect" value=${column_order[i]} checked>${column_order[i]}</input></div>`)
+                $('#nodeFilterSelect').append(`<option value="${column_order[i]}">${column_order[i]}</option>`)
+                if (i==1){
+                    nodeFilterValue[column_order[i]] = true;
                 }
+                // if(i<6){
+                //     $('#checkbox_container1').append(`<div style="width: 20%;" class="flexbox"><input type="checkbox" name="nodeFilterSelect" value=${column_order[i]} checked>${column_order[i]}</input></div>`)
+                // }else{
+                //     $('#checkbox_container2').append(`<div style="width: 20%;" class="flexbox"><input type="checkbox" name="nodeFilterSelect" value=${column_order[i]} checked>${column_order[i]}</input></div>`)
+                // }
             }
-            const nodeFilterSelector = document.getElementsByName("nodeFilterSelect");
-
+            const nodeFilterSelector = document.getElementById("nodeFilterSelect");
+            console.log(nodeFilterSelector)
 
             function startNetwork(data) {
             const container = document.getElementById("mynetwork");
@@ -78,8 +95,8 @@ $(document).ready(function(){
                 network.setOptions( { physics: false } );
 
             });
-
             // ----設置固定位置設定-----
+
             network.on("afterDrawing", function(){
                 unLoading_mask();
             });
@@ -90,38 +107,65 @@ $(document).ready(function(){
             var nodes = new vis.DataSet(response.network_data.nodes);
             // create an array with edges
             var edges = new vis.DataSet(response.network_data.edges);
-
             //--------全部都顯示------
-            const nodesFilterValues = {
-                main: true,
-                GO_MF: true,
-                GO_BP: true,
-                GO_CC: true,
-                Protein_Domain: true,
-                Mutant_Phenotype: true,
-                Pathway: true,
-                Disease: true,
-                Transcriptional_Regulation: true,
-                Physical_Interaction: true,
-                Genetic_Interaction: true,
-            };
+            // let nodeFilterValue = ""
+
             //--------全部都顯示------
 
             const nodesFilter = (node) =>{
-                return nodesFilterValues[node.type];
+            //     switch (nodeFilterValue){
+            //         case "GO_MF":
+            //             return node.type ==="GO_MF";
+            //         case "GO_BP":
+            //             return node.type ==="GO_BP";
+            //         case "GO_CC":
+            //             return node.type ==="GO_CC";
+            //         case "Protein_Domain":
+            //             return node.type ==="Protein_Domain";
+            //         case "Mutant_Phenotype":
+            //             return node.type ==="Mutant_Phenotype";
+            //         case "Pathway":
+            //             return node.type ==="Pathway";
+            //         case "Disease":
+            //             return node.type ==="Disease";
+            //         case "Transcriptional_Regulation":
+            //             return node.type ==="Transcriptional_Regulation";
+            //         case "Physical_Interaction":
+            //             return node.type ==="Physical_Interaction";
+            //         case "Genetic_Interaction":
+            //             return node.type ==="Genetic_Interaction";
+            //     }
+                return nodeFilterValue[node.type];
             }
 
             var nodesView = new vis.DataView(nodes, { filter : nodesFilter });
             var edgesView = new vis.DataView(edges);
             console.log(edgesView)
 
-            nodeFilterSelector.forEach((filter) =>
-                filter.addEventListener("change", (e) => {
-                    const { value, checked } = e.target;
-                    nodesFilterValues[value] = checked;
-                    nodesView.refresh();
+            nodeFilterSelector.addEventListener("change", (e)=>{
+                // const { value, checked } = e.target;
+                all_features = ["GO_MF", "GO_BP", "GO_CC", "Protein_Domain", "Mutant_Phenotype", "Pathway", "Disease", "Transcriptional_Regulation", "Physical_Interaction", "Genetic_Interaction"]
+                for (i=0; i<10; i++){
+                    if (all_features[i] == e.target.value){
+                        nodeFilterValue[e.target.value] = true;
+                    }else{
+                        nodeFilterValue[all_features[i]] = false;
+                    }
+                }
+                nodesView.refresh();
+                startNetwork({ nodes: nodesView, edges: edgesView });
+
             })
-            );
+            //-------check box--------
+
+            // nodeFilterSelector.forEach((filter) =>
+            //     filter.addEventListener("change", (e) => {
+            //         const { value, checked } = e.target;
+            //         nodesFilterValues[value] = checked;
+            //         nodesView.refresh();
+            //     })
+            // );
+            //-------check box--------
 
             startNetwork({ nodes: nodesView, edges: edgesView });
 
@@ -241,24 +285,31 @@ $(document).ready(function(){
                 add_html = add_html + `<div id = ${column_order[i]}></div>`
                 add_href = add_href + `<input id ="${column_order[i]}_move" class="btn btn-primary" type="button" style="margin:2px;" name="Submit" value="${column_order[i]}"  ></input>`
             }
-            console.log(feature_num)
-            $('#href_table').html(`<h4>The terms (from each feature) that are <a style="color:#007bff;">ASSOCIATED </a>with the queried term <a style="color:red;">${name} </a>from [${feature}]</h4>`)
+            // console.log(feature_num)
+            $('#href_table').html(`<h4>The terms (from each feature) that are <a style="color:#007bff;">ASSOCIATED </a>with the queried term <a style="color:red;">${name} </a>from [${feature_dict[feature]}]</h4>`)
 
             $('#Answer2').html(add_html)
             for (i=0 ;i< column_order.length;i++){
                 if (feature_num[i]==1){
-                    $(`#${column_order[i]}`).html(`<div class="card" style="margin-top:5%;" ><h3 class ="fs-3 card-header"><a style="color:red">${feature_num[i]} term </a> from [${column_order[i]}] <a> are</a><a style="color:#007bff"> ASSOCIATED</a> with the queried <a style="color:red"> ${name}</a> from [${feature}]</h3> <div class="card-body">${response.all_tables[column_order[i]]}</div></div>`)
+                    $(`#${column_order[i]}`).html(`<div class="card" style="margin-top:5%;" ><h3 class ="fs-3 card-header"><a style="color:red">${feature_num[i]} term </a> from [${column_order[i]}] <a> are</a><a style="color:#007bff"> ASSOCIATED</a> with the queried <a style="color:red"> ${name}</a> from [${feature_dict[feature]}]</h3> <div class="card-body">${response.all_tables[column_order[i]]}</div></div>`)
                 }else{
-                    $(`#${column_order[i]}`).html(`<div class="card" style="margin-top:5%;" ><h3 class ="fs-3 card-header"><a style="color:red">${feature_num[i]} terms </a> from [${column_order[i]}] <a> are</a><a style="color:#007bff"> ASSOCIATED</a> with the queried <a style="color:red"> ${name}</a> from [${feature}]</h3> <div class="card-body">${response.all_tables[column_order[i]]}</div></div>`)
+                    $(`#${column_order[i]}`).html(`<div class="card" style="margin-top:5%;" ><h3 class ="fs-3 card-header"><a style="color:red">${feature_num[i]} terms </a> from [${column_order[i]}] <a> are</a><a style="color:#007bff"> ASSOCIATED</a> with the queried <a style="color:red"> ${name}</a> from [${feature_dict[feature]}]</h3> <div class="card-body">${response.all_tables[column_order[i]]}</div></div>`)
                 }
                 $(`#${column_order[i]}_table`).DataTable({
                     'columnDefs':[
                         {   'targets':-1,
                             render:function(data,type,row,meta){
                                 var second_name = row[1].split('>')[1].replace('</a', '')
-                                return '<a href = "/yeast/browse/associated/detail/?id='+ feature + '$' + id + '$' + name +'&name='+ column_order[i]+ '$' + data + '$' + second_name +'" target="_blank"> Detail </a>';
+                                return `<a href = "/yeast/browse/associated/detail/?id=${feature}*${id}*${name}&name=${column_order[i]}*${data}*${second_name}" target="_blank"> Detail </a>`;
                             },
                         },
+                        {   'targets':0,
+                        render:function(data,type,row,meta){
+                            var second_name = row[1].split('>')[1].replace('</a', '')
+                            return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value = "${feature}*${name}*${id}" target="_blank"> ${data} </a>`;
+                        },
+                        },
+                        
                         // {   'targets':5,
                         //     render:function(data,type,row,meta){
                         //         // console.log(row)
@@ -271,12 +322,15 @@ $(document).ready(function(){
             /*------------------------modal-----------------------*/
             $('.modal_features').on("click",function(){
                 var feature_name = $(this).attr('value');
+                var feature = feature_name.split("*")[0];
+                var name = feature_name.split("*")[1];
                 $.ajax({
-                    url : '/yeast/ajax_modal/',
+                    url : '/yeast/ajax_p1_modal/',
                     data : {'feature_name' : feature_name},
                     success:function(response){
                         // console.log(response.evidence_table)
                         $('#modal_table').html(response.evidence_table)
+                        var table_row = evidence_table.rows.length-1;
                         $('#evidence_table').DataTable({
                             'bAutoWidth' : true,
                             // 'scrollX':true,
@@ -284,6 +338,15 @@ $(document).ready(function(){
                             "scrollCollapse" : true,
                             "destroy": true,
                         })
+                        if (feature =="Physical_Interaction"||feature =="Genetic_Interaction"){
+                            $("#modal_table_name").html(`<a style="color:red;">${table_row} genes</a><a> are annotated in the queried term [</a><a style="color:red;">${name}</a><a>] from the feature </a><a>[${feature_dict[feature]}]: </a><a style="color:red;">${table_row} genes </a><a> have ${feature_dict[feature].toLowerCase()} with <a style="color:red;">${name}</a>`)
+                        }else if(feature =="Transcriptional_Regulation"){
+                            $("#modal_table_name").html(`<a style="color:red;">${table_row} genes</a><a> are annotated in the queried term [</a><a style="color:red;">${name}</a><a>] from the feature </a><a>[${feature_dict[feature]}]: </a><a style="color:red;">${table_row} genes </a><a> are the targets of ${feature_dict[feature].toLowerCase()} <a style="color:red;">${name}</a>`)
+                        }else if(feature =="GO_MF"||feature =="GO_BP"||feature =="GO_CC"){
+                            $("#modal_table_name").html(`<a style="color:red;">${table_row} genes</a><a> are annotated in the queried term [</a><a style="color:red;">${name}</a><a>] from the feature </a><a>[${feature_dict[feature]}]</a>`)
+                        }else{
+                            $("#modal_table_name").html(`<a style="color:red;">${table_row} genes</a><a> are annotated in the queried term [</a><a style="color:red;">${name}</a><a>] from the feature </a><a>[${feature_dict[feature]}]</a>`)
+                        }
 
                     },
 

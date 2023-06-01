@@ -53,7 +53,7 @@ def yeast_name_base(request):
 #         return y
 #     column_name=[]
 #     try:
-#         connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+#         connect = sqlite3.connect('db.sqlite3')
 #         change_table = pd.read_sql("""SELECT * FROM %s_id_to_name""" %feature, connect, index_col='%s_id' %feature)
 #     finally:
 #         connect.close()
@@ -88,7 +88,7 @@ def yeast_browser(request):
         """%(feature, table_column, feature)
 
     try:
-        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+        connect = sqlite3.connect('db.sqlite3')
         table = pd.read_sql(select, connect)
 
     finally:
@@ -143,7 +143,7 @@ def yeast_network(request):
     # print('-------------')
     # print(feature)
     try:
-        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+        connect = sqlite3.connect('db.sqlite3')
         if feature =="Protein_Domain":
             select = """
                 SELECT `%s(Queried)`, GO_MF, GO_BP, GO_CC, Protein_Domain, Protein_Domain_id, Mutant_Phenotype, Pathway, Disease, Transcriptional_Regulation, Physical_Interaction, Genetic_Interaction, count, SystematicName
@@ -190,7 +190,7 @@ def yeast_associated(request):
     term_name = request.POST.get('name')
 
     try:
-        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+        connect = sqlite3.connect('db.sqlite3')
         if feature == "Protein_Domain":
             select = """
                 SELECT `%s(Queried)`, GO_MF, GO_BP, GO_CC, Protein_Domain, Protein_Domain_id, Mutant_Phenotype, Pathway, Disease, Transcriptional_Regulation, Physical_Interaction, Genetic_Interaction, count, SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
@@ -258,22 +258,24 @@ def yeast_associated(request):
 def yeast_name(request):
     first_feature = request.POST.get('first_feature')
     second_feature = request.POST.get('second_feature')
-    first_feature = first_feature.split('$')
-    second_feature = second_feature.split('$')
+    first_feature = first_feature.split('*')
+    second_feature = second_feature.split('*')
+    # print(second_feature, first_feature)
     try:
-        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+        connect = sqlite3.connect('db.sqlite3')
         db_cursor = connect.cursor()
 
         for  i in range(2):
             if i == 1:
                 select = """
                     SELECT count,SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s")
-                """%(first_feature[0], first_feature[0], first_feature[1])
+                """%(first_feature[0], first_feature[0], first_feature[2])
+                print(select)
                 first_table = pd.read_sql('%s' %select, connect)
             else:
                 select = """
                     SELECT count,SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s")
-                """%(second_feature[0], second_feature[0], second_feature[1])
+                """%(second_feature[0], second_feature[0], second_feature[2])
                 second_table = pd.read_sql('%s' %select, connect)
 
         if first_feature[0]=='Protein_Domain':
@@ -290,7 +292,7 @@ def yeast_name(request):
             second_pd_id = second_pd_id[0]
     finally:
         connect.close()
-
+    print(first_table)
     first_names = eval(first_table.iat[0,1])
     second_names = eval(second_table.iat[0,1])
     first_name_table = pd.DataFrame(list(zip(first_names,['true']*len(first_names))),columns=['all','%s'%first_feature[2]])
@@ -344,7 +346,7 @@ def yeast_evidence(request):
     name1 = feature[1]
     name2 = feature[3]
     systematice_name = feature[4]
-    connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
+    connect = sqlite3.connect('db.sqlite3')
     print(feature)
     if feature1 == 'false':
         pass

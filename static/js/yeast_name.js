@@ -12,8 +12,9 @@ $(document).ready(function() {
     const urlParams = new URLSearchParams(queryString);
     const first_feature = urlParams.get('id')
     const second_feature = urlParams.get('name')
-    var first_feature_array = first_feature.split('$')
-    var second_feature_array = second_feature.split('$')
+    console.log(first_feature)
+    var first_feature_array = first_feature.split('*')
+    var second_feature_array = second_feature.split('*')
     console.log(first_feature_array)
     console.log(second_feature_array)
 

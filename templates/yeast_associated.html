@@ -93,6 +93,7 @@
                     <!-- <div class="card-body "> -->
 
                         <div id="view_network" style="display: none;">
+                            <select id="nodeFilterSelect" class="flexbox"></select>
                             <div id="checkbox_container1" class="flexbox"></div>
                             <div id="checkbox_container2" class="flexbox"></div>
                             <div id="mynetwork" style="width: 90%;height: 600px;" ></div>
@@ -109,14 +110,15 @@
             <!-- <hr class="page-title-under"> -->
             <div class="card-body " style="border: 3px solid #343a40;">
                 <h3>How to determine whether two feature terms (e.g. Term A and Term B) are associated or not?</h3>
-                <h5><a>• </a><a style="color: red;">N<sub>A</sub><a> :the number of genes annotated in Term A. </a></h5>
-                <h5><a>• </a><a style="color: red;">N<sub>B</sub><a> :the number of genes annotated in Term B. </a></h5>
-                <h5><a>• </a><a style="color: red;">N<sub>AB</sub><a> :the number of genes annotated in both Term A & Term B. </a></h5>
-                <h5><a>• </a><a style="color: red;">N<sub>Y</sub>=6611<a> :the number of ORFs (open reading frames) in the yeast genome. </a></h5>
+                <h5><a>• </a><a style="color: red;">N<sub>A</sub><a>: the number of genes annotated in Term A. </a></h5>
+                <h5><a>• </a><a style="color: red;">N<sub>B</sub><a>: the number of genes annotated in Term B. </a></h5>
+                <h5><a>• </a><a style="color: red;">N<sub>AB</sub><a>: the number of genes annotated in both Term A & Term B. </a></h5>
+                <h5><a>• </a><a style="color: red;">N<sub>Y</sub>=6611<a>: the number of ORFs (open reading frames) in the yeast genome. </a></h5>
                 <h5><a>• Term A and Term B are regarded as </a><a style="color: red;">ASSOCIATED </a><a style="color: #007bff;">if their member genes have significant overlap</a><a> (i.e. </a><a style="color: red;">N<sub>AB</sub> is big enough</a><a>).</a></h5>
                 <h5><a>• The p-value of significant overlap is calculated using the hypergeometric test as follows. </a></h5>
                 <h5 class="text-center"><img src="{% static 'img/formula.jpg'%}"></img></h5>
 
+                <h5><a>• The p-value is then corrected by the FDR (false discovery rate) to represent the true alpha level in the multiple hypotheses testing.  </a></h5>
                 <h5><a>• Finally, Term A and Term B are said to be </a><a style="color: red;">ASSOCIATED<a> with each other if the </a><a style="color: red;">corrected p-value <= 0.01</a><a>.</a></h5>
             <!-- <div class="card"> -->
                 <!-- <div class='card-body'></div> -->
@@ -132,12 +134,11 @@
     <div class="modal-dialog maodal-lg" role="document" style="max-width:70%;">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title" id="exampleModalLabel">Edvidence table</h3>
                 <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">x</button>
             </div>
             <div class="modal-body">
                 <div class="card">
-                    <h4 class="card-header">table name</h4>
+                    <h4 id="modal_table_name" class="card-header">table name</h4>
                     <div id="modal_table" class="card-body"></div>
                 </div>
             </div>
