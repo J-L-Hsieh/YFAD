@@ -57,7 +57,7 @@ $(document).ready(function(){
                 Genetic_Interaction: false,
             };
             for (i=1 ;i<column_order.length; i++){
-                $('#nodeFilterSelect').append(`<option value="${column_order[i]}">${column_order[i]}</option>`)
+                $('#nodeFilterSelect').append(`<option value="${column_order[i]}">${feature_dict[column_order[i]]}</option>`)
                 if (i==1){
                     nodeFilterValue[column_order[i]] = true;
                 }
@@ -306,7 +306,7 @@ $(document).ready(function(){
                         {   'targets':0,
                         render:function(data,type,row,meta){
                             var second_name = row[1].split('>')[1].replace('</a', '')
-                            return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value = "${feature}*${name}*${id}" target="_blank"> ${data} </a>`;
+                            return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value = "${feature}*${name}*${id}" target="_blank"> ${name} </a>`;
                         },
                         },
                         

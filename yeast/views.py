@@ -21,8 +21,10 @@ from yeast.python.yeast_modal import p1_modal,p2_modal
 
 import time
 
-fature_name_dict = {"GO_MF(Queried)":"Queried term", "GO_BP(Queried)":"Queried Term", "GO_CC(Queried)":"Queried Term", "Protein_Domain(Queried)":"Queried Term", "Mutant_Phenotype(Queried)":"Queried Term", "Pathway(Queried)":"Queried Term", "Disease(Queried)":"Queried Term", "Transcriptional_Regulation(Queried)":"Queried Term", "Physical_Interaction(Queried)":"Queried Term", "Genetic_Interaction(Queried)":"Queried Term",
-                    "GO_MF":"GO_MF", "GO_BP":"GO_BP", "GO_CC":"GO_CC", "Disease":"Disease", "Pathway":"Pathway", "Protein_Domain":"Protein Domain", "Mutant_Phenotype":"Mutant Phenotype", "Transcriptional_Regulation":"Transcriptional Regulation", "Physical_Interaction":"Physical Interaction", "Genetic_Interaction":"Genetic Interaction"}
+feature_name_dict = {"GO_MF(Queried)":"Queried term", "GO_BP(Queried)":"Queried Term", "GO_CC(Queried)":"Queried Term", "Protein_Domain(Queried)":"Queried Term", "Mutant_Phenotype(Queried)":"Queried Term", "Pathway(Queried)":"Queried Term", "Disease(Queried)":"Queried Term", "Transcriptional_Regulation(Queried)":"Queried Term", "Physical_Interaction(Queried)":"Queried Term", "Genetic_Interaction(Queried)":"Queried Term",
+                    "GO_MF":"GO_MF", "GO_BP":"GO_BP", "GO_CC":"GO_CC", "Disease":"Disease", "Pathway":"Pathway", "Protein_Domain":"Protein Domain", "Mutant_Phenotype":"Mutant Phenotype", "Transcriptional_Regulation":"Transcriptional Regulation", "Physical_Interaction":"Physical Interaction", "Genetic_Interaction":"Genetic Interaction",
+                    "SystematicName":"Systematic Name", "StandardName":"Strandard Name", "GeneDescription":"Gene Description", "EvidenceCode":"Evidence Code", "DomainDescription":"Domain Description", "StartCoordinate":"Start Coordinate", "EndCoordinate":"End Coordinate",
+                    "SystematicName(Bait)":"Systematic Name(Bait)", "StandardName(Bait)":"Standard Name (Bait)", "SystematicName(Hit)":"Systematic Name (Hit)", "StandardName(Hit)":"Standard Name (Hit)", "ExperimentType":"Experiment Type"}
 
 def home(request):
     return(render(request,'base.html',locals()))
@@ -247,7 +249,7 @@ def yeast_associated(request):
     #拿出column term_name
     # associated_table = associated_table.to_html(index= None,classes="table table-bordered table-hover dataTable no-footer ")
     # associated_table = associated_table.replace('table','table id="associated_table"',1)
-    number_table = number_table.rename(columns=fature_name_dict)
+    number_table = number_table.rename(columns=feature_name_dict)
     number_table = number_table.to_html(index= None,classes="table table-bordered table-hover dataTable no-footer ")
     number_table = number_table.replace('table','table id="associated_table"',1)
 
@@ -269,13 +271,13 @@ def yeast_name(request):
             if i == 1:
                 select = """
                     SELECT count,SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s")
-                """%(first_feature[0], first_feature[0], first_feature[2])
+                """%(first_feature[0], first_feature[0], first_feature[1])
                 print(select)
                 first_table = pd.read_sql('%s' %select, connect)
             else:
                 select = """
                     SELECT count,SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s")
-                """%(second_feature[0], second_feature[0], second_feature[2])
+                """%(second_feature[0], second_feature[0], second_feature[1])
                 second_table = pd.read_sql('%s' %select, connect)
 
         if first_feature[0]=='Protein_Domain':
@@ -284,6 +286,7 @@ def yeast_name(request):
             """%(first_feature[0], first_feature[0], first_feature[1])
             first_pd_id = db_cursor.execute(select).fetchone()
             first_pd_id = first_pd_id[0]
+            print(first_pd_id)
         if second_feature[0]=='Protein_Domain':
             select = """
                 SELECT Protein_Domain_name FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
@@ -338,14 +341,19 @@ def yeast_modal(request):
     return JsonResponse(response)
 
 '''----------------------------------------------------------------------------'''
+def Protein_Domain_href(term_id, term_name):
+    return "<a href='https://www.ebi.ac.uk/interpro/entry/pfam/%s/' target='_blank'>%s</a>"%(term_id, term_name)
 
 def yeast_evidence(request):
     feature = request.POST.get('feature').split('%')
+    print(feature)
     feature1 = feature[0]
-    feature2 = feature[2]
-    name1 = feature[1]
-    name2 = feature[3]
-    systematice_name = feature[4]
+    feature2 = feature[3]
+    id_query = feature[1]
+    name_query = feature[2]
+    id_associated = feature[4]
+    name_associated = feature[5]
+    systematice_name = feature[6]
     connect = sqlite3.connect('db.sqlite3')
     print(feature)
     if feature1 == 'false':
@@ -354,21 +362,21 @@ def yeast_evidence(request):
         if feature1 == 'Physical_Interaction':
             select1 = """
                 SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ("%s") AND `StandardName(Hit)` IN ("%s") OR (`SystematicName(Hit)` IN ("%s") AND `StandardName(Bait)` IN ("%s"));
-            """%(feature1, systematice_name, name1, systematice_name, name1)
+            """%(feature1, systematice_name, id_query, systematice_name, id_query)
 
         elif feature1 == 'Genetic_Interaction':
             select1 = """
                 SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ("%s") AND `StandardName(Hit)` IN ("%s") OR (`SystematicName(Hit)` IN ("%s") AND `StandardName(Bait)` IN ("%s"));
-            """%(feature1, systematice_name, name1, systematice_name, name1)
+            """%(feature1, systematice_name, id_query, systematice_name, id_query)
         elif feature1 == 'Transcriptional_Regulation':
             select1 = """
                 SELECT * FROM %s_evidence WHERE SystematicName IN ("%s") AND StandardName IN ("%s");
-            """%(feature1, systematice_name, name1)
+            """%(feature1, systematice_name, id_query)
             print('---asd')
         else:
             select1 = """
                 SELECT * FROM %s_evidence WHERE SystematicName IN ("%s") AND %s IN ("%s");
-            """%(feature1, systematice_name, feature1, name1)
+            """%(feature1, systematice_name, feature1, id_query)
 
     if feature2 == 'false':
         pass
@@ -377,21 +385,21 @@ def yeast_evidence(request):
         if feature2 == 'Physical_Interaction':
             select2 = """
                 SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ("%s") AND `StandardName(Hit)` IN ("%s") OR (`SystematicName(Hit)` IN ("%s") AND `StandardName(Bait)` IN ("%s"));
-            """%(feature2, systematice_name, name2, systematice_name, name2)
+            """%(feature2, systematice_name, id_associated, systematice_name, id_associated)
 
 
         elif feature2 == 'Genetic_Interaction':
             select2 = """
                 SELECT * FROM %s_evidence WHERE `SystematicName(Bait)` IN ("%s") AND `StandardName(Hit)` IN ("%s") OR (`SystematicName(Hit)` IN ("%s") AND `StandardName(Bait)` IN ("%s"));
-            """%(feature2, systematice_name, name2, systematice_name, name2)
+            """%(feature2, systematice_name, id_associated, systematice_name, id_associated)
         elif feature2 == 'Transcriptional_Rugulation':
             select2 = """
                 SELECT * FROM %s_evidence WHERE SystematicName IN ("%s") AND %s IN ("%s");
-            """%(feature2, systematice_name, feature2, name2)
+            """%(feature2, systematice_name, feature2, id_associated)
         else:
             select2 = """
                 SELECT * FROM %s_evidence WHERE SystematicName IN ("%s") AND %s IN ("%s");
-            """%(feature2, systematice_name, feature2, name2)
+            """%(feature2, systematice_name, feature2, id_associated)
 
 
     try:
@@ -402,27 +410,35 @@ def yeast_evidence(request):
         else:
 
             feature1_table = pd.read_sql(select1, connect)
-            print(select1)
-            print(feature1_table)
-            print(select2)
 
             if feature1 == 'Physical_Interaction':
                 feature1_table['SystematicName(Bait)']=feature1_table['Bait_link']
                 feature1_table['SystematicName(Hit)']=feature1_table['Hit_link']
-                feature1_table['StandardName(Bait)']=feature1_table['term_link']
                 feature1_table = feature1_table.drop(columns=['Bait_link', 'Hit_link', 'term_link'])
 
             elif feature1 == 'Genetic_Interaction':
                 feature1_table['SystematicName(Bait)']=feature1_table['Bait_link']
                 feature1_table['SystematicName(Hit)']=feature1_table['Hit_link']
-                feature1_table['StandardName(Bait)']=feature1_table['term_link']
                 feature1_table = feature1_table.drop(columns=['Bait_link', 'Hit_link', 'term_link'])
 
+            elif feature1 == 'Protein_Domain':
+                feature1_table['SystematicName']=feature1_table['gene_link']
+                feature1_table = feature1_table.drop(columns=['gene_link', 'term_link'])
+                feature1_table["Protein_Domain"] = feature1_table.apply(lambda x :Protein_Domain_href(x['Protein_Domain'], name_query), axis=1)
+
+            elif feature1 =="GO_MF" or feature1 =="GO_BP" or feature1 =="GO_CC":
+                feature1_table["EvidenceCode"] = feature1_table.apply(lambda x: x["EvidenceCode"].replace('<a ', '<a target="_blank"'), axis=1)
+                feature1_table['SystematicName']=feature1_table['gene_link']
+                feature1_table['%s'%feature1]=feature1_table['term_link']
+
+                feature1_table = feature1_table.drop(columns=['gene_link', 'term_link'])
+
+                
             else:
                 feature1_table['SystematicName']=feature1_table['gene_link']
                 feature1_table['%s'%feature1]=feature1_table['term_link']
-                feature1_table = feature1_table.drop(columns=['gene_link', 'term_link'])
 
+            feature1_table = feature1_table.rename(columns=feature_name_dict)
             feature1_table = feature1_table.to_html(index= None, classes="table table-bordered table-hover dataTable no-footer",escape=False)
             feature1_table = feature1_table.replace('table', 'table id="feature1_table"', 1)
 
@@ -435,25 +451,33 @@ def yeast_evidence(request):
             if feature2 == 'Physical_Interaction':
                 feature2_table['SystematicName(Bait)']=feature2_table['Bait_link']
                 feature2_table['SystematicName(Hit)']=feature2_table['Hit_link']
-                feature2_table['StandardName(Bait)']=feature2_table['term_link']
                 feature2_table = feature2_table.drop(columns=['Bait_link', 'Hit_link', 'term_link'])
 
             elif feature2 == 'Genetic_Interaction':
                 feature2_table['SystematicName(Bait)']=feature2_table['Bait_link']
                 feature2_table['SystematicName(Hit)']=feature2_table['Hit_link']
-                feature2_table['StandardName(Bait)']=feature2_table['term_link']
                 feature2_table = feature2_table.drop(columns=['Bait_link', 'Hit_link', 'term_link'])
+
+            elif feature2 == 'Protein_Domain':
+                feature2_table['SystematicName']=feature2_table['gene_link']
+                feature2_table = feature2_table.drop(columns=['gene_link', 'term_link'])
+                feature2_table["Protein_Domain"] = feature2_table.apply(lambda x :Protein_Domain_href(x['Protein_Domain'], name_query), axis=1)
+
+            elif feature2 =="GO_MF" or feature2 =="GO_BP" or feature2 =="GO_CC":
+                feature2_table["EvidenceCode"] = feature2_table.apply(lambda x: x["EvidenceCode"].replace('<a ', '<a target="_blank"'), axis=1)
+                feature2_table['SystematicName']=feature2_table['gene_link']
+                feature2_table['%s'%feature2]=feature2_table['term_link']
+                feature2_table = feature2_table.drop(columns=['gene_link', 'term_link'])
 
             else:
                 feature2_table['SystematicName']=feature2_table['gene_link']
                 feature2_table['%s'%feature2]=feature2_table['term_link']
                 feature2_table = feature2_table.drop(columns=['gene_link', 'term_link'])
 
+            feature2_table = feature2_table.rename(columns=feature_name_dict)
             feature2_table = feature2_table.to_html(index= None, classes="table table-bordered table-hover dataTable no-footer",escape=False)
             feature2_table = feature2_table.replace('table', 'table id="feature2_table"', 1)
-
     finally:
         connect.close()
-
     response = {'feature1_table' : feature1_table, 'feature2_table' : feature2_table}
     return JsonResponse(response)
