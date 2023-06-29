@@ -26,8 +26,10 @@ feature_name_dict = {"GO_MF(Queried)":"Queried term", "GO_BP(Queried)":"Queried 
                     "SystematicName":"Systematic Name", "StandardName":"Strandard Name", "GeneDescription":"Gene Description", "EvidenceCode":"Evidence Code", "DomainDescription":"Domain Description", "StartCoordinate":"Start Coordinate", "EndCoordinate":"End Coordinate",
                     "SystematicName(Bait)":"Systematic Name(Bait)", "StandardName(Bait)":"Standard Name (Bait)", "SystematicName(Hit)":"Systematic Name (Hit)", "StandardName(Hit)":"Standard Name (Hit)", "ExperimentType":"Experiment Type"}
 
-def home(request):
+def base(request):
     return(render(request,'base.html',locals()))
+def home(request):
+    return(render(request,'home.html',locals()))
 def download(request):
     return(render(request,'download.html',locals()))
 def contact(request):
@@ -197,7 +199,6 @@ def yeast_associated(request):
             select = """
                 SELECT `%s(Queried)`, GO_MF, GO_BP, GO_CC, Protein_Domain, Protein_Domain_id, Mutant_Phenotype, Pathway, Disease, Transcriptional_Regulation, Physical_Interaction, Genetic_Interaction, count, SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
             """%(feature, feature, feature, term_id)
-            print("asdfasdf")
         else:
             select = """
                 SELECT `%s(Queried)`, GO_MF, GO_BP, GO_CC, Protein_Domain, Protein_Domain_id, Mutant_Phenotype, Pathway, Disease, Transcriptional_Regulation, Physical_Interaction, Genetic_Interaction, count, SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
@@ -262,7 +263,8 @@ def yeast_name(request):
     second_feature = request.POST.get('second_feature')
     first_feature = first_feature.split('*')
     second_feature = second_feature.split('*')
-    # print(second_feature, first_feature)
+    print(second_feature, first_feature)
+
     try:
         connect = sqlite3.connect('db.sqlite3')
         db_cursor = connect.cursor()
@@ -272,7 +274,7 @@ def yeast_name(request):
                 select = """
                     SELECT count,SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s")
                 """%(first_feature[0], first_feature[0], first_feature[1])
-                print(select)
+                # print(select)
                 first_table = pd.read_sql('%s' %select, connect)
             else:
                 select = """
@@ -280,13 +282,28 @@ def yeast_name(request):
                 """%(second_feature[0], second_feature[0], second_feature[1])
                 second_table = pd.read_sql('%s' %select, connect)
 
+
+        first_names = eval(first_table.iat[0,1])
+        second_names = eval(second_table.iat[0,1])
+        first_names_for_evidence = tuple(first_names)
+        second_names_for_evidence = tuple(second_names)
+
+        # sql_string = """
+        #     SELECT  SystematicName, StrandardName, GeneDessciption 
+        #     FROM %s_evidence 
+        #     WHERE `SystematicName` IN `%s`
+        # """%(first_feature[0], first_names_for_evidence)
+        # first_description_table = pd.read_sql('%s'%sql_string, connect)
+        # print(first_description_table)
+
+
         if first_feature[0]=='Protein_Domain':
             select = """
                 SELECT Protein_Domain_name FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
             """%(first_feature[0], first_feature[0], first_feature[1])
             first_pd_id = db_cursor.execute(select).fetchone()
             first_pd_id = first_pd_id[0]
-            print(first_pd_id)
+            print(first_pd_id,'-----')
         if second_feature[0]=='Protein_Domain':
             select = """
                 SELECT Protein_Domain_name FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
@@ -296,14 +313,17 @@ def yeast_name(request):
     finally:
         connect.close()
     print(first_table)
-    first_names = eval(first_table.iat[0,1])
-    second_names = eval(second_table.iat[0,1])
+
+
+
+
     first_name_table = pd.DataFrame(list(zip(first_names,['true']*len(first_names))),columns=['all','%s'%first_feature[2]])
     second_name_table = pd.DataFrame(list(zip(second_names,['true']*len(second_names))),columns=['all','%s'%second_feature[2]])
     both_contain = pd.merge(first_name_table, second_name_table, how="inner")
 
     union = pd.merge(first_name_table, second_name_table, how="outer")
     union = union.fillna('false')
+
     second_contain = union[union["%s"%first_feature[2]] == 'false']
     queried_contain = union[union["%s"%second_feature[2]] == 'false']
 
@@ -372,7 +392,6 @@ def yeast_evidence(request):
             select1 = """
                 SELECT * FROM %s_evidence WHERE SystematicName IN ("%s") AND StandardName IN ("%s");
             """%(feature1, systematice_name, id_query)
-            print('---asd')
         else:
             select1 = """
                 SELECT * FROM %s_evidence WHERE SystematicName IN ("%s") AND %s IN ("%s");
@@ -401,7 +420,7 @@ def yeast_evidence(request):
                 SELECT * FROM %s_evidence WHERE SystematicName IN ("%s") AND %s IN ("%s");
             """%(feature2, systematice_name, feature2, id_associated)
 
-
+    print(select1)
     try:
 
         if feature1 == 'false':
@@ -467,6 +486,7 @@ def yeast_evidence(request):
                 feature2_table["EvidenceCode"] = feature2_table.apply(lambda x: x["EvidenceCode"].replace('<a ', '<a target="_blank"'), axis=1)
                 feature2_table['SystematicName']=feature2_table['gene_link']
                 feature2_table['%s'%feature2]=feature2_table['term_link']
+                
                 feature2_table = feature2_table.drop(columns=['gene_link', 'term_link'])
 
             else:

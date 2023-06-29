@@ -3,7 +3,7 @@ $.ajaxSetup({
     type: 'POST',
 })
 
-feature_dict = {"GO_MF":"GO_MF", "GO_BP":"GO_BP", "GO_CC":"GO_CC", "Protein_Domain":"Protein Domain", "Mutant_Phenotype":"Mutant Phenotype", "Pathway":"Pathway", "Disease":"Disease", "Transcriptional_Regulation":"Transcriptional Regulation", "Pysical_Interaction":"Pysical Interaction", "Genetic_Interaction":"Genetic Interaction"}
+feature_dict = {"GO_MF":"GO_MF", "GO_BP":"GO_BP", "GO_CC":"GO_CC", "Protein_Domain":"Protein Domain", "Mutant_Phenotype":"Mutant Phenotype", "Pathway":"Pathway", "Disease":"Disease", "Transcriptional_Regulation":"Transcriptional Regulation", "Physical_Interaction":"Physical Interaction", "Genetic_Interaction":"Genetic Interaction"}
 
 $(document).ready(function(){
     $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
@@ -291,25 +291,31 @@ $(document).ready(function(){
             $('#Answer2').html(add_html)
             for (i=0 ;i< column_order.length;i++){
                 if (feature_num[i]==1){
-                    $(`#${column_order[i]}`).html(`<div class="card" style="margin-top:5%;" ><h3 class ="fs-3 card-header"><a style="color:red">${feature_num[i]} term </a> from [${column_order[i]}] <a> are</a><a style="color:#007bff"> ASSOCIATED</a> with the queried <a style="color:red"> ${name}</a> from [${feature_dict[feature]}]</h3> <div class="card-body">${response.all_tables[column_order[i]]}</div></div>`)
+                    $(`#${column_order[i]}`).html(`<div class="card" style="margin-top:5%;" ><h3 class ="fs-3 card-header"><a style="color:red">${feature_num[i]} term </a> from [${feature_dict[column_order[i]]}] <a> is</a><a style="color:#007bff"> ASSOCIATED</a> with the queried term <a style="color:red"> ${name}</a> from [${feature_dict[feature]}]</h3> <div class="card-body">${response.all_tables[column_order[i]]}</div></div>`)
                 }else{
-                    $(`#${column_order[i]}`).html(`<div class="card" style="margin-top:5%;" ><h3 class ="fs-3 card-header"><a style="color:red">${feature_num[i]} terms </a> from [${column_order[i]}] <a> are</a><a style="color:#007bff"> ASSOCIATED</a> with the queried <a style="color:red"> ${name}</a> from [${feature_dict[feature]}]</h3> <div class="card-body">${response.all_tables[column_order[i]]}</div></div>`)
+                    $(`#${column_order[i]}`).html(`<div class="card" style="margin-top:5%;" ><h3 class ="fs-3 card-header"><a style="color:red">${[feature_num[i]]} terms </a> from [${feature_dict[column_order[i]]}] <a> are</a><a style="color:#007bff"> ASSOCIATED</a> with the queried term <a style="color:red"> ${name}</a> from [${feature_dict[feature]}]</h3> <div class="card-body">${response.all_tables[column_order[i]]}</div></div>`)
                 }
                 $(`#${column_order[i]}_table`).DataTable({
                     'columnDefs':[
                         {   'targets':-1,
                             render:function(data,type,row,meta){
-                                var second_name = row[1].split('>')[1].replace('</a', '')
+                                var second_name = row[1].split('*')[1]
                                 return `<a href = "/yeast/browse/associated/detail/?id=${feature}*${id}*${name}&name=${column_order[i]}*${data}*${second_name}" target="_blank"> Detail </a>`;
                             },
                         },
                         {   'targets':0,
                         render:function(data,type,row,meta){
-                            var second_name = row[1].split('>')[1].replace('</a', '')
                             return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value = "${feature}*${name}*${id}" target="_blank"> ${name} </a>`;
                         },
                         },
-                        
+                        {   'targets':1,
+                        render:function(data,type,row,meta){
+                            var data = data.split('*')
+                            var feature_name = data[0]
+                            var feature_id = data[1]
+                            return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value = "${column_order[i]}*${feature_name}*${feature_id}" target="_blank"> ${feature_name} </a>`;
+                        },
+                        },
                         // {   'targets':5,
                         //     render:function(data,type,row,meta){
                         //         // console.log(row)

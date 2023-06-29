@@ -14,7 +14,7 @@ def round_float(p_value):
 def associated_analysis(associated_table, table_name, name):
     associated_table = pd.DataFrame(associated_table)
     '''-------------------------queried feature data---------------------'''
-    print(associated_table)
+    # print(associated_table)
     queried_feature = associated_table.at[0,'%s(Queried)'%table_name]
     queried_count = associated_table.at[0,'count']
     queried_name = associated_table.at[0,'SystematicName']
@@ -22,44 +22,44 @@ def associated_analysis(associated_table, table_name, name):
     '''------------------------------------------------------------------'''
 
     associated_table = associated_table.drop(columns = ['%s(Queried)' %table_name, 'count', 'SystematicName'])
-    column_name = associated_table.columns.values.tolist()
+    features = associated_table.columns.values.tolist()
 
     '''------------------回傳資料為各個table及column的順序--------------------'''
-    for i in column_name:
-        if i == 'Protein_Domain':
-            p_id = eval(associated_table.at[0, 'Protein_Domain'])
+    for feature in features:
+        if feature == 'Protein_Domain':
+            protein_name = eval(associated_table.at[0, 'Protein_Domain'])
             associated_table['Protein_Domain'] = associated_table['Protein_Domain_id']
-            column_name.remove('Protein_Domain_id')
+            features.remove('Protein_Domain_id')
+
     response ={}
     try:
         connect = sqlite3.connect('db.sqlite3')
-        # db_cursor = connect.cursor()
-        # select ="""
-        #     SELECT link FROM %s_link WHERE %s IN ("%s");
-        # """%(table_name, table_name, queried_feature)
-        # queried_link = db_cursor.execute(select).fetchone()
-        # queried_link = queried_link[0]
 
-        for i in column_name:
-            domain_name = eval(associated_table.at[0,'%s' %i])
-            feature_name = '\",\"'.join(domain_name)
+        for feature in features:
+            term_id = eval(associated_table.at[0,'%s' %feature])
+
+            
+            feature_name = '\",\"'.join(term_id)
             select  = """
                 SELECT `%s(Queried)`,SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
-            """%(i, i, i, feature_name)
+            """%(feature, feature, feature, feature_name)
             feature_systematic = pd.read_sql('%s' %select, connect)
-            print(feature_systematic)
+            # print(feature_systematic)
             feature_systematic["Term A (The Queried Term)"] = queried_feature
             feature_systematic['N<sub>A</sub>'] = str(len(eval(queried_name)))
             feature_systematic["N<sub>B</sub>"] = feature_systematic.apply(lambda x: str(len(eval(x['SystematicName']))), axis=1)
             feature_systematic['N<sub>AB</sub>'] = feature_systematic.apply(lambda x: intersection(queried_name, x['SystematicName']), axis=1)
             feature_systematic['Corrected p-value'] = feature_systematic.apply(lambda x: yeast_enrichment(queried_name, x['SystematicName']), axis=1)
 
-            select = """
-                SELECT link FROM %s_link WHERE %s IN ("%s");
-            """%(i, i, feature_name)
-            link_table = pd.read_sql('%s' %select, connect)
-            feature_systematic["Term B (The Associated Term)"] = link_table['link']
-            feature_systematic = feature_systematic.rename(columns={'%s(Queried)'%i:'Detail'})
+            if feature == 'Protein_Domain':
+                term_b = [p_name+'*'+p_id for p_name, p_id in zip(protein_name, term_id)]
+                feature_systematic["Term B (The Associated Term)"] = term_b
+            else:
+                term_b = [name+'*'+name for name in term_id]
+                feature_systematic["Term B (The Associated Term)"] = term_b
+            # print(feature_systematic, '--------') 
+
+            feature_systematic = feature_systematic.rename(columns={'%s(Queried)'%feature:'Detail'})
 
             feature_systematic = feature_systematic.drop(['SystematicName'], axis=1)
             feature_systematic = feature_systematic[['Term A (The Queried Term)', 'Term B (The Associated Term)', 'Corrected p-value', 'N<sub>A</sub>', 'N<sub>B</sub>', 'N<sub>AB</sub>', 'Detail']]
@@ -69,10 +69,10 @@ def associated_analysis(associated_table, table_name, name):
             feature_systematic['Corrected p-value'] = feature_systematic.apply(lambda x:("{:.2e}".format(x['Corrected p-value'])), axis=1)
 
             feature_systematic = feature_systematic.to_html(index= None,classes="table table-bordered table-hover dataTable no-footer", escape=False)
-            feature_systematic = feature_systematic.replace('table', 'table id="%s_table"'%i, 1)
-            response['%s'%i] = feature_systematic
+            feature_systematic = feature_systematic.replace('table', 'table id="%s_table"'%feature, 1)
+            response['%s'%feature] = feature_systematic
 
-            column_order = column_name[0:]
+            column_order = features[0:]
             response['column_order'] = column_order
     finally:
         connect.close()

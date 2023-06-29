@@ -3,7 +3,7 @@ import sqlite3
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width', None)
-# pd.set_option('display.max_colwidth', -1)
+pd.set_option('display.max_colwidth', -1)
 
 feature_name_dict = {"GO_MF":"GO_MF", "GO_BP":"GO_BP", "GO_CC":"GO_CC", "Disease":"Disease", "Pathway":"Pathway", "Protein_Domain":"Protein Domain", "Mutant_Phenotype":"Mutant Phenotype", "Transcriptional_Regulation":"Transcriptional Regulation", "Physical_Interaction":"Physical Interaction", "Genetic_Interaction":"Genetic Interaction",
                     "SystematicName":"Systematic Name", "StandardName":"Strandard Name", "GeneDescription":"Gene Description", "EvidenceCode":"Evidence Code", "DomainDescription":"Domain Description", "StartCoordinate":"Start Coordinate", "EndCoordinate":"End Coordinate",
@@ -19,7 +19,7 @@ def p1_modal(request):
     feature = feature_name[0]
     name = feature_name[1]
     term_id = feature_name[2]
-    print(feature_name)
+    # print(feature_name)
     try:
         connect = sqlite3.connect('db.sqlite3')
         db_cursor = connect.cursor()
@@ -31,10 +31,10 @@ def p1_modal(request):
             select = """
                 SELECT SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
             """%(feature, feature, term_id)
-        # print(select)
+        print(select)
         db_cursor.execute(select)
         sys_name1 = db_cursor.fetchall()
-        # print(sys_name1)
+        print(sys_name1)
         sys_name1_set = str(eval(sys_name1[0][0])).replace("[", "(").replace("]", ")")
         # print(sys_name1[0][0])
 
@@ -66,8 +66,8 @@ def p1_modal(request):
             select = """
                 SELECT * FROM %s_evidence WHERE SystematicName IN %s AND %s IN ("%s");
             """%(feature, sys_name1_set, feature, term_id)
-            # print(select)
-            evidence_table = pd.read_sql(select , connect)
+            print(select)
+            evidence_table = pd.read_sql(select, connect)
     finally:
         connect.close()
     if feature == 'Physical_Interaction':
@@ -127,7 +127,7 @@ def p2_modal(request):
     # print(name1)
     # print(name2)
     try:
-        connect = sqlite3.connect('db.sqlite3')
+        connect = sqlite3.connect('/home/chunlin/Django/chunlin_project/db.sqlite3')
         db_cursor = connect.cursor()
 
         select = """

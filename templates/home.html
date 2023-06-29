@@ -1,0 +1,191 @@
+{% extends "base.html" %}
+{% load static %}
+
+
+{% block content %}
+
+<body>
+
+    <div class="container-fluid ">
+        <div class="col-9 mx-auto">
+            <div class="card" >
+                <h2  class="card-header bg-dark text-white text-left">What is YFAD?</h2>
+                <div class="card-body " style="border: 3px solid #343a40;">
+                    <div class="card" >
+                        <div class=card-header>
+                            <h3>YFAD collected terms of the following 10 biological features.</h3>
+                        </div>
+                        <div class="card-body">
+                            <table class="table text-center">
+                                <thead>
+                                    <tr class="">
+                                        <th scope="col">Feature name</th>
+                                        <th scope="col"># of terms</th>
+                                        <th scope="col">Example term</th>
+                                        <th scope="col"># of genes annotated in the example term</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="">
+                                        <th scope="col">GO_MF</th>
+                                        <th scope="col">2085</th>
+                                        <th scope="col"><a href="https://www.yeastgenome.org/go/GO:0000403" target="_blank">Y-form DNA binding</a></th>
+                                        <th scope="col"><a class="show_term_member" href = "#Modal" data-bs-toggle="modal" value = "GO_MF*Y-form DNA binding*Y-form DNA binding" target="_blank"> 8 </a></th>
+                                    </tr>
+                                    <tr class="">
+                                        <th scope="col">GO_BP</th>
+                                        <th scope="col">3185</th>
+                                        <th scope="col"><a href="https://www.yeastgenome.org/go/GO:0031638" target="_blank">zymogen activation</a></th>
+                                        <th scope="col"><a class="show_term_member" href = "#Modal" data-bs-toggle="modal" value = "GO_BP*zymogen activation*zymogen activation" target="_blank"> 2 </a></th>
+                                    </tr>                                    
+                                    <tr class="">
+                                        <th scope="col">GO_CC</th>
+                                        <th scope="col">833</th>
+                                        <th scope="col"><a href="https://www.yeastgenome.org/go/GO:0031428" target="_blank">box C/D snoRNP complex</a></th>
+                                        <th scope="col"><a class="show_term_member" href = "#Modal" data-bs-toggle="modal" value = "GO_CC*box C/D snoRNP complex*box C/D snoRNP complex" target="_blank"> 15 </a></th>
+                                    </tr>
+                                    <tr class="">
+                                        <th scope="col">Protein Domain</th>
+                                        <th scope="col">3229</th>
+                                        <th scope="col"><a href='https://www.ebi.ac.uk/interpro/entry/pfam/PF00488/' target='_blank'> MutS domain V </a></th>
+                                        <th scope="col"><a class="show_term_member" href = "#Modal" data-bs-toggle="modal" value = "Protein_Domain*MutS domain V*PF00488" target="_blank"> 6 </a></th>
+                                    </tr>
+                                    <tr class="">
+                                        <th scope="col">Mutane Phenotype</th>
+                                        <th scope="col">634</th>
+                                        <th scope="col"><a href="https://www.yeastgenome.org/phenotype/increased_apoptosis" target="_blank">apoptosis: increased</a></th>
+                                        <th scope="col"><a class="show_term_member" href = "#Modal" data-bs-toggle="modal" value = "Mutant_Phenotype*apoptosis: increased*apoptosis: increased" target="_blank"> 37 </a></th>
+                                    </tr>
+                                    <tr class="">
+                                        <th scope="col">Pathway</th>
+                                        <th scope="col">164</th>
+                                        <th scope="col"><a href="https://pathway.yeastgenome.org/YEAST/NEW-IMAGE?type=PATHWAY&object=ARGININE-SYN" target="_blank">arginine biosynthesis</a></th>
+                                        <th scope="col"><a class="show_term_member" href = "#Modal" data-bs-toggle="modal" value = "Pathway*arginine biosynthesis*arginine biosynthesis" target="_blank"> 10 </a></th>
+                                    </tr>
+                                    <tr class="">
+                                        <th scope="col">Disease</th>
+                                        <th scope="col">351</th>
+                                        <th scope="col"><a href="https://www.yeastgenome.org/disease/DOID:162" target="_blank">cancer</a></th>
+                                        <th scope="col"><a class="show_term_member" href = "#Modal" data-bs-toggle="modal" value = "Disease*cancer*cancer" target="_blank"> 148 </a></th>
+                                    </tr>
+                                    <tr class="">
+                                        <th scope="col">Transcriptional Regulation</th>
+                                        <th scope="col">194</th>
+                                        <th scope="col"><a href="https://www.yeastgenome.org/locus/ABF1/regulation" target="_blank">ABF1</a></th>
+                                        <th scope="col"><a class="show_term_member" href = "#Modal" data-bs-toggle="modal" value = "Transcriptional_Regulation*SIN4*YNL236W" target="_blank"> 317 </a>(<a style="color: red;">317 genes are the targets of the transcriptional regulator ABF1</a>)</th>
+                                    </tr>
+                                    <tr class="">
+                                        <th scope="col">Physical_Interaction</th>
+                                        <th scope="col">5624</th>
+                                        <th scope="col"><a href="https://www.yeastgenome.org/locus/S000001900/interaction" target="_blank">RPN11</a></th>
+                                        <th scope="col"><a class="show_term_member" href = "#Modal" data-bs-toggle="modal" value = "Physical_Interaction*RPN11*RPN11" target="_blank"> 1641 </a>(<a style="color: red;">1641 genes have physical interaction with RPN11</a>)</th>
+                                    </tr>
+                                    <tr class="">
+                                        <th scope="col">Genetic_Interaction</th>
+                                        <th scope="col">5500</th>
+                                        <th scope="col"><a href="https://www.yeastgenome.org/locus/S000004688/interaction" target="_blank">ADH3</a></th>
+                                        <th scope="col"><a class="show_term_member" href = "#Modal" data-bs-toggle="modal" value = "Genetic_Interaction*ADH3*ADH3" target="_blank"> 129 </a>(<a style="color: red;">129 genes have genetic interaction with ADH3</a>)</th>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                    <div class="lh-lg" style="margin-top: 2%;">
+                        <h5><a>⬦ YFAD identified xx </a><a style="color: red;">term-term associations<a> from the 10 collected biological features.</a></h5>
+                        <h5><a>⬦ For example, YFAD identified that </a><a style="color: #007bff;">Y-form DNA binding<a> from [GO_MF] is </a><a style="color: red;">ASSOCIATED </a><a>with </a><a style="color: #007bff;">MutS domain V <a>from [Protein Domain]</a></h5>
+                        <table style="margin: 1%;" id="Protein_Domain_table" border="1" class="dataframe table table-bordered table-hover dataTable no-footer">
+                            <thead>
+                                <tr style="text-align: right;">
+                                <th>Term A </th>
+                                <th>Term B </th>
+                                <th>Corrected p-value</th>
+                                <th>N<sub>A</sub></th>
+                                <th>N<sub>B</sub></th>
+                                <th>N<sub>AB</sub></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><a class="show_term_member" href = "#Modal" data-bs-toggle="modal" value = "GO_MF*Y-form DNA binding*Y-form DNA binding" target="_blank"> Y-form DNA binding </a></td>
+                                    <td><a class="show_term_member" href = "#Modal" data-bs-toggle="modal" value = "Protein_Domain*MutS domain V*PF00488" target="_blank"> MutS domain V </a></td>
+                                    <td>1.32e-11</td>
+                                    <td>8</td>
+                                    <td>6</td>
+                                    <td>4</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <h5><a>⬦ How to determine whether two terms (e.g. Term A and Term B) are associated or not?</h5>
+                            <h5><a>&emsp;&emsp;• </a><a style="color: red;">N<sub>A</sub><a>: the number of genes annotated in Term A. </a></h5>
+                            <h5><a>&emsp;&emsp;• </a><a style="color: red;">N<sub>B</sub><a>: the number of genes annotated in Term B. </a></h5>
+                            <h5><a>&emsp;&emsp;• </a><a style="color: red;">N<sub>AB</sub><a>: the number of genes annotated in both Term A & Term B. </a></h5>
+                            <h5><a>&emsp;&emsp;• </a><a style="color: red;">N<sub>Y</sub>=6611<a>: the number of ORFs (open reading frames) in the yeast genome. </a></h5>
+                            <h5><a>&emsp;&emsp;• Term A and Term B are regarded as </a><a style="color: red;">ASSOCIATED </a><a style="color: #007bff;">if their member genes have significant overlap</a><a> (i.e. </a><a style="color: red;">N<sub>AB</sub> is big enough</a><a>).</a></h5>
+                            <h5><a>&emsp;&emsp;• The p-value of significant overlap is calculated using the hypergeometric test as follows. </a></h5>
+                            <h5 class="text-center"><img src="{% static 'img/formula.jpg'%}"></img></h5>
+            
+                            <h5><a>&emsp;&emsp;• The p-value is then corrected by the FDR (false discovery rate) to represent the true alpha level in the multiple hypotheses testing.  </a></h5>
+                            <h5><a>&emsp;&emsp;• Finally, Term A and Term B are said to be </a><a style="color: red;">ASSOCIATED<a> with each other if the </a><a style="color: red;">corrected p-value <= 0.01</a><a>.</a></h5>
+                    </div>
+            </div>
+        </div>
+        <div class="card" style="margin-top: 3%;">
+            <h2  class="card-header bg-dark text-white text-left">Update History</h2>
+            <div class="card-body " style="border: 3px solid #343a40;">
+                <table class="table table-hover mb-0">
+                    <tbody class="test-center">
+                        <tr>
+                            <td style="width: 10%;">2023</td>
+                            <td style="width: 90%;">July Release YFAD.</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 10%;">2023</td>
+                            <td style="width: 90%;">Mar. Construct the web interface of YFAD.</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 10%;">2023</td>
+                            <td style="width: 90%;">Feb. Identify xx <a style="color: red;">term-term associations </a>from the 10 biological features.</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 10%;">2023</td>
+                            <td style="width: 90%;">Jan. Download terms of 10 biological features from <a style="color: #007bff;">YMLA</a>.</td>
+                        </tr>
+                        <tr>
+                            <td style="width: 10%;">2023</td>
+                            <td style="width: 90%;">Start YFAD project.</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="card-footer bg-dark text-white text-left">Last Updated: 06/02/2023</div>
+        </div>
+    </div>
+    <!------------------------modal---------------------->
+    <div class="modal fade" id="Modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog maodal-lg" role="document" style="max-width:70%;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">x</button>
+                </div>
+                <div class="modal-body">
+                    <div class="card">
+                        <h4 id="modal_table_name" class="card-header">table name</h4>
+                        <div id="modal_table" class="card-body"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!------------------------------------------------------>
+</body>
+
+<script>csrf_token= "{{ csrf_token }}"</script>
+<script src="{% static 'js/home.js'%}"></script>
+
+{% endblock content %}
