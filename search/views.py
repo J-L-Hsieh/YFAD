@@ -44,10 +44,12 @@ def search_mode(request):
                     locals()[feature+"_table"]['Detail'] = locals()[feature+"_table"]['Protein_Domain(Queried)']
                     locals()[feature+"_table"]["Protein_Domain(Queried)"] = locals()[feature+"_table"].apply(lambda x: x["Protein_Domain_name"]+'%'+x["Protein_Domain(Queried)"], axis=1)
                     locals()[feature+"_table"] = locals()[feature+"_table"].drop(columns=['Protein_Domain_name'])
+                    print(locals()[feature+"_table"])
 
                 elif feature == 'Transcriptional_Regulation':
                     locals()[feature+"_table"]["Transcriptional_Regulation(Queried)"] = locals()[feature+"_table"].apply(lambda x: x["Transcriptional_Regulation(Queried)"]+'%'+x["Transcriptional_Regulation_id"], axis=1)
                     locals()[feature+"_table"] = locals()[feature+"_table"].drop(columns=['Transcriptional_Regulation_id'])
+                    print(locals()[feature+"_table"])
 
                 else:
                     locals()[feature+"_table"]['Detail'] = locals()[feature+"_table"]['%s(Queried)'%feature]
@@ -56,6 +58,8 @@ def search_mode(request):
 
                 find_feature.append(feature)
                 locals()[feature+"_table"]["Detail"] = locals()[feature+"_table"].iloc[:,1:-1].sum(axis=1)
+                print(locals()[feature+"_table"])
+
                 locals()[feature+"_table"] = locals()[feature+"_table"].rename(columns=fature_name_dict)
                 locals()[feature+"_table"] = locals()[feature+"_table"].to_html(index= None,classes="table table-striped table-bordered")
                 locals()[feature+"_table"] = locals()[feature+"_table"].replace('table', 'table id="%s_table"'%feature, 1)

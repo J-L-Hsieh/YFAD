@@ -299,7 +299,7 @@ $(document).ready(function(){
                     'columnDefs':[
                         {   'targets':-1,
                             render:function(data,type,row,meta){
-                                var second_name = row[1].split('*')[1]
+                                var second_name = row[1].split('*')[0]
                                 return `<a href = "/yeast/browse/associated/detail/?id=${feature}*${id}*${name}&name=${column_order[i]}*${data}*${second_name}" target="_blank"> Detail </a>`;
                             },
                         },

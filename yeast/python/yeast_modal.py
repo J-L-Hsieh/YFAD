@@ -3,7 +3,7 @@ import sqlite3
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width', None)
-pd.set_option('display.max_colwidth', -1)
+# pd.set_option('display.max_colwidth', -1)
 
 feature_name_dict = {"GO_MF":"GO_MF", "GO_BP":"GO_BP", "GO_CC":"GO_CC", "Disease":"Disease", "Pathway":"Pathway", "Protein_Domain":"Protein Domain", "Mutant_Phenotype":"Mutant Phenotype", "Transcriptional_Regulation":"Transcriptional Regulation", "Physical_Interaction":"Physical Interaction", "Genetic_Interaction":"Genetic Interaction",
                     "SystematicName":"Systematic Name", "StandardName":"Strandard Name", "GeneDescription":"Gene Description", "EvidenceCode":"Evidence Code", "DomainDescription":"Domain Description", "StartCoordinate":"Start Coordinate", "EndCoordinate":"End Coordinate",

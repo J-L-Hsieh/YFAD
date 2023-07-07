@@ -29,10 +29,6 @@ $(document).ready(function() {
             $('#table1').html(`<div class="card" style="margin-top:5%;" ><h3 class ="fs-3 card-header"><a id="table1_header_num"></a>annotated <a style="color:red">BOTH</a> in the queried term & the associated term</h3><div class="card-body">${response.both_contain}</div></div>`)
             let trs1 = document.querySelectorAll('#both_name_table tr');
 
-            for (let tr of trs1) {
-                let td = document.createElement('td');
-                tr.appendChild(td);
-            }
             $('#both_name_table').DataTable({
                 // 'scrollY':true,
                 dom: 'Bfrtip',
@@ -40,7 +36,8 @@ $(document).ready(function() {
                 'csv', 'pdf', 'print'
                 ],
                 'columnDefs':[
-                    {   'targets':1,
+
+                    {   'targets':-3,
                         render:function(row){
                             if (row ==='true'){
                                 return '<i class="fa fa-check" aria-hidden="true" style="color:green"></i>'
@@ -49,7 +46,7 @@ $(document).ready(function() {
                             }
                         }
                     },
-                    {   "target":2,
+                    {   "target":-2,
                         render: function(row){
                             if (row ==='true'){
                                 return '<i class="fa fa-check" aria-hidden="true" style="color:green"></i>'
@@ -58,15 +55,15 @@ $(document).ready(function() {
                             }
                         }
                     },
-                    {   'targets':3,
+                    {   'targets':-1,
                         render:function(data,type,row,meta){
-                            if (row[1] === 'false'){
-                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${row[1]}%${first_feature_array[1]}%${first_feature_array[2]}%${second_feature_array[0]}%${second_feature_array[1]}%${second_feature_array[2]}%${row[0]}"> Evidence </a>`
-                            }else if(row[2] === 'false'){
-                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${first_feature_array[0]}%${first_feature_array[1]}%${first_feature_array[2]}%${row[2]}%${second_feature_array[1]}%${second_feature_array[2]}%${row[0]}"> Evidence </a>`
+                            if (row[2] === 'false'){
+                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${row[2]}%${first_feature_array[1]}%${first_feature_array[2]}%${second_feature_array[0]}%${second_feature_array[1]}%${second_feature_array[2]}%${data}"> Evidence </a>`
+                            }else if(row[3] === 'false'){
+                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${first_feature_array[0]}%${first_feature_array[1]}%${first_feature_array[2]}%${row[3]}%${second_feature_array[1]}%${second_feature_array[2]}%${data}"> Evidence </a>`
                             }
                             else{
-                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${first_feature_array[0]}%${first_feature_array[1]}%${first_feature_array[2]}%${second_feature_array[0]}%${second_feature_array[1]}%${second_feature_array[2]}%${row[0]}"}"> Evidence </a>`
+                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${first_feature_array[0]}%${first_feature_array[1]}%${first_feature_array[2]}%${second_feature_array[0]}%${second_feature_array[1]}%${second_feature_array[2]}%${data}"}"> Evidence </a>`
                             }
                         },
                     },
@@ -77,10 +74,6 @@ $(document).ready(function() {
             $('#table2').html(`<div class="card" style="margin-top:5%;" ><h3 class ="fs-3 card-header"><a id="table2_header_num"></a>annotated <a style="color:red">ONLY</a> in the queried term but <a style="color:red">NOT</a> in the associated term</h3><div class="card-body">${response.queried_contain}</div></div>`)
             let trs2 = document.querySelectorAll('#queried_table tr');
 
-            for (let tr of trs2) {
-                let td = document.createElement('td');
-                tr.appendChild(td);
-            }
             $('#queried_table').DataTable({
                 // 'scrollY':true,
                 dom: 'Bfrtip',
@@ -88,7 +81,7 @@ $(document).ready(function() {
                 'csv', 'pdf', 'print'
                 ],
                 'columnDefs':[
-                    {   'targets':1,
+                    {   'targets':-3,
                         render:function(row){
                             if (row ==='true'){
                                 return '<i class="fa fa-check" aria-hidden="true" style="color:green"></i>'
@@ -97,7 +90,7 @@ $(document).ready(function() {
                             }
                         }
                     },
-                    {   "target":2,
+                    {   "target":-2,
                         render: function(row){
                             if (row ==='true'){
                                 return '<i class="fa fa-check" aria-hidden="true" style="color:green"></i>'
@@ -106,15 +99,15 @@ $(document).ready(function() {
                             }
                         }
                     },
-                    {   'targets':3,
+                    {   'targets':-1,
                         render:function(data,type,row,meta){
-                            if (row[1] === 'false'){
-                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${row[1]}%${first_feature_array[1]}%${first_feature_array[2]}%${second_feature_array[0]}%${second_feature_array[1]}%${second_feature_array[2]}%${row[0]}"> Evidence </a>`
-                            }else if(row[2] === 'false'){
-                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${first_feature_array[0]}%${first_feature_array[1]}%${first_feature_array[2]}%${row[2]}%${second_feature_array[1]}%${second_feature_array[2]}%${row[0]}"> Evidence </a>`
+                            if (row[2] === 'false'){
+                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${row[2]}%${first_feature_array[1]}%${first_feature_array[2]}%${second_feature_array[0]}%${second_feature_array[1]}%${second_feature_array[2]}%${data}"> Evidence </a>`
+                            }else if(row[3] === 'false'){
+                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${first_feature_array[0]}%${first_feature_array[1]}%${first_feature_array[2]}%${row[3]}%${second_feature_array[1]}%${second_feature_array[2]}%${data}"> Evidence </a>`
                             }
                             else{
-                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${first_feature_array[0]}%${first_feature_array[1]}%${first_feature_array[2]}%${second_feature_array[0]}%${second_feature_array[1]}%${second_feature_array[2]}%${row[0]}"}"> Evidence </a>`
+                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${first_feature_array[0]}%${first_feature_array[1]}%${first_feature_array[2]}%${second_feature_array[0]}%${second_feature_array[1]}%${second_feature_array[2]}%${data}"> Evidence </a>`
                             }
                         },
                     },
@@ -126,10 +119,7 @@ $(document).ready(function() {
             let trs3 = document.querySelectorAll('#second_table tr');
             console.log(trs3)
 
-            for (let tr of trs3) {
-                let td = document.createElement('td');
-                tr.appendChild(td);
-            }
+
             $('#second_table').DataTable({
                 // 'scrollY':true,
                 dom: 'Bfrtip',
@@ -137,7 +127,7 @@ $(document).ready(function() {
                 'csv', 'pdf', 'print'
                 ],
                 'columnDefs':[
-                    {   'targets':1,
+                    {   'targets':-3,
                         render:function(row){
                             if (row ==='true'){
                                 return '<i class="fa fa-check" aria-hidden="true" style="color:green"></i>'
@@ -146,7 +136,7 @@ $(document).ready(function() {
                             }
                         }
                     },
-                    {   "target":2,
+                    {   "target":-2,
                         render: function(row){
                             if (row ==='true'){
                                 return '<i class="fa fa-check" aria-hidden="true" style="color:green"></i>'
@@ -155,15 +145,15 @@ $(document).ready(function() {
                             }
                         }
                     },
-                    {   'targets':3,
+                    {   'targets':-1,
                         render:function(data,type,row,meta){
-                            if (row[1] === 'false'){
-                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${row[1]}%${first_feature_array[1]}%${first_feature_array[2]}%${second_feature_array[0]}%${second_feature_array[1]}%${second_feature_array[2]}%${row[0]}"> Evidence </a>`
-                            }else if(row[2] === 'false'){
-                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${first_feature_array[0]}%${first_feature_array[1]}%${first_feature_array[2]}%${row[2]}%${second_feature_array[1]}%${second_feature_array[2]}%${row[0]}"> Evidence </a>`
+                            if (row[2] === 'false'){
+                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${row[2]}%${first_feature_array[1]}%${first_feature_array[2]}%${second_feature_array[0]}%${second_feature_array[1]}%${second_feature_array[2]}%${data}"> Evidence </a>`
+                            }else if(row[3] === 'false'){
+                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${first_feature_array[0]}%${first_feature_array[1]}%${first_feature_array[2]}%${row[3]}%${second_feature_array[1]}%${second_feature_array[2]}%${data}"> Evidence </a>`
                             }
                             else{
-                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${first_feature_array[0]}%${first_feature_array[1]}%${first_feature_array[2]}%${second_feature_array[0]}%${second_feature_array[1]}%${second_feature_array[2]}%${row[0]}"}"> Evidence </a>`
+                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${first_feature_array[0]}%${first_feature_array[1]}%${first_feature_array[2]}%${second_feature_array[0]}%${second_feature_array[1]}%${second_feature_array[2]}%${data}"}"> Evidence </a>`
                             }
                         },
                     },
@@ -175,7 +165,7 @@ $(document).ready(function() {
                 $('#queried_last').html(`<h5>${trs2.length-1}</h5>`)
             }else{
                 $('#queried_last').html(`<h5><a href="#table2">${trs2.length-1}</a></h5>`)
-000            }
+            }
 
             if (trs3.length-1 == 0){
                 $('#compare_last').html(`<h5>${trs3.length-1}</h5>`)

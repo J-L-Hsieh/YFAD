@@ -38,13 +38,14 @@ def associated_analysis(associated_table, table_name, name):
         for feature in features:
             term_id = eval(associated_table.at[0,'%s' %feature])
 
-            
+
             feature_name = '\",\"'.join(term_id)
+            # print(len(feature_name.split(",")))
             select  = """
                 SELECT `%s(Queried)`,SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
             """%(feature, feature, feature, feature_name)
             feature_systematic = pd.read_sql('%s' %select, connect)
-            # print(feature_systematic)
+            print(select)
             feature_systematic["Term A (The Queried Term)"] = queried_feature
             feature_systematic['N<sub>A</sub>'] = str(len(eval(queried_name)))
             feature_systematic["N<sub>B</sub>"] = feature_systematic.apply(lambda x: str(len(eval(x['SystematicName']))), axis=1)
@@ -55,9 +56,11 @@ def associated_analysis(associated_table, table_name, name):
                 term_b = [p_name+'*'+p_id for p_name, p_id in zip(protein_name, term_id)]
                 feature_systematic["Term B (The Associated Term)"] = term_b
             else:
+                print(len(feature_systematic))
+                print(len(term_id))
                 term_b = [name+'*'+name for name in term_id]
                 feature_systematic["Term B (The Associated Term)"] = term_b
-            # print(feature_systematic, '--------') 
+            # print(feature_systematic, '--------')
 
             feature_systematic = feature_systematic.rename(columns={'%s(Queried)'%feature:'Detail'})
 
@@ -67,6 +70,8 @@ def associated_analysis(associated_table, table_name, name):
             feature_systematic = feature_systematic.sort_values(by=['Corrected p-value'], ascending=True)
             # print(feature_systematic)
             feature_systematic['Corrected p-value'] = feature_systematic.apply(lambda x:("{:.2e}".format(x['Corrected p-value'])), axis=1)
+
+            print(feature_systematic)
 
             feature_systematic = feature_systematic.to_html(index= None,classes="table table-bordered table-hover dataTable no-footer", escape=False)
             feature_systematic = feature_systematic.replace('table', 'table id="%s_table"'%feature, 1)
