@@ -14,7 +14,7 @@ def round_float(p_value):
 def associated_analysis(associated_table, table_name, name):
     associated_table = pd.DataFrame(associated_table)
     '''-------------------------queried feature data---------------------'''
-    # print(associated_table)
+    print(associated_table)
     queried_feature = associated_table.at[0,'%s(Queried)'%table_name]
     queried_count = associated_table.at[0,'count']
     queried_name = associated_table.at[0,'SystematicName']
@@ -30,6 +30,11 @@ def associated_analysis(associated_table, table_name, name):
             protein_name = eval(associated_table.at[0, 'Protein_Domain'])
             associated_table['Protein_Domain'] = associated_table['Protein_Domain_id']
             features.remove('Protein_Domain_id')
+
+        elif feature =='Transcriptional_Regulation':
+            transcriptional_id = eval(associated_table.at[0,'Transcriptional_Regulation'])
+            associated_table['Transcriptional_Regulation'] = associated_table['Transcriptional_Regulation_name']
+            features.remove('Transcriptional_Regulation_name')
 
     response ={}
     try:
@@ -55,9 +60,13 @@ def associated_analysis(associated_table, table_name, name):
             if feature == 'Protein_Domain':
                 term_b = [p_name+'*'+p_id for p_name, p_id in zip(protein_name, term_id)]
                 feature_systematic["Term B (The Associated Term)"] = term_b
+            elif feature == 'Transcriptional_Regulation':
+                term_b = [t_name + '*' + t_id for t_name, t_id in zip(term_id, transcriptional_id)]
+                feature_systematic["Term B (The Associated Term)"] = term_b
+
             else:
-                print(len(feature_systematic))
-                print(len(term_id))
+                # print(len(feature_systematic))
+                # print(len(term_id))
                 term_b = [name+'*'+name for name in term_id]
                 feature_systematic["Term B (The Associated Term)"] = term_b
             # print(feature_systematic, '--------')
@@ -71,7 +80,7 @@ def associated_analysis(associated_table, table_name, name):
             # print(feature_systematic)
             feature_systematic['Corrected p-value'] = feature_systematic.apply(lambda x:("{:.2e}".format(x['Corrected p-value'])), axis=1)
 
-            print(feature_systematic)
+            # print(feature_systematic)
 
             feature_systematic = feature_systematic.to_html(index= None,classes="table table-bordered table-hover dataTable no-footer", escape=False)
             feature_systematic = feature_systematic.replace('table', 'table id="%s_table"'%feature, 1)

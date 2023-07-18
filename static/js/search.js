@@ -107,7 +107,7 @@ $(document).ready(function() {
                                         var term_name = row[0].split('%')[0]
                                         var term_id = row[0].split('%')[1]
                                         if (data != 0){
-                                            return `<a href = "/yeast/browse/associated/?id=${term_id}&name=${term_name}&feature=${find_feature[i]}" target="_blank"> Detail </a>`;
+                                            return `<a href = "/yeast/browse/associated/?id=${term_id}&name=${term_name}&query=${find_feature[i]}" target="_blank"> Detail </a>`;
                                         }else{
                                             return "No Detail"
                                         }
@@ -198,7 +198,7 @@ $(document).ready(function() {
                             },
                             {   'targets':-1,
                                 render:function(data,type,row,meta){
-                                    return `<a href = "/yeast/browse/associated/?id=${data}&name=${row[0]}&feature=${feature}" target="_blank"> Detail </a>`;
+                                    return `<a href = "/yeast/browse/associated/?id=${data}&name=${row[0]}&query=${feature}" target="_blank"> Detail </a>`;
                                 },
                             },
                         ]

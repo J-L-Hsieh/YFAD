@@ -32,13 +32,13 @@ $(document).ready(function(){
     const urlParams = new URLSearchParams(queryString);
     const id = urlParams.get('id')
     const name = urlParams.get('name')
-    const feature = urlParams.get('feature')
-    $('#queried').html(`<h2>The queried term <a style="color:red;">${name}</a> from [${feature_dict[feature]}]<h2>`)
-    $('#associated_title').html(`<h4><a># of terms (from each feature) that are </a><a style="color:#007bff;">ASSOCIATED </a><a>with the queried term </a><a style="color:red;">${name} </a>from [${feature_dict[feature]}]</h4>`)
+    const query = urlParams.get('query')
+    $('#queried').html(`<h2>The queried term <a style="color:red;">${name}</a> from [${feature_dict[query]}]<h2>`)
+    $('#associated_title').html(`<h4><a># of terms (from each feature) that are </a><a style="color:#007bff;">ASSOCIATED </a><a>with the queried term </a><a style="color:red;">${name} </a>from [${feature_dict[query]}]</h4>`)
     // console.log(name)
     $.ajax({
         url : '/yeast/ajax_network/',
-        data : {'feature':feature, 'id':id, 'name':name},
+        data : {'query':query, 'id':id, 'name':name},
         success:function(response){
             var column_order = response.column_order;
             var network_judge = false;
@@ -188,7 +188,7 @@ $(document).ready(function(){
 
     $.ajax({
         url : '/yeast/ajax_associated/',
-        data : {'feature':feature, 'id':id, 'name':name},
+        data : {'query':  query, 'id':id, 'name':name},
         success:function(response){
             // console.log('-----')
             var column_order = response.all_tables.column_order;
@@ -286,26 +286,26 @@ $(document).ready(function(){
                 add_href = add_href + `<input id ="${column_order[i]}_move" class="btn btn-primary" type="button" style="margin:2px;" name="Submit" value="${column_order[i]}"  ></input>`
             }
             // console.log(feature_num)
-            $('#href_table').html(`<h4>The terms (from each feature) that are <a style="color:#007bff;">ASSOCIATED </a>with the queried term <a style="color:red;">${name} </a>from [${feature_dict[feature]}]</h4>`)
+            $('#href_table').html(`<h4>The terms (from each feature) that are <a style="color:#007bff;">ASSOCIATED </a>with the queried term <a style="color:red;">${name} </a>from [${feature_dict[query]}]</h4>`)
 
             $('#Answer2').html(add_html)
             for (i=0 ;i< column_order.length;i++){
                 if (feature_num[i]==1){
-                    $(`#${column_order[i]}`).html(`<div class="card" style="margin-top:5%;" ><h3 class ="fs-3 card-header"><a style="color:red">${feature_num[i]} term </a> from [${feature_dict[column_order[i]]}] <a> is</a><a style="color:#007bff"> ASSOCIATED</a> with the queried term <a style="color:red"> ${name}</a> from [${feature_dict[feature]}]</h3> <div class="card-body">${response.all_tables[column_order[i]]}</div></div>`)
+                    $(`#${column_order[i]}`).html(`<div class="card" style="margin-top:5%;" ><h3 class ="fs-3 card-header"><a style="color:red">${feature_num[i]} term </a> from [${feature_dict[column_order[i]]}] <a> is</a><a style="color:#007bff"> ASSOCIATED</a> with the queried term <a style="color:red"> ${name}</a> from [${feature_dict[query]}]</h3> <div class="card-body">${response.all_tables[column_order[i]]}</div></div>`)
                 }else{
-                    $(`#${column_order[i]}`).html(`<div class="card" style="margin-top:5%;" ><h3 class ="fs-3 card-header"><a style="color:red">${[feature_num[i]]} terms </a> from [${feature_dict[column_order[i]]}] <a> are</a><a style="color:#007bff"> ASSOCIATED</a> with the queried term <a style="color:red"> ${name}</a> from [${feature_dict[feature]}]</h3> <div class="card-body">${response.all_tables[column_order[i]]}</div></div>`)
+                    $(`#${column_order[i]}`).html(`<div class="card" style="margin-top:5%;" ><h3 class ="fs-3 card-header"><a style="color:red">${[feature_num[i]]} terms </a> from [${feature_dict[column_order[i]]}] <a> are</a><a style="color:#007bff"> ASSOCIATED</a> with the queried term <a style="color:red"> ${name}</a> from [${feature_dict[query]}]</h3> <div class="card-body">${response.all_tables[column_order[i]]}</div></div>`)
                 }
                 $(`#${column_order[i]}_table`).DataTable({
                     'columnDefs':[
                         {   'targets':-1,
                             render:function(data,type,row,meta){
                                 var second_name = row[1].split('*')[0]
-                                return `<a href = "/yeast/browse/associated/detail/?id=${feature}*${id}*${name}&name=${column_order[i]}*${data}*${second_name}" target="_blank"> Detail </a>`;
+                                return `<a href = "/yeast/browse/associated/detail/?query=${query}*${id}*${name}&associate=${column_order[i]}*${data}*${second_name}" target="_blank"> Detail </a>`;
                             },
                         },
                         {   'targets':0,
                         render:function(data,type,row,meta){
-                            return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value = "${feature}*${name}*${id}" target="_blank"> ${name} </a>`;
+                            return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value = "${query}*${name}*${id}" target="_blank"> ${name} </a>`;
                         },
                         },
                         {   'targets':1,
@@ -345,13 +345,13 @@ $(document).ready(function(){
                             "destroy": true,
                         })
                         if (feature =="Physical_Interaction"||feature =="Genetic_Interaction"){
-                            $("#modal_table_name").html(`<a style="color:red;">${table_row} genes</a><a> are annotated in the queried term [</a><a style="color:red;">${name}</a><a>] from the feature </a><a>[${feature_dict[feature]}]: </a><a style="color:red;">${table_row} genes </a><a> have ${feature_dict[feature].toLowerCase()} with <a style="color:red;">${name}</a>`)
+                            $("#modal_table_name").html(`<a style="color:red;">${table_row} genes</a><a> are annotated in the queried term [</a><a style="color:red;">${name}</a><a>] from the feature </a><a>[${feature_dict[query]}]: </a><a style="color:red;">${table_row} genes </a><a> have ${feature_dict[query].toLowerCase()} with <a style="color:red;">${name}</a>`)
                         }else if(feature =="Transcriptional_Regulation"){
-                            $("#modal_table_name").html(`<a style="color:red;">${table_row} genes</a><a> are annotated in the queried term [</a><a style="color:red;">${name}</a><a>] from the feature </a><a>[${feature_dict[feature]}]: </a><a style="color:red;">${table_row} genes </a><a> are the targets of ${feature_dict[feature].toLowerCase()} <a style="color:red;">${name}</a>`)
+                            $("#modal_table_name").html(`<a style="color:red;">${table_row} genes</a><a> are annotated in the queried term [</a><a style="color:red;">${name}</a><a>] from the feature </a><a>[${feature_dict[query]}]: </a><a style="color:red;">${table_row} genes </a><a> are the targets of ${feature_dict[query].toLowerCase()} <a style="color:red;">${name}</a>`)
                         }else if(feature =="GO_MF"||feature =="GO_BP"||feature =="GO_CC"){
-                            $("#modal_table_name").html(`<a style="color:red;">${table_row} genes</a><a> are annotated in the queried term [</a><a style="color:red;">${name}</a><a>] from the feature </a><a>[${feature_dict[feature]}]</a>`)
+                            $("#modal_table_name").html(`<a style="color:red;">${table_row} genes</a><a> are annotated in the queried term [</a><a style="color:red;">${name}</a><a>] from the feature </a><a>[${feature_dict[query]}]</a>`)
                         }else{
-                            $("#modal_table_name").html(`<a style="color:red;">${table_row} genes</a><a> are annotated in the queried term [</a><a style="color:red;">${name}</a><a>] from the feature </a><a>[${feature_dict[feature]}]</a>`)
+                            $("#modal_table_name").html(`<a style="color:red;">${table_row} genes</a><a> are annotated in the queried term [</a><a style="color:red;">${name}</a><a>] from the feature </a><a>[${feature_dict[query]}]</a>`)
                         }
 
                     },

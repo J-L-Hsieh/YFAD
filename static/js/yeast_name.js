@@ -10,20 +10,19 @@ $.ajaxSetup({
 $(document).ready(function() {
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
-    const first_feature = urlParams.get('id')
-    const second_feature = urlParams.get('name')
-    console.log(first_feature)
-    var first_feature_array = first_feature.split('*')
-    var second_feature_array = second_feature.split('*')
-    console.log(first_feature_array)
-    console.log(second_feature_array)
+    const query_feature = urlParams.get('query')
+    const associate_feature = urlParams.get('associate')
+    var query_feature_array = query_feature.split('*')
+    var associate_feature_array = associate_feature.split('*')
+    console.log(query_feature_array)
+    console.log(associate_feature_array)
 
-    $('#first').html(`<h4 ><a>The qureied term </a> <a style="color:red"> ${first_feature_array[2]} </a> <a> from [${first_feature_array[0]}]</a></h4>`)
-    $('#second').html(`<h4 ><a>The associated term </a> <a style="color:red"> ${second_feature_array[2]} </a> <a> from [${second_feature_array[0]}]</a></h4>`)
+    $('#first').html(`<h4 ><a>The qureied term </a> <a style="color:red"> ${query_feature_array[2]} </a> <a> from [${query_feature_array[0]}]</a></h4>`)
+    $('#second').html(`<h4 ><a>The associated term </a> <a style="color:red"> ${associate_feature_array[2]} </a> <a> from [${associate_feature_array[0]}]</a></h4>`)
 
     $.ajax({
         url : '/yeast/ajax_name/',
-        data : { 'first_feature' : first_feature,'second_feature' : second_feature },
+        data : { 'query_feature' : query_feature,'associate_feature' : associate_feature },
         success:function(response){
             // -------------------------table1---------------
             $('#table1').html(`<div class="card" style="margin-top:5%;" ><h3 class ="fs-3 card-header"><a id="table1_header_num"></a>annotated <a style="color:red">BOTH</a> in the queried term & the associated term</h3><div class="card-body">${response.both_contain}</div></div>`)
@@ -58,12 +57,12 @@ $(document).ready(function() {
                     {   'targets':-1,
                         render:function(data,type,row,meta){
                             if (row[2] === 'false'){
-                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${row[2]}%${first_feature_array[1]}%${first_feature_array[2]}%${second_feature_array[0]}%${second_feature_array[1]}%${second_feature_array[2]}%${data}"> Evidence </a>`
+                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${row[2]}%${query_feature_array[1]}%${query_feature_array[2]}%${associate_feature_array[0]}%${associate_feature_array[1]}%${associate_feature_array[2]}%${data}"> Evidence </a>`
                             }else if(row[3] === 'false'){
-                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${first_feature_array[0]}%${first_feature_array[1]}%${first_feature_array[2]}%${row[3]}%${second_feature_array[1]}%${second_feature_array[2]}%${data}"> Evidence </a>`
+                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${query_feature_array[0]}%${query_feature_array[1]}%${query_feature_array[2]}%${row[3]}%${associate_feature_array[1]}%${associate_feature_array[2]}%${data}"> Evidence </a>`
                             }
                             else{
-                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${first_feature_array[0]}%${first_feature_array[1]}%${first_feature_array[2]}%${second_feature_array[0]}%${second_feature_array[1]}%${second_feature_array[2]}%${data}"}"> Evidence </a>`
+                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${query_feature_array[0]}%${query_feature_array[1]}%${query_feature_array[2]}%${associate_feature_array[0]}%${associate_feature_array[1]}%${associate_feature_array[2]}%${data}"}"> Evidence </a>`
                             }
                         },
                     },
@@ -102,12 +101,12 @@ $(document).ready(function() {
                     {   'targets':-1,
                         render:function(data,type,row,meta){
                             if (row[2] === 'false'){
-                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${row[2]}%${first_feature_array[1]}%${first_feature_array[2]}%${second_feature_array[0]}%${second_feature_array[1]}%${second_feature_array[2]}%${data}"> Evidence </a>`
+                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${row[2]}%${query_feature_array[1]}%${query_feature_array[2]}%${associate_feature_array[0]}%${associate_feature_array[1]}%${associate_feature_array[2]}%${data}"> Evidence </a>`
                             }else if(row[3] === 'false'){
-                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${first_feature_array[0]}%${first_feature_array[1]}%${first_feature_array[2]}%${row[3]}%${second_feature_array[1]}%${second_feature_array[2]}%${data}"> Evidence </a>`
+                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${query_feature_array[0]}%${query_feature_array[1]}%${query_feature_array[2]}%${row[3]}%${associate_feature_array[1]}%${associate_feature_array[2]}%${data}"> Evidence </a>`
                             }
                             else{
-                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${first_feature_array[0]}%${first_feature_array[1]}%${first_feature_array[2]}%${second_feature_array[0]}%${second_feature_array[1]}%${second_feature_array[2]}%${data}"> Evidence </a>`
+                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${query_feature_array[0]}%${query_feature_array[1]}%${query_feature_array[2]}%${associate_feature_array[0]}%${associate_feature_array[1]}%${associate_feature_array[2]}%${data}"> Evidence </a>`
                             }
                         },
                     },
@@ -148,12 +147,12 @@ $(document).ready(function() {
                     {   'targets':-1,
                         render:function(data,type,row,meta){
                             if (row[2] === 'false'){
-                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${row[2]}%${first_feature_array[1]}%${first_feature_array[2]}%${second_feature_array[0]}%${second_feature_array[1]}%${second_feature_array[2]}%${data}"> Evidence </a>`
+                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${row[2]}%${query_feature_array[1]}%${query_feature_array[2]}%${associate_feature_array[0]}%${associate_feature_array[1]}%${associate_feature_array[2]}%${data}"> Evidence </a>`
                             }else if(row[3] === 'false'){
-                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${first_feature_array[0]}%${first_feature_array[1]}%${first_feature_array[2]}%${row[3]}%${second_feature_array[1]}%${second_feature_array[2]}%${data}"> Evidence </a>`
+                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${query_feature_array[0]}%${query_feature_array[1]}%${query_feature_array[2]}%${row[3]}%${associate_feature_array[1]}%${associate_feature_array[2]}%${data}"> Evidence </a>`
                             }
                             else{
-                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${first_feature_array[0]}%${first_feature_array[1]}%${first_feature_array[2]}%${second_feature_array[0]}%${second_feature_array[1]}%${second_feature_array[2]}%${data}"}"> Evidence </a>`
+                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${query_feature_array[0]}%${query_feature_array[1]}%${query_feature_array[2]}%${associate_feature_array[0]}%${associate_feature_array[1]}%${associate_feature_array[2]}%${data}"}"> Evidence </a>`
                             }
                         },
                     },

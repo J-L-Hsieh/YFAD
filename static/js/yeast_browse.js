@@ -84,7 +84,7 @@ $(document).ready(function() {
                         {   'targets':0,
                             render:function(data, type, row, meta){
                                 // return `<a id="mouse_touch${meta.row}" value="${meta.row}"> {data} </a>`;
-                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${queried_feature}%${row[row.length-1]}" > ${data} </a>`
+                                return `<a class="modal_features" href = "#exampleModal" data-bs-toggle="modal" value="${queried_feature}*${data}*${row[row.length-1]}" > ${data} </a>`
 
                             },
                         },
