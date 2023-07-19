@@ -296,6 +296,10 @@ $(document).ready(function(){
                     $(`#${column_order[i]}`).html(`<div class="card" style="margin-top:5%;" ><h3 class ="fs-3 card-header"><a style="color:red">${[feature_num[i]]} terms </a> from [${feature_dict[column_order[i]]}] <a> are</a><a style="color:#007bff"> ASSOCIATED</a> with the queried term <a style="color:red"> ${name}</a> from [${feature_dict[query]}]</h3> <div class="card-body">${response.all_tables[column_order[i]]}</div></div>`)
                 }
                 $(`#${column_order[i]}_table`).DataTable({
+                    dom: 'Bfrtip',
+                    buttons: [
+                        'csv', 'pdf', 'print'
+                        ],
                     'columnDefs':[
                         {   'targets':-1,
                             render:function(data,type,row,meta){

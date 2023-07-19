@@ -31,8 +31,8 @@ $(document).ready(function() {
             checkboxvalue = checkboxvalue + ($(this).val()+',');
         });
         var input = $('#features').serialize() + checkboxvalue;
-        var  table_name = document.getElementById('first').value
-
+        var  table_name = document.getElementById('query_feature').value
+        console.log(input)
 
         $.ajax({
             url: '/yeast/ajax_yeast_browser/',
