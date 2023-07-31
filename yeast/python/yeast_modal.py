@@ -7,7 +7,7 @@ pd.set_option('display.width', None)
 
 feature_name_dict = {"GO_MF":"GO_MF", "GO_BP":"GO_BP", "GO_CC":"GO_CC", "Disease":"Disease", "Pathway":"Pathway", "Protein_Domain":"Protein Domain", "Mutant_Phenotype":"Mutant Phenotype", "Transcriptional_Regulation":"Transcriptional Regulation", "Physical_Interaction":"Physical Interaction", "Genetic_Interaction":"Genetic Interaction",
                     "SystematicName":"Systematic Name", "StandardName":"Strandard Name", "GeneDescription":"Gene Description", "EvidenceCode":"Evidence Code", "DomainDescription":"Domain Description", "StartCoordinate":"Start Coordinate", "EndCoordinate":"End Coordinate",
-                    "SystematicName(Bait)":"Systematic Name(Bait)", "StandardName(Bait)":"Standard Name (Bait)", "SystematicName(Hit)":"Systematic Name (Hit)", "StandardName(Hit)":"Standard Name (Hit)", "ExperimentType":"Experiment Type"}
+                    "SystematicName(Bait)":"Systematic Name (Bait)", "StandardName(Bait)":"Standard Name (Bait)", "SystematicName(Hit)":"Systematic Name (Hit)", "StandardName(Hit)":"Standard Name (Hit)", "ExperimentType":"Experiment Type"}
 
 def Protein_Domain_href(term_id, term_name):
     return "<a href='https://www.ebi.ac.uk/interpro/entry/pfam/%s/' target='_blank'>%s</a>"%(term_id, term_name)

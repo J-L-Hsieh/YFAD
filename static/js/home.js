@@ -17,15 +17,15 @@ $(document).ready(function() {
                 var table_row = evidence_table.rows.length-1;
                 $('#evidence_table').DataTable({
                     'bAutoWidth' : true,
-                    // 'scrollX':true,
+                    'scrollX':true,
                     // 'scrollY' : true,
                     "scrollCollapse" : true,
                     "destroy": true,
                 })
                 if (feature =="Physical_Interaction"||feature =="Genetic_Interaction"){
-                    $("#modal_table_name").html(`<a style="color:red;">${table_row} genes</a><a> are annotated in the queried term [</a><a style="color:red;">${name}</a><a>] from the feature </a><a>[${feature_dict[feature]}]: </a><a style="color:red;">${table_row} genes </a><a> have ${feature_dict[feature].toLowerCase()} with <a style="color:red;">${name}</a>`)
+                    $("#modal_table_name").html(`<a style="color:red;">${table_row} genes</a><a> are annotated in the term [</a><a style="color:red;">${name}</a><a>] from the feature </a><a>[${feature_dict[feature]}]: </a><a style="color:red;">${table_row} genes </a><a> have ${feature_dict[feature].toLowerCase()} with <a style="color:red;">${name}</a>`)
                 }else if(feature =="Transcriptional_Regulation"){
-                    $("#modal_table_name").html(`<a style="color:red;">${table_row} genes</a><a> are annotated in the queried term [</a><a style="color:red;">${name}</a><a>] from the feature </a><a>[${feature_dict[feature]}]: </a><a style="color:red;">${table_row} genes </a><a> are the targets of ${feature_dict[feature].toLowerCase()} <a style="color:red;">${name}</a>`)
+                    $("#modal_table_name").html(`<a style="color:red;">${table_row} genes</a><a> are annotated in the queried term [</a><a style="color:red;">${name}</a><a>] from the feature </a><a>[${feature_dict[feature]}]: </a><a style="color:red;">${table_row} genes </a><a> are the targets of transcriptional regulator <a style="color:red;">${name}</a>`)
                 }else if(feature =="GO_MF"||feature =="GO_BP"||feature =="GO_CC"){
                     $("#modal_table_name").html(`<a style="color:red;">${table_row} genes</a><a> are annotated in the queried term [</a><a style="color:red;">${name}</a><a>] from the feature </a><a>[${feature_dict[feature]}]</a>`)
                 }else{

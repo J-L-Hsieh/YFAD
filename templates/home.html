@@ -13,7 +13,7 @@
                 <div class="card-body " style="border: 3px solid #343a40;">
                     <div class="card" >
                         <div class=card-header>
-                            <h3>YFAD collected terms of the following 10 biological features.</h3>
+                            <h3>YFAD collected terms of the following 10 biological features from Saccharomyces Genome Database.</h3>
                         </div>
                         <div class="card-body">
                             <table class="table text-center">
@@ -51,7 +51,7 @@
                                         <th scope="col"><a class="show_term_member" href = "#Modal" data-bs-toggle="modal" value = "Protein_Domain*MutS domain V*PF00488" target="_blank"> 6 </a></th>
                                     </tr>
                                     <tr class="">
-                                        <th scope="col">Mutane Phenotype</th>
+                                        <th scope="col">Mutant Phenotype</th>
                                         <th scope="col">634</th>
                                         <th scope="col"><a href="https://www.yeastgenome.org/phenotype/increased_apoptosis" target="_blank">apoptosis: increased</a></th>
                                         <th scope="col"><a class="show_term_member" href = "#Modal" data-bs-toggle="modal" value = "Mutant_Phenotype*apoptosis: increased*apoptosis: increased" target="_blank"> 37 </a></th>
@@ -72,16 +72,16 @@
                                         <th scope="col">Transcriptional Regulation</th>
                                         <th scope="col">194</th>
                                         <th scope="col"><a href="https://www.yeastgenome.org/locus/ABF1/regulation" target="_blank">ABF1</a></th>
-                                        <th scope="col"><a class="show_term_member" href = "#Modal" data-bs-toggle="modal" value = "Transcriptional_Regulation*SIN4*YNL236W" target="_blank"> 317 </a>(<a style="color: red;">317 genes are the targets of the transcriptional regulator ABF1</a>)</th>
+                                        <th scope="col"><a class="show_term_member" href = "#Modal" data-bs-toggle="modal" value = "Transcriptional_Regulation*ABF1*YKL112W" target="_blank"> 317 </a>(<a style="color: red;">317 genes are the targets of the transcriptional regulator ABF1</a>)</th>
                                     </tr>
                                     <tr class="">
-                                        <th scope="col">Physical_Interaction</th>
+                                        <th scope="col">Physical Interaction</th>
                                         <th scope="col">5624</th>
                                         <th scope="col"><a href="https://www.yeastgenome.org/locus/S000001900/interaction" target="_blank">RPN11</a></th>
                                         <th scope="col"><a class="show_term_member" href = "#Modal" data-bs-toggle="modal" value = "Physical_Interaction*RPN11*RPN11" target="_blank"> 1641 </a>(<a style="color: red;">1641 genes have physical interaction with RPN11</a>)</th>
                                     </tr>
                                     <tr class="">
-                                        <th scope="col">Genetic_Interaction</th>
+                                        <th scope="col">Genetic Interaction</th>
                                         <th scope="col">5500</th>
                                         <th scope="col"><a href="https://www.yeastgenome.org/locus/S000004688/interaction" target="_blank">ADH3</a></th>
                                         <th scope="col"><a class="show_term_member" href = "#Modal" data-bs-toggle="modal" value = "Genetic_Interaction*ADH3*ADH3" target="_blank"> 129 </a>(<a style="color: red;">129 genes have genetic interaction with ADH3</a>)</th>
@@ -92,9 +92,9 @@
 
                         </div>
                     </div>
-                    <div class="lh-lg" style="margin-top: 2%;">
-                        <h5><a>⬦ YFAD identified 8209013 </a><a style="color: red;">term-term associations<a> from the 10 collected biological features.</a></h5>
-                        <h5><a>⬦ For example, YFAD identified that </a><a style="color: #007bff;">Y-form DNA binding<a> from [GO_MF] is </a><a style="color: red;">ASSOCIATED </a><a>with </a><a style="color: #007bff;">MutS domain V <a>from [Protein Domain]</a></h5>
+                    <div style="margin-top: 2%;line-height: 25px;">
+                        <h5><b>⬦ YFAD identified 8209013 </b><b style="color: red;">term-term associations</b><b> from the 10 collected biological features.</b></h5><br>
+                        <h5><b>⬦ For example, YFAD identified that </b><b style="color: #007bff;">Y-form DNA binding</b><b> from [GO_MF] is </b><b style="color: red;">ASSOCIATED </b><b>with </b><b style="color: #007bff;">MutS domain V</b><b>from [Protein Domain]</b></h5>
                         <table style="margin: 1%;" id="Protein_Domain_table" border="1" class="dataframe table table-bordered table-hover dataTable no-footer">
                             <thead>
                                 <tr style="text-align: right;">
@@ -117,7 +117,9 @@
                                 </tr>
                             </tbody>
                         </table>
-                        <h5><a>⬦ How to determine whether two terms (e.g. Term A and Term B) are associated or not?</h5>
+                        <br/>
+                        <h5><b>⬦ How to determine whether two terms (e.g. Term A and Term B) are associated or not?</b></h5>
+                        <div>
                             <h5><a>&emsp;&emsp;• </a><a style="color: red;">N<sub>A</sub><a>: the number of genes annotated in Term A. </a></h5>
                             <h5><a>&emsp;&emsp;• </a><a style="color: red;">N<sub>B</sub><a>: the number of genes annotated in Term B. </a></h5>
                             <h5><a>&emsp;&emsp;• </a><a style="color: red;">N<sub>AB</sub><a>: the number of genes annotated in both Term A & Term B. </a></h5>
@@ -128,6 +130,7 @@
 
                             <h5><a>&emsp;&emsp;• The p-value is then corrected by the FDR (false discovery rate) to represent the true alpha level in the multiple hypotheses testing.  </a></h5>
                             <h5><a>&emsp;&emsp;• Finally, Term A and Term B are said to be </a><a style="color: red;">ASSOCIATED<a> with each other if the </a><a style="color: red;">corrected p-value <= 0.01</a><a>.</a></h5>
+                        </div>
                     </div>
             </div>
         </div>
@@ -137,23 +140,23 @@
                 <table class="table table-hover mb-0">
                     <tbody class="test-center">
                         <tr>
-                            <td style="width: 10%;">2023</td>
-                            <td style="width: 90%;">July Release YFAD.</td>
+                            <td style="width: 10%;">2023 July</td>
+                            <td style="width: 90%;">Release YFAD.</td>
                         </tr>
                         <tr>
-                            <td style="width: 10%;">2023</td>
-                            <td style="width: 90%;">Mar. Construct the web interface of YFAD.</td>
+                            <td style="width: 10%;">2023 Mar.</td>
+                            <td style="width: 90%;">Construct the web interface of YFAD.</td>
                         </tr>
                         <tr>
-                            <td style="width: 10%;">2023</td>
-                            <td style="width: 90%;">Feb. Identify 8209013 <a style="color: red;">term-term associations </a>from the 10 biological features.</td>
+                            <td style="width: 10%;">2023 Feb.</td>
+                            <td style="width: 90%;">Identify 8209013 <a style="color: red;">term-term associations </a>from the 10 biological features.</td>
                         </tr>
                         <tr>
-                            <td style="width: 10%;">2023</td>
-                            <td style="width: 90%;">Jan. Download terms of 10 biological features from <a style="color: #007bff;">YMLA</a>.</td>
+                            <td style="width: 10%;">2023 Jan. </td>
+                            <td style="width: 90%;">Download terms of 10 biological features from <a href="https://cosbi7.ee.ncku.edu.tw/YMLA/download" style="color: #007bff;">YMLA</a>.</td>
                         </tr>
                         <tr>
-                            <td style="width: 10%;">2023</td>
+                            <td style="width: 10%;">2023 Jan. </td>
                             <td style="width: 90%;">Start YFAD project.</td>
                         </tr>
 
