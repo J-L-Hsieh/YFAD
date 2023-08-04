@@ -31,10 +31,10 @@ def p1_modal(request):
             select = """
                 SELECT SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
             """%(feature, feature, term_id)
-        print(select)
+        # print(select)
         db_cursor.execute(select)
         sys_name1 = db_cursor.fetchall()
-        print(sys_name1)
+        # print(sys_name1)
         sys_name1_set = str(eval(sys_name1[0][0])).replace("[", "(").replace("]", ")")
         # print(sys_name1[0][0])
 
@@ -66,7 +66,7 @@ def p1_modal(request):
             select = """
                 SELECT * FROM %s_evidence WHERE SystematicName IN %s AND %s IN ("%s");
             """%(feature, sys_name1_set, feature, term_id)
-            print(select)
+            # print(select)
             evidence_table = pd.read_sql(select, connect)
     finally:
         connect.close()

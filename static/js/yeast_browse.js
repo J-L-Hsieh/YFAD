@@ -44,9 +44,11 @@ $(document).ready(function() {
 
                 let target_num = Array.from({ length: response.columns.length-2 }, (val, index) => index + 1);
 
-                var queried_feature = response.columns[0].title.replace("(Queried)", "")
+                var queried_feature = response.columns[0].title.replace(" (Queried)", "")
 
                     var result_table = $('#result_table').DataTable({
+                    'order': [[1, 'desc']],
+
                     // 'bAutoWidth':true,
                     'scrollY':true,
                     'scrollX':true,
@@ -90,7 +92,7 @@ $(document).ready(function() {
                         },
                         {   'targets':-1,
                             render:function(data, type, row, meta){
-                                return '<a href = "/yeast/browse/associated/?id='+ data + '&name='+ row[0] +'&feature='+ table_name +'" target="_blank"> Detail </a>';
+                                return '<a href = "/yeast/browse/associated/?id='+ data + '&name='+ row[0] +'&query='+ table_name +'" target="_blank"> Detail </a>';
                             },
                         },
                     ]
@@ -177,6 +179,11 @@ $(document).ready(function() {
                 /*------------------------modal-----------------------*/
                 $('.modal_features').on("click",function(){
                     var feature_name = $(this).attr('value');
+                    $('#modal_table').empty();
+                    $('#modal_table_name').empty();
+
+                    var feature = feature_name.split("*")[0];
+                    var name = feature_name.split("*")[1];
                     // console.log(feature_name)
                     $.ajax({
                         url : '/yeast/ajax_p1_modal/',
@@ -184,6 +191,9 @@ $(document).ready(function() {
                         success:function(response){
                             // console.log(response.evidence_table)
                             $('#modal_table').html(response.evidence_table)
+                            var evidence_table = document.getElementById("evidence_table");
+                            var table_row = evidence_table.rows.length-1;
+
                             $('#evidence_table').DataTable({
                                 'bAutoWidth' : true,
                                 // 'scrollX':true,
@@ -191,6 +201,17 @@ $(document).ready(function() {
                                 "scrollCollapse" : true,
                                 "destroy": true,
                             })
+
+                            if (feature =="Physical_Interaction"||feature =="Genetic_Interaction"){
+                                $("#modal_table_name").html(`<a style="color:red;">${table_row} genes</a><a> are annotated in the term [</a><a style="color:red;">${name}</a><a>] from the feature </a><a>[${feature.replace("_", " ")}]: </a><a style="color:red;">${table_row} genes </a><a> have ${feature.replace("_", " ").toLowerCase()} with <a style="color:red;">${name}</a>`)
+                            }else if(feature =="Transcriptional_Regulation"){
+                                console.log(feature)
+                                $("#modal_table_name").html(`<a style="color:red;">${table_row} genes</a><a> are annotated in the term [</a><a style="color:red;">${name}</a><a>] from the feature </a><a>[${feature.replace("_", " ")}]: </a><a style="color:red;">${table_row} genes </a><a> are the targets of ${feature.replace("_", " ").toLowerCase()} <a style="color:red;">${name}</a>`)
+                            }else if(feature =="GO_MF"||feature =="GO_BP"||feature =="GO_CC"){
+                                $("#modal_table_name").html(`<a style="color:red;">${table_row} genes</a><a> are annotated in the term [</a><a style="color:red;">${name}</a><a>] from the feature </a><a>[${feature}]</a>`)
+                            }else{
+                                $("#modal_table_name").html(`<a style="color:red;">${table_row} genes</a><a> are annotated in the term [</a><a style="color:red;">${name}</a><a>] from the feature </a><a>[${feature.replace("_", " ")}]</a>`)
+                            }
 
                         },
 

@@ -7,7 +7,7 @@
 
 <div class="container-fluid">
     <div class="col-9 mx-auto">
-        <h2><i class="fa fa-globe"></i> Browse Modes</h2>
+        <h2><i class="fa fa-globe"></i> Browse terms (from the Compared Features) which are <a style="color: red;">ASSOCIATED</a> with the terms (from the Queried Feature)</h2>
         <hr class="page-title-under">
     </div>
     <div class="col-9 mx-auto">
@@ -19,9 +19,9 @@
                         <div class="flexbox card-header" style="width:100%;height:100px;font-size:26px;">
                             <div style="width:25%; margin: 5%;">Queried Feature : </div>
                             <select id="query_feature" style="width:75%; margin: 5%;" id ='type' type="text" name="query_feature">Queried Feature :
-                                <option value="GO_MF">GO(MF)</option>
-                                <option value="GO_BP">GO(BP)</option>
-                                <option value="GO_CC">GO(CC)</option>
+                                <option value="GO_MF">GO_MF</option>
+                                <option value="GO_BP">GO_BP</option>
+                                <option value="GO_CC">GO_CC</option>
                                 <option value="Protein_Domain">Protein Domain</option>
                                 <option value="Mutant_Phenotype">Mutant Phenotype</option>
                                 <option value="Pathway">Pathway</option>
@@ -36,19 +36,19 @@
                             <div id="GO_MF" class="checkbox_style" style="width:20%;">
                                 <input id="GO_MF_input" type="checkbox" value="GO_MF" checked="checked">
                                 <label for="flexCheckDefault">
-                                    GO(MF)
+                                    GO_MF
                                 </label>
                             </div>
                             <div id="GO_BP" class="checkbox_style" style="width:20%;">
                                 <input id="GO_BP_input" type="checkbox" value="GO_BP" checked="ckecked">
                                 <label for="flexCheckDefault">
-                                    GO(BP)
+                                    GO_BP
                                 </label>
                             </div>
                             <div id="GO_CC" class="checkbox_style" style="width:20%;">
                                 <input id="GO_CC_input" type="checkbox" value="GO_CC" checked="ckecked">
                                 <label for="flexCheckDefault">
-                                    GO(CC)
+                                    GO_CC
                                 </label>
                             </div>
                             <div id="Protein_Domain" class="checkbox_style" style="width:20%;">
@@ -105,21 +105,28 @@
         </div>
     </div>
     <div id="browse_result" class="col-9 mx-auto" style="margin-top: 5%;display: none;">
-        <h2><i class="fa fa-table"></i> Result</h2>
+        <h2><i class="fa fa-table"></i> Browse Results</h2>
         <hr class="page-title-under">
-        <div id="result"></div>
+        <div class=" card">
+            <div class="card-header bg-dark text-white">
+                <h2># of terms (from the Compared Features) which are <a style="color: red;">ASSOCIATED</a> with the terms (from the Queried Feature)</h2>
+            </div>
+            <div class="card-body">
+                <div id="result"></div>
+            </div>
+        </div>
     </div>
     <!------------------------modal---------------------->
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog maodal-lg" role="document" style="max-width:70%;">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h3 class="modal-title" id="exampleModalLabel">Edvidence table</h3>
+                    <h3 class="modal-title" id="exampleModalLabel"></h3>
                     <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">x</button>
                 </div>
                 <div class="modal-body">
                     <div class="card">
-                        <h4 class="card-header">table name</h4>
+                        <h4 id="modal_table_name" class="card-header"></h4>
                         <div id="modal_table" class="card-body"></div>
                     </div>
                 </div>

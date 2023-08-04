@@ -17,7 +17,7 @@ from yeast.testdb import DatabaseManager
 from yeast.python.enrichment import enrichment_program
 from yeast.python.yeast_associated import associated_analysis
 from yeast.python.yeast_network import network
-from yeast.python.yeast_modal import p1_modal,p2_modal
+from yeast.python.yeast_modal import p1_modal, p2_modal
 
 import time
 
@@ -53,6 +53,9 @@ def yeast_browser(request):
     table_column = request.POST.get('other_feature')[:-1]
     search_feature = table_column.split(',')
 
+    browser_feature_name_dict = {"GO_MF(Queried)":"GO_MF (Queried)", "GO_BP(Queried)":"GO_BP (Queried)", "GO_CC(Queried)":"GO_CC (Queried)", "Protein_Domain(Queried)":"Protein_Domain (Queried)", "Mutant_Phenotype(Queried)":"Mutant_Phenotype (Queried)", "Pathway(Queried)":"Pathway (Queried)", "Disease(Queried)":"Disease (Queried)", "Transcriptional_Regulation(Queried)":"Transcriptional_Regulation (Queried)", "Physical_Interaction(Queried)":"Physical_Interaction (Queried)", "Genetic_Interaction(Queried)":"Genetic_Interaction (Queried)",
+                    "GO_MF":"GO_MF", "GO_BP":"GO_BP", "GO_CC":"GO_CC", "Disease":"Disease", "Pathway":"Pathway", "Protein_Domain":"Protein Domain", "Mutant_Phenotype":"Mutant Phenotype", "Transcriptional_Regulation":"Transcriptional Regulation", "Physical_Interaction":"Physical Interaction", "Genetic_Interaction":"Genetic Interaction", "Detail":"Detail"
+    }
     if feature == 'Protein_Domain':
         select = """
             SELECT `%s(Queried)`, %s, %s_name FROM `%s_10_length`;
@@ -91,11 +94,10 @@ def yeast_browser(request):
 
     table = table.fillna('-')
 
-
     table_columns = table.columns.values.tolist()
     columns = []
     for i in table_columns:
-        columns.append({'title': i})
+        columns.append({'title': browser_feature_name_dict[i]})
 
 
     table = table.values.tolist()
