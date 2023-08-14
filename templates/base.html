@@ -28,6 +28,9 @@
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.html5.min.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/buttons/2.3.2/js/buttons.print.min.js"></script>
     <!-- <script type="text/javascript" charset="utf8" src=""></script> -->
+    <!-- Loading -->
+    <script src="https://cdn.jsdelivr.net/npm/busy-load/dist/app.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/busy-load/dist/app.min.css" rel="stylesheet">
 
     <!-- css -->
     <link rel="stylesheet" href="{% static 'css/index.css' %}">
@@ -46,7 +49,38 @@
         /* .table-bordered td, .table-bordered th {
         border: 1px solid #dee2e6;
         } */
+
+        .loader {
+        width: 53px;
+        height: 53px;
+        border-radius: 50%;
+        display: inline-block;
+        border-top: 3px solid #FFF;
+        border-right: 3px solid transparent;
+        box-sizing: border-box;
+        animation: rotation 1s linear infinite;
+        }
+
+        @keyframes rotation {
+        0% {
+        transform: rotate(0deg);
+        }
+
+        100% {
+        transform: rotate(360deg);
+        }
+        }
+
+        .container-mask {
+        display: flex;
+        }
+
+        .box-mask {
+        flex: 1;
+        font-size: 40px;
+        }
     </style>
+
     {% block style %}{% endblock style %}
 
 </head>
@@ -105,10 +139,25 @@
         {% block content %}
         {% endblock content %}
     </div>
-    <style>
-        /* .table > tbody > tr > td,
-        .table > thead > tr > th{
-            vertical-align: middle;
-            text-align: center;
-        }  */
-    </style>
+
+    <script>
+        function Loading_mask() {
+            let count = 0;
+            let customElement = $("<div>", {
+            id: "countdown",
+            css: { "font-size": "40px", "background-color": 'black', "opacity": ".5", "border": 'none', "padding": '15px', "color": '#fff', "border-radius": '20px' },
+            });
+            customElement.append('<div class="container-mask"><span class="loader box-mask"></span>' + '<p class="box-mask">' + '&nbsp;Loading...' + count + '</p></div>')
+            $.busyLoadFull("show", {
+                custom: customElement
+            });
+            let interval = setInterval(function () {
+                count++;
+                customElement.empty()
+                customElement.append('<div class="container-mask"><span class="loader box-mask"></span>' + '<p class="box-mask">' + '&nbsp;Loading...' + count + '</p></div>')
+            }, 1000);
+            }
+        function unLoading_mask() {
+            $.busyLoadFull("hide");
+        }
+    </script>

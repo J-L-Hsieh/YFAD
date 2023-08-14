@@ -10,6 +10,7 @@ $(document).ready(function() {
         var feature = feature_name.split("*")[0];
         var name = feature_name.split("*")[1];
         $('#modal_table').empty()
+        $('#modal_table_name').empty()
         $.ajax({
             url : '/yeast/ajax_p1_modal/',
             data : {'feature_name' : feature_name},

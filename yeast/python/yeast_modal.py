@@ -31,12 +31,9 @@ def p1_modal(request):
             select = """
                 SELECT SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
             """%(feature, feature, term_id)
-        # print(select)
         db_cursor.execute(select)
         sys_name1 = db_cursor.fetchall()
-        # print(sys_name1)
         sys_name1_set = str(eval(sys_name1[0][0])).replace("[", "(").replace("]", ")")
-        # print(sys_name1[0][0])
 
         '''-------------------------依照主要的feature取出證據檔------------------'''
         if feature == 'Physical_Interaction':

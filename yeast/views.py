@@ -118,8 +118,8 @@ def yeast_network(request):
     feature_query = request.POST.get('query')
     term_id = request.POST.get('id')
     term_name = request.POST.get('name')
-    print('-------------')
-    print(feature_query)
+    # print('-------------')
+    # print(feature_query)
     try:
         connect = sqlite3.connect('db.sqlite3')
         if feature_query =="Protein_Domain":
@@ -306,7 +306,7 @@ def yeast_name(request):
             select1 = """
                 SELECT DISTINCT `SystematicName`, `gene_link`, `StandardName` FROM %s_evidence WHERE `SystematicName` IN %s AND `Transcriptional_Regulation` IN ("%s");
             """%(feature_query, first_names_for_evidence, id_query)
-            print(select1)
+            # print(select1)
         else:
             select1 = """
                 SELECT DISTINCT `SystematicName`, `gene_link`, `StandardName` FROM %s_evidence WHERE `SystematicName` IN %s AND `%s` IN ("%s");
@@ -348,6 +348,7 @@ def yeast_name(request):
             """%(associate_feature[0], associate_feature[0], associate_feature[1])
             second_pd_id = db_cursor.execute(select).fetchone()
             second_pd_id = second_pd_id[0]
+
     finally:
         connect.close()
     # print(first_table)
@@ -419,16 +420,19 @@ def yeast_name(request):
         second_contain = second_contain.drop(columns=['gene_link', 'all'])
 
     # print(both_contain)
+    both_contain = both_contain.rename(columns=feature_name_dict)
     both_contain = both_contain.fillna('-')
     both_contain = both_contain.to_html(index=None, classes='table table-bordered table-hover dataTable no-footer', escape=False)
     both_contain = both_contain.replace('table', 'table id="both_name_table"')
     # print(second_contain)
 
+    second_contain = second_contain.rename(columns=feature_name_dict)
     second_contain = second_contain.fillna('-')
     second_contain = second_contain.to_html(index=None, classes='table table-bordered table-hover dataTable no-footer', escape=False)
     second_contain = second_contain.replace('table', 'table id="second_table"')
     # print("queried_contain",queried_contain)
 
+    queried_contain = queried_contain.rename(columns=feature_name_dict)
     queried_contain = queried_contain.fillna('-')
     queried_contain = queried_contain.to_html(index=None, classes='table table-bordered table-hover dataTable no-footer ', escape=False)
     queried_contain = queried_contain.replace('table', 'table id="queried_table"')
@@ -458,7 +462,7 @@ def yeast_evidence(request):
     name_associated = feature[5]
     systematice_name = feature[6]
     connect = sqlite3.connect('db.sqlite3')
-    print(feature)
+    # print(feature)
     if feature1 == 'false':
         pass
     else:
@@ -499,7 +503,7 @@ def yeast_evidence(request):
             select2 = """
                 SELECT * FROM %s_evidence WHERE SystematicName IN ("%s") AND `Transcriptional_Regulation` IN ("%s");
             """%(feature2, systematice_name, id_associated)
-            print(select2)
+            # print(select2)
         else:
             select2 = """
                 SELECT * FROM %s_evidence WHERE SystematicName IN ("%s") AND %s IN ("%s");
@@ -528,7 +532,9 @@ def yeast_evidence(request):
             elif feature1 == 'Protein_Domain':
                 feature1_table['SystematicName']=feature1_table['gene_link']
                 feature1_table = feature1_table.drop(columns=['gene_link', 'term_link'])
-                feature1_table["Protein_Domain"] = feature1_table.apply(lambda x :Protein_Domain_href(x['Protein_Domain'], name_query), axis=1)
+                feature1_table["Protein_Domain"] = feature1_table.apply(lambda x :Protein_Domain_href(x['Protein_Domain'], x['DomainDescription']), axis=1)
+
+                feature1_table = feature1_table.drop(columns=['DomainDescription'])
 
             elif feature1 =="GO_MF" or feature1 =="GO_BP" or feature1 =="GO_CC":
                 feature1_table["EvidenceCode"] = feature1_table.apply(lambda x: x["EvidenceCode"].replace('<a ', '<a target="_blank"'), axis=1)
@@ -541,6 +547,8 @@ def yeast_evidence(request):
             else:
                 feature1_table['SystematicName']=feature1_table['gene_link']
                 feature1_table['%s'%feature1]=feature1_table['term_link']
+                feature1_table = feature1_table.drop(columns=['gene_link', 'term_link'])
+
 
             feature1_table = feature1_table.rename(columns=feature_name_dict)
             feature1_table = feature1_table.to_html(index= None, classes="table table-bordered table-hover dataTable no-footer",escape=False)
@@ -565,7 +573,10 @@ def yeast_evidence(request):
             elif feature2 == 'Protein_Domain':
                 feature2_table['SystematicName']=feature2_table['gene_link']
                 feature2_table = feature2_table.drop(columns=['gene_link', 'term_link'])
-                feature2_table["Protein_Domain"] = feature2_table.apply(lambda x :Protein_Domain_href(x['Protein_Domain'], name_query), axis=1)
+                feature2_table["Protein_Domain"] = feature2_table.apply(lambda x :Protein_Domain_href(x['Protein_Domain'], x['DomainDescription']), axis=1)
+
+                feature2_table = feature2_table.drop(columns=['DomainDescription'])
+
 
             elif feature2 =="GO_MF" or feature2 =="GO_BP" or feature2 =="GO_CC":
                 feature2_table["EvidenceCode"] = feature2_table.apply(lambda x: x["EvidenceCode"].replace('<a ', '<a target="_blank"'), axis=1)

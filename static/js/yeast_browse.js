@@ -25,6 +25,7 @@ $(document).ready(function() {
 
     /* -----------------------------------------傳遞已選擇變數------------------------------------- */
     $('#submit_feature').click(function(e){
+        Loading_mask();
         e.preventDefault();
         var checkboxvalue = '&other_feature=';
         $("input[type=checkbox]:checked").each(function(i){
@@ -38,7 +39,7 @@ $(document).ready(function() {
             url: '/yeast/ajax_yeast_browser/',
             data: input,
             success: function(response){
-                $('#browse_result').show()
+
                 // $('#result').html('<div class="container"><div class="card mt-5 w-100"><div class="card-body"></div>'+response.table+'</div></div>')
                 $('#result').html('<div class="card"><div class="card-body"><table id="result_table" class="table table-bordered table-hover dataTable no-footer"></table></div></div>')
 
@@ -49,7 +50,7 @@ $(document).ready(function() {
                     var result_table = $('#result_table').DataTable({
                     'order': [[1, 'desc']],
 
-                    // 'bAutoWidth':true,
+                    'bAutoWidth':true,
                     'scrollY':true,
                     'scrollX':true,
                     'scrollCollapse': true,
@@ -176,6 +177,11 @@ $(document).ready(function() {
                     PlusHide();
                     MinusHide();
                 })
+
+                $('#browse_result').show()
+                const element = document.getElementById("browse_result");
+                element.scrollIntoView({behavior: "smooth", block: "center", inline: "nearest"})
+
                 /*------------------------modal-----------------------*/
                 $('.modal_features').on("click",function(){
                     var feature_name = $(this).attr('value');
@@ -221,6 +227,7 @@ $(document).ready(function() {
                     })
                 })
                 /*------------------------modal-----------------------*/
+                unLoading_mask()
             },
             error: function(){
                 alert('Something error');

@@ -6,6 +6,8 @@ $.ajaxSetup({
 feature_dict = {"GO_MF":"GO_MF", "GO_BP":"GO_BP", "GO_CC":"GO_CC", "Protein_Domain":"Protein Domain", "Mutant_Phenotype":"Mutant Phenotype", "Pathway":"Pathway", "Disease":"Disease", "Transcriptional_Regulation":"Transcriptional Regulation", "Physical_Interaction":"Physical Interaction", "Genetic_Interaction":"Genetic Interaction"}
 
 $(document).ready(function(){
+    Loading_mask()
+
     $('a[data-toggle="tab"]').on( 'shown.bs.tab', function (e) {
         $($.fn.dataTable.tables( true ) ).css('width', '100%');
         $($.fn.dataTable.tables( true ) ).DataTable().columns.adjust().draw();
@@ -331,9 +333,13 @@ $(document).ready(function(){
             }
             /*------------------------modal-----------------------*/
             $('.modal_features').on("click",function(){
+                Loading_mask()
                 var feature_name = $(this).attr('value');
                 var feature = feature_name.split("*")[0];
                 var name = feature_name.split("*")[1];
+                $('#modal_table_name').empty()
+                $('#modal_table').empty()
+
                 $.ajax({
                     url : '/yeast/ajax_p1_modal/',
                     data : {'feature_name' : feature_name},
@@ -357,7 +363,7 @@ $(document).ready(function(){
                         }else{
                             $("#modal_table_name").html(`<a style="color:red;">${table_row} genes</a><a> are annotated in the term [</a><a style="color:red;">${name}</a><a>] from the feature </a><a>[${feature_dict[query]}]</a>`)
                         }
-
+                        unLoading_mask()
                     },
 
                     error :function(){
@@ -366,6 +372,7 @@ $(document).ready(function(){
                 })
             })
             /*------------------------modal-----------------------*/
+            unLoading_mask()
         },
         error :function(){
             alert('Something error');

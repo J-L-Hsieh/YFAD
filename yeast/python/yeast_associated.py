@@ -14,7 +14,7 @@ def round_float(p_value):
 def associated_analysis(associated_table, table_name, name):
     associated_table = pd.DataFrame(associated_table)
     '''-------------------------queried feature data---------------------'''
-    print(associated_table)
+    # print(associated_table)
     queried_feature = associated_table.at[0,'%s(Queried)'%table_name]
     queried_count = associated_table.at[0,'count']
     queried_name = associated_table.at[0,'SystematicName']
@@ -50,7 +50,7 @@ def associated_analysis(associated_table, table_name, name):
                 SELECT `%s(Queried)`,SystematicName FROM %s_1_to_10 WHERE `%s(Queried)` IN ("%s");
             """%(feature, feature, feature, feature_name)
             feature_systematic = pd.read_sql('%s' %select, connect)
-            print(select)
+            # print(select)
             feature_systematic["Term A (The Queried Term)"] = queried_feature
             feature_systematic['N<sub>A</sub>'] = str(len(eval(queried_name)))
             feature_systematic["N<sub>B</sub>"] = feature_systematic.apply(lambda x: str(len(eval(x['SystematicName']))), axis=1)

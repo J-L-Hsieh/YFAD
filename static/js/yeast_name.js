@@ -8,6 +8,7 @@ $.ajaxSetup({
 //                     'scrollY':true,}
 
 $(document).ready(function() {
+    Loading_mask()
     const queryString = window.location.search;
     const urlParams = new URLSearchParams(queryString);
     const query_feature = urlParams.get('query')
@@ -190,18 +191,29 @@ $(document).ready(function() {
 
 
             // -------------------modal table1---------------
-            $('#both_name_table').on("click",'.modal_features',function(){
-                var feature = $(this).attr('value');
-                var exist = feature.split('%')
-                var feature1_exist = exist[0]
-                var feature2_exist = exist[3]
-                var queried_term = exist[1]
-                var queried_term_name = exist[2]
-                var associated_term = exist[4]
-                var associated_term_name = exist[5]
-                var systematic_name = exist[6]
+            $('#both_name_table').on("click", '.modal_features',function(){
+                Loading_mask()
 
+                var feature = $(this).attr('value');
+                var exist = feature.split('%');
                 console.log(exist)
+
+                var feature1_exist = exist[0];
+                var feature2_exist = exist[3];
+                var queried_term = exist[1];
+                var queried_term_name = exist[2];
+                var associated_term = exist[4];
+                var associated_term_name = exist[5];
+                var systematic_name = exist[6];
+
+                $('#modal_title').empty();
+                $('#modal_table1_header').empty();
+                $('#feature1').empty();
+                $('#modal_table2_header').empty();
+                $('#feature2').empty();
+
+
+                // console.log(exist)
 
                 $.ajax({
                     url : '/yeast/ajax_evidence/',
@@ -234,6 +246,7 @@ $(document).ready(function() {
                         else{
                             $('#modal_table2').hide()
                         }
+                        unLoading_mask()
                     },
                     error :function(){
                         alert('Something error');
@@ -243,16 +256,23 @@ $(document).ready(function() {
             // -------------------modal table1---------------
             // -------------------modal table2---------------
             $('#queried_table').on("click",'.modal_features',function(){
+                Loading_mask()
                 var feature = $(this).attr('value');
-                var exist = feature.split('%')
-                var feature1_exist = exist[0]
-                var feature2_exist = exist[3]
-                var queried_term = exist[1]
-                var queried_term_name = exist[2]
-                var associated_term = exist[4]
-                var associated_term_name = exist[5]
-                var systematic_name = exist[6]
+                var exist = feature.split('%');
                 console.log(exist)
+                var feature1_exist = exist[0];
+                var feature2_exist = exist[3];
+                var queried_term = exist[1];
+                var queried_term_name = exist[2];
+                var associated_term = exist[4];
+                var associated_term_name = exist[5];
+                var systematic_name = exist[6];
+
+                $('#modal_title').empty();
+                $('#modal_table1_header').empty();
+                $('#feature1').empty();
+                $('#modal_table2_header').empty();
+                $('#feature2').empty();
 
                 $.ajax({
                     url : '/yeast/ajax_evidence/',
@@ -285,6 +305,7 @@ $(document).ready(function() {
                         else{
                             $('#modal_table2').hide()
                         }
+                        unLoading_mask()
                     },
                     error :function(){
                         alert('Something error');
@@ -294,17 +315,24 @@ $(document).ready(function() {
             // -------------------modal table2---------------
             // -------------------modal table3---------------
             $('#second_table').on("click",'.modal_features',function(){
+                Loading_mask()
                 var feature = $(this).attr('value');
                 var exist = feature.split('%')
-                var feature1_exist = exist[0]
-                var feature2_exist = exist[3]
-                var queried_term = exist[1]
-                var queried_term_name = exist[2]
-                var associated_term = exist[4]
-                var associated_term_name = exist[5]
-                var systematic_name = exist[6]
-
                 console.log(exist)
+
+                var feature1_exist = exist[0];
+                var feature2_exist = exist[3];
+                var queried_term = exist[1];
+                var queried_term_name = exist[2];
+                var associated_term = exist[4];
+                var associated_term_name = exist[5];
+                var systematic_name = exist[6];
+
+                $('#modal_title').empty();
+                $('#modal_table1_header').empty();
+                $('#feature1').empty();
+                $('#modal_table2_header').empty();
+                $('#feature2').empty();
 
                 $.ajax({
                     url : '/yeast/ajax_evidence/',
@@ -337,13 +365,18 @@ $(document).ready(function() {
                         else{
                             $('#modal_table2').hide()
                         }
+                    unLoading_mask()
+
                     },
+
                     error :function(){
                         alert('Something error');
                     }
                 })
             });
+
             // -------------------modal table3---------------
+            unLoading_mask()
         },
         error:function(){
             alert('Something error');
